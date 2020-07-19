@@ -22,75 +22,149 @@ public class ThrusterController : MonoBehaviour
         // verts
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            foreach(Transform t in vertThrusters){
-                rb.AddForceAtPosition(new Vector3(0.0f, vertSpd, 0.0f) * Time.deltaTime, t.transform.position);
-                Debug.DrawRay(t.transform.position, new Vector3(0.0f, -vertSpd, 0.0f) * Time.deltaTime, Color.green);
-            }
+            vertUp();
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            foreach(Transform t in vertThrusters){
-                rb.AddForceAtPosition(new Vector3(0.0f, -vertSpd, 0.0f) * Time.deltaTime, t.transform.position);
-                Debug.DrawRay(t.transform.position, new Vector3(0.0f, vertSpd, 0.0f) * Time.deltaTime, Color.green);
-            }
+            vertDown();
         }
 
-        // lats
-        if (Input.GetKey(KeyCode.RightArrow))
+        // move laterlly
+        if (Input.GetKey(KeyCode.D))
         {
-            // FR
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, -latSpd) * Time.deltaTime, latThrusters[0].transform.position);
-            Debug.DrawRay(latThrusters[0].transform.position, new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, Color.green);
-
-            // FL
-            rb.AddForceAtPosition(new Vector3(latSpd, 0.0f) * Time.deltaTime, latThrusters[3].transform.position);
-            Debug.DrawRay(latThrusters[3].transform.position, new Vector3(-latSpd, 0.0f,  0.0f) * Time.deltaTime, Color.green);
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            // FR
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, latThrusters[0].transform.position);
-            Debug.DrawRay(latThrusters[0].transform.position, new Vector3(0.0f, 0.0f, -latSpd) * Time.deltaTime, Color.green);
-
-            // FL
-            rb.AddForceAtPosition(new Vector3(-latSpd, 0.0f, 0.0f) * Time.deltaTime, latThrusters[3].transform.position);
-            Debug.DrawRay(latThrusters[3].transform.position, new Vector3(latSpd, 0.0f, 0.0f) * Time.deltaTime, Color.green);
-        }
-
-        // RL
-        if (Input.GetKey(KeyCode.Q))
-        {
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, latThrusters[2].transform.position);
-            Debug.DrawRay(latThrusters[2].transform.position, new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, Color.green);
+            strafeRight();
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, latThrusters[2].transform.position);
-            Debug.DrawRay(latThrusters[2].transform.position, new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, Color.green);
+            strafeLeft();
         }
 
-        // FL
+        // move forward
         if (Input.GetKey(KeyCode.W))
         {
-            rb.AddForceAtPosition(new Vector3(latSpd, 0.0f) * Time.deltaTime, latThrusters[3].transform.position);
-            Debug.DrawRay(latThrusters[3].transform.position, new Vector3(-latSpd, 0.0f,  0.0f) * Time.deltaTime, Color.green);
+            moveForward();
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            rb.AddForceAtPosition(new Vector3(-latSpd, 0.0f, 0.0f) * Time.deltaTime, latThrusters[3].transform.position);
-            Debug.DrawRay(latThrusters[3].transform.position, new Vector3(latSpd, 0.0f, 0.0f) * Time.deltaTime, Color.green);
+            moveReverse();
+        }
+
+        // turn
+        if (Input.GetKey(KeyCode.E))
+        {
+            turnRight();
+        }
+        else if (Input.GetKey(KeyCode.Q))
+        {
+            turnLeft();
+        }
+
+        // RL
+        if (Input.GetKey(KeyCode.T))
+        {
+            applyThrust(latThrusters[2], latSpd);
+        }
+        else if (Input.GetKey(KeyCode.G))
+        {
+            applyThrust(latThrusters[2], -latSpd);
+        }
+
+        // FL
+        if (Input.GetKey(KeyCode.Y))
+        {
+            applyThrust(latThrusters[3], latSpd);
+        }
+        else if (Input.GetKey(KeyCode.H))
+        {
+            applyThrust(latThrusters[3], -latSpd);
         }
 
         // FR
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.U))
         {
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, latThrusters[0].transform.position);
-            Debug.DrawRay(latThrusters[0].transform.position, new Vector3(0.0f, 0.0f, -latSpd) * Time.deltaTime, Color.green);
+            applyThrust(latThrusters[0], latSpd);
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.J))
         {
-            rb.AddForceAtPosition(new Vector3(0.0f, 0.0f, -latSpd) * Time.deltaTime, latThrusters[0].transform.position);
-            Debug.DrawRay(latThrusters[0].transform.position, new Vector3(0.0f, 0.0f, latSpd) * Time.deltaTime, Color.green);
+            applyThrust(latThrusters[0], -latSpd);
+        }
+
+        // RR
+        if (Input.GetKey(KeyCode.I))
+        {
+            applyThrust(latThrusters[1], latSpd);
+        }
+        else if (Input.GetKey(KeyCode.K))
+        {
+            applyThrust(latThrusters[1], -latSpd);
+        }
+    }
+
+    private void applyThrust(Transform t, float spd = 1.0f)
+    {
+        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+    }
+
+    public void moveForward()
+    {
+        applyThrust(latThrusters[0], latSpd);
+        applyThrust(latThrusters[1], latSpd);
+        applyThrust(latThrusters[2], latSpd);
+        applyThrust(latThrusters[3], latSpd);
+    }
+
+    public void moveReverse()
+    {
+        applyThrust(latThrusters[0], -latSpd);
+        applyThrust(latThrusters[1], -latSpd);
+        applyThrust(latThrusters[2], -latSpd);
+        applyThrust(latThrusters[3], -latSpd);
+    }
+
+    public void strafeRight()
+    {
+        applyThrust(latThrusters[0], -latSpd);
+        applyThrust(latThrusters[1], latSpd);
+        applyThrust(latThrusters[2], -latSpd);
+        applyThrust(latThrusters[3], latSpd);
+    }
+
+    public void strafeLeft()
+    {
+        applyThrust(latThrusters[0], latSpd);
+        applyThrust(latThrusters[1], -latSpd);
+        applyThrust(latThrusters[2], latSpd);
+        applyThrust(latThrusters[3], -latSpd);
+    }
+
+    public void turnRight()
+    {
+        applyThrust(latThrusters[0], -latSpd);
+        applyThrust(latThrusters[1], -latSpd);
+        applyThrust(latThrusters[2], latSpd);
+        applyThrust(latThrusters[3], latSpd);
+    }
+
+    public void turnLeft()
+    {
+        applyThrust(latThrusters[0], latSpd);
+        applyThrust(latThrusters[1], latSpd);
+        applyThrust(latThrusters[2], -latSpd);
+        applyThrust(latThrusters[3], -latSpd);
+    }
+
+    public void vertUp()
+    {
+        foreach(Transform t in vertThrusters){
+            applyThrust(t, vertSpd);
+        }
+    }
+
+    public void vertDown()
+    {
+        foreach(Transform t in vertThrusters){
+            applyThrust(t, -vertSpd);
         }
     }
 }
