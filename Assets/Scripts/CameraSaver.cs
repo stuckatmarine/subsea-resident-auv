@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CameraSaver : MonoBehaviour
 {
     private bool saving = false;

@@ -10,10 +10,11 @@ public class ThrusterController : MonoBehaviour
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
 
-    // Start is called before the first frame update
+    public GLDebug gl;
+
     void Start()
     {
-        
+        gl = this.gameObject.GetComponent<GLDebug>();
     }
 
     // Update is called once per frame
@@ -50,11 +51,11 @@ public class ThrusterController : MonoBehaviour
         }
 
         // turn
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
         {
             turnRight();
         }
-        else if (Input.GetKey(KeyCode.Q))
+        else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
         {
             turnLeft();
         }
@@ -104,6 +105,7 @@ public class ThrusterController : MonoBehaviour
     {
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
         Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+        GLDebug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up);
     }
 
     public void moveForward()
