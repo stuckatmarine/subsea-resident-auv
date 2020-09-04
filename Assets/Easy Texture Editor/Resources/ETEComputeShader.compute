@@ -1,0 +1,757 @@
+﻿#pragma kernel ETEBrightness
+#pragma kernel ETEContrast
+#pragma kernel ETEExposure
+#pragma kernel ETEGamma
+#pragma kernel ETEInvert
+#pragma kernel ETEGrayscale
+#pragma kernel ETESaturation
+#pragma kernel ETEHue
+#pragma kernel ETEBlendMul
+#pragma kernel ETEBlendAdd
+#pragma kernel ETEBlendDiv
+#pragma kernel ETEBlendSub
+#pragma kernel ETEBlendNor
+#pragma kernel ETEBlendDar
+#pragma kernel ETEBlendLig
+#pragma kernel ETEBlendScr
+#pragma kernel ETEBlendDis
+#pragma kernel ETEBlendCBu
+#pragma kernel ETEBlendLBu
+#pragma kernel ETEBlendDCo
+#pragma kernel ETEBlendLCo
+#pragma kernel ETEBlendCDo
+#pragma kernel ETEBlendOve
+#pragma kernel ETEBlendHLi
+#pragma kernel ETEBlendSLi
+#pragma kernel ETEBlendVLi
+#pragma kernel ETEBlendLLi
+#pragma kernel ETEBlendPLi
+#pragma kernel ETEBlendHMi
+#pragma kernel ETEBlendDif
+#pragma kernel ETEBlendExc
+#pragma kernel ETERep
+#pragma kernel ETESharpen
+
+
+//http://www.simplefilter.de/en/basics/mixmods.html
+
+RWTexture2D<float4> data;
+RWTexture2D<float4> dataBlend;
+float magBrightness;
+float magContrast;
+float magExposure;
+float magGamma;
+float magSaturation;
+float magHue;
+float magBlend;
+float magRep;
+float magSharpen;
+float repDiff;
+float4 repClr1;
+float4 repClr2;
+
+[numthreads(8, 8, 1)]
+void ETESharpen(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v = data[id.xy];
+
+	float3 m1 = float3(-1 , -1 , -1 );
+	float3 m2 = float3(-1 , 9, -1 );
+	float3 m3 = float3(-1 , -1 , -1 );
+
+
+	v.x = float(v.x * m1.x + v.y * m1.y + v.z * m1.z);
+	v.y = float(v.x * m2.x + v.y * m2.y + v.z * m2.z);
+	v.z = float(v.x * m3.x + v.y * m3.y + v.z * m3.z);
+
+	data[id.xy] = lerp(data[id.xy],v, magSharpen);
+
+
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETERep(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v1 = float4(repClr1.x, repClr1.y, repClr1.z, data[id.xy].w);
+
+	float4 v2 = float4(repClr2.x, repClr2.y, repClr2.z, repClr2.w);
+
+	if (distance(data[id.xy], v1) < magRep)
+		if (repDiff == 1)
+			data[id.xy] = v2;
+		else
+			data[id.xy] = v2 + data[id.xy] - v1;
+
+
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendExc(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(0, 0, 0, 0);
+
+	v = dataBlend[id.xy] + data[id.xy] - 2 * (dataBlend[id.xy] * data[id.xy]);
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendDif(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(0, 0, 0, 0);
+
+	v = abs(dataBlend[id.xy] - data[id.xy]);
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendHMi(uint3 id : SV_DispatchThreadID) {
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (dataBlend[id.xy].x < 1 - data[id.xy].x)
+		v.x = 0;
+	else
+		v.x = 1;
+
+	if (dataBlend[id.xy].y < 1 - data[id.xy].y)
+		v.y = 0;
+	else
+		v.y = 1;
+
+	if (dataBlend[id.xy].z < 1 - data[id.xy].z)
+		v.z = 0;
+	else
+		v.z = 1;
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendPLi(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (data[id.xy].x < 2 * dataBlend[id.xy].x - 1)
+		v.x = 2 * dataBlend[id.xy].x - 1;
+	else if (2 * dataBlend[id.xy].x - 1 < data[id.xy].x && data[id.xy].x < 2 * dataBlend[id.xy].x)
+		v.x = data[id.xy].x;
+	else
+		v.x = 2 * dataBlend[id.xy].x;
+
+
+	if (data[id.xy].y < 2 * dataBlend[id.xy].y - 1)
+		v.y = 2 * dataBlend[id.xy].y - 1;
+	else if (2 * dataBlend[id.xy].y - 1 < data[id.xy].y && data[id.xy].y < 2 * dataBlend[id.xy].y)
+		v.y = data[id.xy].y;
+	else
+		v.y = 2 * dataBlend[id.xy].y;
+
+
+
+	if (data[id.xy].z < 2 * dataBlend[id.xy].z - 1)
+		v.z = 2 * dataBlend[id.xy].z - 1;
+	else if (2 * dataBlend[id.xy].z - 1 < data[id.xy].z && data[id.xy].z < 2 * dataBlend[id.xy].z)
+		v.z = data[id.xy].z;
+	else
+		v.z = 2 * dataBlend[id.xy].z;
+
+
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+}
+
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendLLi(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+
+	v = data[id.xy] + 2 * dataBlend[id.xy] - 1;
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendVLi(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (dataBlend[id.xy].x < 0.5)
+		v.x = 1 - (1 - data[id.xy].x) / (2 * dataBlend[id.xy].x);
+	else
+		v.x = data[id.xy].x / (2 * (1 - dataBlend[id.xy].x));
+
+
+	if (dataBlend[id.xy].y < 0.5)
+		v.y = 1 - (1 - data[id.xy].y) / (2 * dataBlend[id.xy].y);
+	else
+		v.y = data[id.xy].y / (2 * (1 - dataBlend[id.xy].y));
+
+
+	if (dataBlend[id.xy].z < 0.5)
+		v.z = 1 - (1 - data[id.xy].z) / (2 * dataBlend[id.xy].z);
+	else
+		v.z = data[id.xy].z / (2 * (1 - dataBlend[id.xy].z));
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendSLi(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (dataBlend[id.xy].x < 0.5)
+		v.x = (2 * dataBlend[id.xy].x - 1) * (data[id.xy].x - data[id.xy].x * data[id.xy].x) + data[id.xy].x;
+	else
+		v.x = (2 * dataBlend[id.xy].x - 1) * (sqrt(data[id.xy].x) - data[id.xy].x) + data[id.xy].x;
+
+
+	if (dataBlend[id.xy].y < 0.5)
+		v.y = (2 * dataBlend[id.xy].y - 1) * (data[id.xy].y - data[id.xy].y * data[id.xy].y) + data[id.xy].y;
+	else
+		v.y = (2 * dataBlend[id.xy].y - 1) * (sqrt(data[id.xy].y) - data[id.xy].y) + data[id.xy].y;
+
+
+	if (dataBlend[id.xy].z < 0.5)
+		v.z = (2 * dataBlend[id.xy].z - 1) * (data[id.xy].z - data[id.xy].z * data[id.xy].z) + data[id.xy].z;
+	else
+		v.z = (2 * dataBlend[id.xy].z - 1) * (sqrt(data[id.xy].z) - data[id.xy].z) + data[id.xy].z;
+
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendHLi(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (dataBlend[id.xy].x < 0.5)
+		v.x = 2 * dataBlend[id.xy].x * data[id.xy].x;
+	else
+		v.x = 1 - 2 * (1 - dataBlend[id.xy].x) * (1 - data[id.xy].x);
+
+	if (dataBlend[id.xy].y < 0.5)
+		v.y = 2 * dataBlend[id.xy].y * data[id.xy].y;
+	else
+		v.y = 1 - 2 * (1 - dataBlend[id.xy].y) * (1 - data[id.xy].y);
+
+	if (dataBlend[id.xy].z < 0.5)
+		v.z = 2 * dataBlend[id.xy].z * data[id.xy].z;
+	else
+		v.z = 1 - 2 * (1 - dataBlend[id.xy].z) * (1 - data[id.xy].z);
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEBlendOve(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+
+
+	if (data[id.xy].x < 0.5)
+		v.x = 2 * dataBlend[id.xy].x * data[id.xy].x;
+	else
+		v.x = 1 - 2 * (1 - dataBlend[id.xy].x) * (1 - data[id.xy].x);
+
+	if (data[id.xy].y < 0.5)
+		v.y = 2 * dataBlend[id.xy].y * data[id.xy].y;
+	else
+		v.y = 1 - 2 * (1 - dataBlend[id.xy].y) * (1 - data[id.xy].y);
+
+	if (data[id.xy].z < 0.5)
+		v.z = 2 * dataBlend[id.xy].z * data[id.xy].z;
+	else
+		v.z = 1 - 2 * (1 - dataBlend[id.xy].z) * (1 - data[id.xy].z);
+
+
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendCDo(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 0);
+	v.x = data[id.xy].x / (1 - dataBlend[id.xy].x);
+	v.y = data[id.xy].y / (1 - dataBlend[id.xy].y);
+	v.z = data[id.xy].z / (1 - dataBlend[id.xy].z);
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendLCo(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 1);
+
+	float r = 0.26;
+	float g = 0.75;
+	float b = 0.14;
+
+
+
+	float c1 = (data[id.xy].x * r + data[id.xy].y * g + data[id.xy].z * b);
+	float c2 = (dataBlend[id.xy].x * r + dataBlend[id.xy].y * g + dataBlend[id.xy].z * b);
+
+	v = c1 > c2 ? data[id.xy] : dataBlend[id.xy];
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEBlendDCo(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 1);
+
+	float r = 0.26;
+	float g = 0.75;
+	float b = 0.14;
+
+
+
+	float c1 = (data[id.xy].x * r + data[id.xy].y * g + data[id.xy].z * b);
+	float c2 = (dataBlend[id.xy].x * r + dataBlend[id.xy].y * g + dataBlend[id.xy].z * b);
+
+	v = c1 < c2 ? data[id.xy] : dataBlend[id.xy];
+	v.w = 1;
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEBlendLBu(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 1);
+	v.x = data[id.xy].x + dataBlend[id.xy].x - 1;
+	v.y = data[id.xy].y + dataBlend[id.xy].y - 1;
+	v.z = data[id.xy].z + dataBlend[id.xy].z - 1;
+
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEBlendCBu(uint3 id : SV_DispatchThreadID)
+{
+
+
+	float4 v = float4(0, 0, 0, 1);
+	v.x = 1 - (1 - data[id.xy].x) / dataBlend[id.xy].x;
+	v.y = 1 - (1 - data[id.xy].y) / dataBlend[id.xy].y;
+	v.z = 1 - (1 - data[id.xy].z) / dataBlend[id.xy].z;
+
+
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+
+
+}
+
+uint Hash(uint s)
+{
+	s ^= 2747636419u;
+	s *= 2654435769u;
+	s ^= s >> 16;
+	s *= 2654435769u;
+	s ^= s >> 16;
+	s *= 2654435769u;
+	return s;
+}
+//https://github.com/keijiro/ComputePrngTest/blob/master/Assets/Prng.compute
+float Random(uint seed)
+{
+	return float(Hash(seed)) / 4294967295.0; // 2^32-1
+}
+
+[numthreads(8, 8, 1)]
+void ETEBlendDis(uint3 id : SV_DispatchThreadID)
+{
+
+	float w, h;
+	data.GetDimensions(w, h);
+	dataBlend[id.xy] = float4(dataBlend[id.xy].x, dataBlend[id.xy].y, dataBlend[id.xy].z, data[id.xy].w);
+	if (Random(id.x + id.y * w) < magBlend)
+		data[id.xy] = dataBlend[id.xy];
+
+
+}
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendScr(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v = float4(0, 0, 0, 1);
+	v.x = 1 - (1 - data[id.xy].x) * (1 - dataBlend[id.xy].x);
+	v.y = 1 - (1 - data[id.xy].y) * (1 - dataBlend[id.xy].y);
+	v.z = 1 - (1 - data[id.xy].z) * (1 - dataBlend[id.xy].z);
+
+	v = clamp(v, 0, 1);
+	v.w = data[id.xy].w;
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendLig(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v = float4(0, 0, 0, 1);
+	v.x = dataBlend[id.xy].x > data[id.xy].x ? dataBlend[id.xy].x : data[id.xy].x;
+	v.y = dataBlend[id.xy].y > data[id.xy].y ? dataBlend[id.xy].y : data[id.xy].y;
+	v.z = dataBlend[id.xy].z > data[id.xy].z ? dataBlend[id.xy].z : data[id.xy].z;
+
+	//v = float4(dataBlend[id.xy].x, dataBlend[id.xy].y, dataBlend[id.xy].z, data[id.xy].w);
+	v.w = data[id.xy].w;
+
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendDar(uint3 id : SV_DispatchThreadID)
+{
+
+	float4 v = float4(0, 0, 0, 1);
+	v.x = dataBlend[id.xy].x < data[id.xy].x ? dataBlend[id.xy].x : data[id.xy].x;
+	v.y = dataBlend[id.xy].y < data[id.xy].y ? dataBlend[id.xy].y : data[id.xy].y;
+	v.z = dataBlend[id.xy].z < data[id.xy].z ? dataBlend[id.xy].z : data[id.xy].z;
+
+	//v = float4(dataBlend[id.xy].x, dataBlend[id.xy].y, dataBlend[id.xy].z, data[id.xy].w);
+	v.w = data[id.xy].w;
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendNor(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(dataBlend[id.xy].x, dataBlend[id.xy].y, dataBlend[id.xy].z, data[id.xy].w);
+
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendSub(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(data[id.xy].x - dataBlend[id.xy].x, data[id.xy].y - dataBlend[id.xy].y, data[id.xy].z - dataBlend[id.xy].z, data[id.xy].w);
+
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendDiv(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(data[id.xy].x / dataBlend[id.xy].x, data[id.xy].y / dataBlend[id.xy].y, data[id.xy].z / dataBlend[id.xy].z, data[id.xy].w);
+
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendAdd(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(data[id.xy].x + dataBlend[id.xy].x, data[id.xy].y + dataBlend[id.xy].y, data[id.xy].z + dataBlend[id.xy].z, data[id.xy].w);
+
+	v = clamp(v, 0, 1);
+
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+
+
+[numthreads(8, 8, 1)]
+void ETEBlendMul(uint3 id : SV_DispatchThreadID)
+{
+	float4 v = float4(data[id.xy].x * dataBlend[id.xy].x, data[id.xy].y * dataBlend[id.xy].y, data[id.xy].z * dataBlend[id.xy].z, data[id.xy].w);
+
+	v = clamp(v, 0, 1);
+	data[id.xy] = lerp(data[id.xy], v, magBlend);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEBrightness(uint3 id : SV_DispatchThreadID)
+{
+
+	data[id.xy] = float4(data[id.xy].x * (1 + magBrightness), data[id.xy].y * (1 + magBrightness), data[id.xy].z * (1 + magBrightness), data[id.xy].w);
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEContrast(uint3 id : SV_DispatchThreadID) {
+
+	float pR = data[id.xy].x;
+	pR -= 0.5;
+	pR *= magContrast;
+	pR += 0.5;
+
+	float pG = data[id.xy].y;
+	pG -= 0.5;
+	pG *= magContrast;
+	pG += 0.5;
+
+	float pB = data[id.xy].z;
+	pB -= 0.5;
+	pB *= magContrast;
+	pB += 0.5;
+
+	pG = clamp(pG, 0, 1);
+	pB = clamp(pB, 0, 1);
+	pR = clamp(pR, 0, 1);
+
+	data[id.xy] = float4(pR, pG, pB, data[id.xy].w);
+
+}
+
+
+[numthreads(8, 8, 1)]
+void ETEExposure(uint3 id : SV_DispatchThreadID)
+{
+
+	float r = data[id.xy].x * pow(2, magExposure);
+	float g = data[id.xy].y * pow(2, magExposure);
+	float b = data[id.xy].z * pow(2, magExposure);
+
+	data[id.xy] = float4(r, g, b, data[id.xy].w);
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEGamma(uint3 id : SV_DispatchThreadID)
+{
+
+	float r = pow(abs(data[id.xy].x), magGamma);
+	float g = pow(abs(data[id.xy].y), magGamma);
+	float b = pow(abs(data[id.xy].z), magGamma);
+
+	data[id.xy] = float4(r, g, b, data[id.xy].w);
+
+}
+[numthreads(8, 8, 1)]
+void ETEInvert(uint3 id : SV_DispatchThreadID)
+{
+
+	data[id.xy] = float4(1 - data[id.xy].x, 1 - data[id.xy].y, 1 - data[id.xy].z, data[id.xy].w);
+
+}
+[numthreads(8, 8, 1)]
+void ETEGrayscale(uint3 id : SV_DispatchThreadID)
+{
+	float r = data[id.xy].x;
+	float g = data[id.xy].y;
+	float b = data[id.xy].z;
+
+	float v = r * 0.59 + g * 0.3 + b * 0.11;
+
+	data[id.xy] = float4(v, v, v, data[id.xy].w);
+
+}
+[numthreads(8, 8, 1)]
+void ETESaturation(uint3 id : SV_DispatchThreadID)
+{
+	float Pr = 0.299;
+	float Pg = 0.587;
+	float Pb = 0.114;
+
+	float r = data[id.xy].x;
+	float g = data[id.xy].y;
+	float b = data[id.xy].z;
+
+
+	float  P = sqrt(r * r * Pr + g * g * Pg + b * b * Pb);
+
+	r = P + (r - P) * magSaturation;
+	g = P + (g - P) * magSaturation;
+	b = P + (b - P) * magSaturation;
+
+
+	data[id.xy] = float4(r, g, b, data[id.xy].w);
+
+}
+
+[numthreads(8, 8, 1)]
+void ETEHue(uint3 id : SV_DispatchThreadID)
+{
+	float H = magHue;
+
+
+	float U = cos(H * 3.1415926538 / 180);
+	float W = sin(H * 3.1415926538 / 180);
+
+	data[id.xy] = float4(
+		(0.299 + 0.701 * U + 0.168 * W) * data[id.xy].x
+		+ (0.587 - 0.587 * U + 0.330 * W) * data[id.xy].y
+		+ (0.114 - 0.114 * U - 0.497 * W) * data[id.xy].z
+		,
+
+		(0.299 - 0.299 * U - .328 * W) * data[id.xy].x
+		+ (0.587 + 0.413 * U + 0.035 * W) * data[id.xy].y
+		+ (0.114 - 0.114 * U + 0.292 * W) * data[id.xy].z
+		,
+		(0.299 - 0.3 * U + 1.25 * W) * data[id.xy].x
+		+ (0.587 - 0.588 * U - 1.05 * W) * data[id.xy].y
+		+ (0.114 + 0.886 * U - 0.203 * W) * data[id.xy].z
+		,
+		data[id.xy].w
+
+		);
+
+	/*
+
+	float Pr = 0.299;
+	float Pg = 0.587;
+	float Pb = 0.114;
+
+	float r = data[id.xy].x;
+	float g = data[id.xy].y;
+	float b = data[id.xy].z;
+
+
+	float  P = sqrt(r * r * Pr + g * g * Pg + b * b * Pb);
+
+	r = P + (r - P) * magSaturation;
+	g = P + (g - P) * magSaturation;
+	b = P + (b - P) * magSaturation;
+
+
+	data[id.xy] = float4(r, g, b, data[id.xy].w);
+	*/
+}
+
+

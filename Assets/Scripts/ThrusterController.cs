@@ -10,11 +10,9 @@ public class ThrusterController : MonoBehaviour
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
 
-    public GLDebug gl;
-
     void Start()
     {
-        gl = this.gameObject.GetComponent<GLDebug>();
+        //gl = this.gameObject.GetComponent<GLDebug>();
     }
 
     // Update is called once per frame
@@ -101,13 +99,18 @@ public class ThrusterController : MonoBehaviour
         }
     }
 
+    // apply force at position of thruster transform 't'
+    // also draws green ray to show thrust in editor
+    // TODO: apply ray to camera views and GUI
     private void applyThrust(Transform t, float spd = 1.0f)
     {
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
         Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
-        GLDebug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up);
     }
 
+    // 4 vectored thruster move forward command
+    // +/- latSpd to control output direction
+    // thrusters ordered clockwise {frontRight, backRight, backLeft, fronLeft}
     public void moveForward()
     {
         applyThrust(latThrusters[0], latSpd);

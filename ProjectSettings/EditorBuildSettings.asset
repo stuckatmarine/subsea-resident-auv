@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/EarlyRender.unity
+    guid: 7724e4306cc842b4eb278c45c51ed627
   m_configObjects: {}
