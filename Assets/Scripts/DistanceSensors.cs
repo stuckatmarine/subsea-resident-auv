@@ -27,15 +27,33 @@ public class DistanceSensors : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach (Transform t in sensorArr)
+        for (int i = 0; i < 4; i++)
         {
-            useSensor(t, 0.0f, 2.0f);
+            useSensor(i, latMin, latMax);
+        }
+        for (int i = 4; i < 6; i++)
+        {
+            useSensor(i, vertMin, vertMax);
         }
     }
 
-    private void useSensor(Transform t, float min = 0.0f, float max = 2.0f)
+    private void useSensor(int i, float min, float max)
     {
+        Transform t = sensorArr[i];
+        RaycastHit hit;
+        Vector3 end = t.transform.position + (max * t.transform.forward);
+
         if (drawLines)
-            ld.DrawLine(t.transform.position, t.transform.position + (max * t.transform.forward), Color.red, 0.1f);
+            ld.DrawLine(t.transform.position, end, Color.red);
+
+        Physics.Raycast(t.transform.position, end, out hit);
+        //     Debug.Log("Sensor dist: " + hit.distance);
+
+        if (hit.distance < max)
+        {
+            sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = hit.distance.ToString("#.00");
+        }
+        else
+            sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "MAX";
     }
 }
