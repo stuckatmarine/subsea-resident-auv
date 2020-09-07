@@ -13,11 +13,11 @@ public class ThrusterController : MonoBehaviour
 
     public ServerCommunication WS;
     public Material lineMaterial;
+    public bool drawLines = true;
     private LineDrawer ld;
 
     void Start()
     {
-        //gl = this.gameObject.GetComponent<GLDebug>();
         ld = new LineDrawer(lineMaterial);
     }
 
@@ -115,7 +115,8 @@ public class ThrusterController : MonoBehaviour
     private void applyThrust(Transform t, float spd = 1.0f)
     {
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-        ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        if (drawLines)
+            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 

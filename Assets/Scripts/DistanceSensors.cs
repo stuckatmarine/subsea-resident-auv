@@ -14,24 +14,28 @@ public class DistanceSensors : MonoBehaviour
     public Color colorHigh;
     public Color colorLow;
 
+    public Material lineMaterial;
+    public bool drawLines = true;
+    private LineDrawer ld;
+
     // Start is called before the first frame update
-    // void Start()
-    // {
-        
-    // }
+    void Start()
+    {
+        ld = new LineDrawer(lineMaterial);
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // foreach (Transform t in sensorArr)
-        // {
-        //     useSensor(t, 0.0f, 2.0f);
-        // }
+        foreach (Transform t in sensorArr)
+        {
+            useSensor(t, 0.0f, 2.0f);
+        }
     }
 
     private void useSensor(Transform t, float min = 0.0f, float max = 2.0f)
     {
-        // rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-        Debug.DrawRay(t.transform.position, max * t.transform.up, Color.red);
+        if (drawLines)
+            ld.DrawLine(t.transform.position, t.transform.position + (max * t.transform.forward), Color.red, 0.1f);
     }
 }
