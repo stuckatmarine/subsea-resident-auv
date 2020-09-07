@@ -13,7 +13,7 @@ async def hello(websocket, path):
     print(f"< {recvMsg}")
 
     obj = {
-            "source" : "sim",
+            "source" : "server",
             "msgNum" : 1,
             "msgType" : "telemetry",
             "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
@@ -22,7 +22,7 @@ async def hello(websocket, path):
     }
 
     resp = json.dumps(obj)
-    await websocket.send(resp)
+    await websocket.send("test resp")
     print(f"> {resp}")
 
 start_server = websockets.serve(hello, "localhost", 8765)

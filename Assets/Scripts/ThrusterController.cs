@@ -10,6 +10,8 @@ public class ThrusterController : MonoBehaviour
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
 
+    public ServerCommunication WS;
+
     void Start()
     {
         //gl = this.gameObject.GetComponent<GLDebug>();
@@ -18,6 +20,10 @@ public class ThrusterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+             WS.SendRequest("test msg");
+
+
         // verts
         if (Input.GetKey(KeyCode.UpArrow))
         {
