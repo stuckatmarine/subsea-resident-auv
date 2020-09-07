@@ -21,8 +21,17 @@ public class DistanceSensors : MonoBehaviour
     // }
 
     // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
+    void FixedUpdate()
+    {
+        // foreach (Transform t in sensorArr)
+        // {
+        //     useSensor(t, 0.0f, 2.0f);
+        // }
+    }
+
+    private void useSensor(Transform t, float min = 0.0f, float max = 2.0f)
+    {
+        // rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        Debug.DrawRay(t.transform.position, max * t.transform.up, Color.red);
+    }
 }

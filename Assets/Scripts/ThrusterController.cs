@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class ThrusterController : MonoBehaviour
 {
@@ -11,10 +12,13 @@ public class ThrusterController : MonoBehaviour
     public float latSpd = 5.0f;
 
     public ServerCommunication WS;
+    public Material lineMaterial;
+    private LineDrawer ld;
 
     void Start()
     {
         //gl = this.gameObject.GetComponent<GLDebug>();
+        ld = new LineDrawer(lineMaterial);
     }
 
     // Update is called once per frame
@@ -111,7 +115,8 @@ public class ThrusterController : MonoBehaviour
     private void applyThrust(Transform t, float spd = 1.0f)
     {
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-        Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+        ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
     // 4 vectored thruster move forward command
@@ -178,4 +183,6 @@ public class ThrusterController : MonoBehaviour
             applyThrust(t, -vertSpd);
         }
     }
+
+    
 }
