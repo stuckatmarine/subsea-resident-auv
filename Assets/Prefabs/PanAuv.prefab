@@ -29340,11 +29340,17 @@ MonoBehaviour:
   - {fileID: 7914814780905525364}
   - {fileID: 6216354347842072072}
   - {fileID: 2329799377653439646}
-  sensorValueArr: []
-  latMax: 0
-  latMin: 0
-  vertMax: 0
-  vertMin: 0
+  sensorValueArr:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  latMax: 20
+  latMin: 1
+  vertMax: 20
+  vertMin: 0.5
   colorValid: {r: 0.14578143, g: 0.72156864, b: 0.24349172, a: 0}
   colorHigh: {r: 0.6037736, g: 0.10537558, b: 0.10537558, a: 0}
   colorLow: {r: 0.07524917, g: 0.39821818, b: 0.8396226, a: 0}

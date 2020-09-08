@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DistanceSensors : MonoBehaviour
 {
@@ -41,19 +42,24 @@ public class DistanceSensors : MonoBehaviour
     {
         Transform t = sensorArr[i];
         RaycastHit hit;
-        Vector3 end = t.transform.position + (max * t.transform.forward);
 
         if (drawLines)
-            ld.DrawLine(t.transform.position, end, Color.red);
+            ld.DrawLine(t.transform.position, t.transform.position + ((max * 0.5f) * t.transform.forward), Color.red);
 
-        Physics.Raycast(t.transform.position, end, out hit);
-        //     Debug.Log("Sensor dist: " + hit.distance);
+        Physics.Raycast(t.transform.position, t.transform.position + (max * t.transform.forward), out hit);
 
         if (hit.distance < max)
-        {
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = hit.distance.ToString("#.00");
-        }
         else
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "MAX";
+
+        // min distance for close proximity checks
+        if (hit.distance < min)
+        {
+            // Debug.Log( i + "   " + hit.distance);
+            sensorValueArr[i].GetComponent<Image>().color = Color.red;
+        }
+        else
+            sensorValueArr[i].GetComponent<Image>().color = Color.grey;
     }
 }
