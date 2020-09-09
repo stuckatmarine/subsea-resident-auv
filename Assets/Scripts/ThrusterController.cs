@@ -15,8 +15,6 @@ public class ThrusterController : MonoBehaviour
     public Material lineMaterial;
     public bool drawLines = true;
     private LineDrawer ld;
-    private int drawCountdown = 0;
-    // public float drawInterval
 
     void Start()
     {

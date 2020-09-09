@@ -15,8 +15,9 @@ public class LineDrawer
         myLine.AddComponent<LineRenderer>();
         LineRenderer lr = myLine.GetComponent<LineRenderer>();
         lr.material = lineMaterial;
-        lr.SetColors(color, color);
-        lr.SetWidth(0.02f, 0.02f);
+        // lr.SetColors(color, color);
+        lr.startColor = color;
+        lr.startWidth = (0.02f);
         lr.SetPosition(0, start);
         lr.SetPosition(1, end);
         GameObject.Destroy(myLine, duration);

@@ -96,7 +96,7 @@ public class WsClient
     public void Send(string message)
     {
         byte[] buffer = encoder.GetBytes(message);
-        //Debug.Log("Message to queue for send: " + buffer.Length + ", message: " + message);
+        Debug.Log("Message to queue for send: " + buffer.Length + ", message: " + message);
         var sendBuf = new ArraySegment<byte>(buffer);
 
         sendQueue.Add(sendBuf);
@@ -111,6 +111,7 @@ public class WsClient
         ArraySegment<byte> msg;
         while (true)
         {
+
             while (!sendQueue.IsCompleted)
             {
                 msg = sendQueue.Take();
