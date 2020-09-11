@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-# WS client example
+# WS client example to test server
 
 import asyncio
 import websockets
@@ -8,7 +7,7 @@ import json
 import time
 
 async def hello():
-    uri = "ws://localhost:8765"
+    uri = "ws://localhost:8000"
     async with websockets.connect(uri) as websocket:
         inp = input("Input msg number? ")
 
