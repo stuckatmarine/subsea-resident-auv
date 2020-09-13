@@ -17,6 +17,8 @@ public class ServerCommunication : MonoBehaviour
     [SerializeField]
     private bool useLocalhost = true;
 
+    public int sendIntervalMs = 1000;
+
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
     // Final server address
