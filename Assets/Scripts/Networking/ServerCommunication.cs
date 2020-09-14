@@ -28,7 +28,7 @@ public class ServerCommunication : MonoBehaviour
     private WsClient client;
 
     // Class with messages for "lobby"
-    public LobbyMessaging Lobby { private set; get; }
+    // public LobbyMessaging Lobby { private set; get; }
 
     /// <summary>
     /// Unity method called on initialization
@@ -39,7 +39,7 @@ public class ServerCommunication : MonoBehaviour
         client = new WsClient(server);
 
         // Messaging
-        Lobby = new LobbyMessaging(this);
+        // Lobby = new LobbyMessaging(this);
         ConnectToServer();
     }
 
@@ -57,8 +57,6 @@ public class ServerCommunication : MonoBehaviour
             cqueue.TryDequeue(out msg);
             HandleMessage(msg);
         }
-
-
     }
 
     /// <summary>
