@@ -26,11 +26,12 @@ public class LobbyMessaging : BaseMessaging
     /// <param name="request">Request.</param>
     public void EchoMessage(EchoMessageModel request)
     {
-        var message = new MessageModel
-        {
-            source = "echo",
-            message = JsonUtility.ToJson(request)
-        };
-        client.SendRequest(JsonUtility.ToJson(message));
+        // var message = new MessageModel
+        // {
+        //     source = "echo",
+        //     message = JsonUtility.ToJson(request)
+        // };
+        // client.SendRequest(JsonUtility.ToJson(message));
+        Debug.Log("EchoMessageDepricated");
     }
 }

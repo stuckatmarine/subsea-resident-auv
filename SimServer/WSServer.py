@@ -20,7 +20,7 @@ class SimpleEcho(WebSocket):
         obj = {
                 "source" : "server",
                 "msgNum" : 1,
-                "msgType" : "telemetry",
+                "msgType" : "command",
                 "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
                 "latThrust" : [6.0,7.0,8.0,9.0],
                 "vertThrust" : [10.0, 11.0]

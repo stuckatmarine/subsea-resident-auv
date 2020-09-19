@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Forefront class for the server communication.
@@ -16,14 +17,25 @@ public class ServerCommunication : MonoBehaviour
     // Flag to use localhost
     [SerializeField]
     private bool useLocalhost = true;
+    [SerializeField]
+    private int txNum = 0;
+    [SerializeField]
+    private int rxNum = 0;
 
     public int sendIntervalMs = 1000;
+    public TelemetryModel tm = new TelemetryModel();
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
     // Final server address
     private string server;
-
+    
+        public Transform[] distSensorVals;
+        public Transform srauv;
+        public Transform dock;
+        public Transform tree1;
+        public Transform tree2;
+        public Transform tree3;
     // WebSocket Client
     private WsClient client;
 
@@ -41,7 +53,14 @@ public class ServerCommunication : MonoBehaviour
         // Messaging
         // Lobby = new LobbyMessaging(this);
         ConnectToServer();
+
+        srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
+        srauv = GameObject.Find("Dock").GetComponent<Transform>();
+        tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
+        tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
+        tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
     }
+
 
     /// <summary>
     /// Unity method called every frame
@@ -65,24 +84,24 @@ public class ServerCommunication : MonoBehaviour
     /// <param name="msg">Message.</param>
     private void HandleMessage(string msg)
     {
-        Debug.Log("From Server: " + msg);
+        Debug.Log("Rx: " + rxNum++ + ", msg: " + msg);
 
         // Deserializing message from the server
-        // var message = JsonUtility.FromJson<MessageModel>(msg);
+        var message = JsonUtility.FromJson<CommandModel>(msg);
 
         // // Picking correct method for message handling
-        // switch (message.source)
-        // {
-        //     case LobbyMessaging.Register:
-        //         Lobby.OnConnectedToServer?.Invoke();
-        //         break;
-        //     case LobbyMessaging.Echo:
-        //         Lobby.OnEchoMessage?.Invoke(JsonUtility.FromJson<EchoMessageModel>(message.message));
-        //         break;
-        //     default:
-        //         Debug.Log("Unknown type of method: " + message.source);
-        //         break;
-        // }
+        switch (message.msgType)
+        {
+            case "command":
+                Debug.Log("Apply Forces Here");
+                break;
+            case "reset":
+                SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+                break;
+            default:
+                Debug.Log("Unknown type of method: " + message.msgType);
+                break;
+        }
     }
 
     /// <summary>
@@ -99,7 +118,30 @@ public class ServerCommunication : MonoBehaviour
     /// <param name="message">Message.</param>
     public void SendRequest(string message)
     {
-        Debug.Log("Sending: " + message);
-        client.Send(message);
+        tm.source = "sim";
+        tm.msgNum = txNum++;
+        tm.msgType = "telem";
+        tm.depth = distSensorVals[4].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.alt = distSensorVals[5].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.fwdDist = distSensorVals[0].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.rightDist = distSensorVals[1].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.rearDist = distSensorVals[2].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.leftDist = distSensorVals[3].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.posX = srauv.position.x;
+        tm.posY = srauv.position.y;
+        tm.posZ = srauv.position.z;
+        if (dock)
+            tm.dockDist = Vector3.Distance(srauv.position, dock.position);
+        if (tree1)
+            tm.tree1Dist = Vector3.Distance(srauv.position, tree1.position);
+        if (tree2)
+            tm.tree2Dist = Vector3.Distance(srauv.position, tree2.position);
+        if (tree3)
+            tm.tree3Dist = Vector3.Distance(srauv.position, tree3.position);
+        
+        string msg = JsonUtility.ToJson(tm);
+
+        Debug.Log("Sending: " + msg);
+        client.Send(msg);
     }
 }
