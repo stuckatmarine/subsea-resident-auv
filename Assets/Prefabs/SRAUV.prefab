@@ -3737,9 +3737,17 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_IsSelectable: 1
-  m_SelectedFaces: 
-  m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedFaces: 04000000
+  m_SelectedEdges:
+  - a: 16
+    b: 17
+  - a: 18
+    b: 16
+  - a: 17
+    b: 19
+  - a: 19
+    b: 18
+  m_SelectedVertices: 10000000110000001200000013000000
 --- !u!64 &2133139523734933117
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5841,7 +5849,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3969754098235947163}
-  m_LocalRotation: {x: -0, y: -0.08582971, z: -0, w: 0.9963099}
+  m_LocalRotation: {x: 0, y: -0.08582548, z: 0, w: 0.99631023}
   m_LocalPosition: {x: -6.87, y: 3.56, z: -10.27}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children:
@@ -36345,6 +36353,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 83863849499693683}
     m_Modifications:
+    - target: {fileID: 50634448323797432, guid: d4dcadc635814e04d91863d3787eb848,
+        type: 3}
+      propertyPath: m_Name
+      value: FrontCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 1233915265008156821, guid: d4dcadc635814e04d91863d3787eb848,
         type: 3}
       propertyPath: m_Mesh
@@ -36618,7 +36631,7 @@ PrefabInstance:
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.5
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
@@ -36843,7 +36856,7 @@ PrefabInstance:
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.27
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
@@ -36963,7 +36976,7 @@ PrefabInstance:
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
       propertyPath: m_Intensity
-      value: 1.5
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
@@ -37588,7 +37601,7 @@ PrefabInstance:
     - target: {fileID: 453993123710675018, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}
       propertyPath: m_Intensity
-      value: 2.61
+      value: 0.99
       objectReference: {fileID: 0}
     - target: {fileID: 3459210120097555991, guid: 47ce346d0318f6444894b213de2ad297,
         type: 3}

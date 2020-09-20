@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization.Formatters.Binary;
+using System;
+using System.Text;
 
 /// <summary>
 /// Forefront class for the server communication.
@@ -22,8 +25,10 @@ public class ServerCommunication : MonoBehaviour
     [SerializeField]
     private int rxNum = 0;
 
-    public int sendIntervalMs = 1000;
+    public int txIntervalMs = 1000;
+    private int lastTxTime = 0;
     public TelemetryModel tm = new TelemetryModel();
+    public CamShotModel cm = new CamShotModel();
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
@@ -36,6 +41,8 @@ public class ServerCommunication : MonoBehaviour
         public Transform tree1;
         public Transform tree2;
         public Transform tree3;
+        public Camera frontCam;
+        private Texture2D frontCamTexture;
     // WebSocket Client
     private WsClient client;
 
@@ -49,7 +56,7 @@ public class ServerCommunication : MonoBehaviour
     {
         server = "ws://" + host + ":" + port;
         client = new WsClient(server);
-
+        frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         // Messaging
         // Lobby = new LobbyMessaging(this);
         ConnectToServer();
@@ -75,6 +82,12 @@ public class ServerCommunication : MonoBehaviour
             // Parse newly received messages
             cqueue.TryDequeue(out msg);
             HandleMessage(msg);
+        }
+
+        if (Time.time * 1000 > lastTxTime + txIntervalMs)
+        {
+            SendRequest("placeholder");
+            lastTxTime = (int)Time.time * 1000;
         }
     }
 
@@ -143,5 +156,44 @@ public class ServerCommunication : MonoBehaviour
 
         Debug.Log("Sending: " + msg);
         client.Send(msg);
+
+        // send screenshot too after every x msgs
+        if (txNum % 2 == 0)
+        {
+            cm.source = "sim";
+            cm.msgNum = txNum++;
+            cm.msgType = "cam";
+
+            frontCamTexture = getScreenshot(frontCam);
+            // frontCamTexSture = frontCam;
+            byte[] bytes;
+            bytes = frontCamTexture.EncodeToJPG();
+            cm.imgStr = Convert.ToBase64String(bytes);
+
+            msg = JsonUtility.ToJson(cm);
+            Debug.Log("Sending Img: " + msg);
+            client.Send(msg);
+        }
+    }
+
+    // Take a "screenshot" of a camera's Render Texture.
+    private Texture2D getScreenshot(Camera camera)
+    {
+        // The Render Texture in RenderTexture.active is the one
+        // that will be read by ReadPixels.
+        var currentRT = RenderTexture.active;
+        RenderTexture.active = camera.targetTexture;
+
+        // Render the camera's view.
+        camera.Render();
+
+        // Make a new texture and read the active Render Texture into it.
+        Texture2D image = new Texture2D(camera.targetTexture.width, camera.targetTexture.height);
+        image.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0);
+        image.Apply();
+
+        // Replace the original active Render Texture.
+        RenderTexture.active = currentRT;
+        return image;
     }
 }
