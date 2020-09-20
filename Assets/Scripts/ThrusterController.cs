@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 public class ThrusterController : MonoBehaviour
 {
@@ -24,8 +25,10 @@ public class ThrusterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ehcange what spacebar does
         if (Input.GetKeyDown(KeyCode.Space))
-             WS.SendRequest("test msg");
+            SceneManager.LoadScene (SceneManager.GetActiveScene ().name); // resets lvl
+            // WS.SendRequest("test msg");
 
 
         // verts
