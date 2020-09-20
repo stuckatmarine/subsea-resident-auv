@@ -31,41 +31,41 @@ public class ThrusterController : MonoBehaviour
         // verts
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            vertUp();
+            vertUp(vertSpd);
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            vertDown();
+            vertDown(vertSpd);
         }
 
         // move laterlly
         if (Input.GetKey(KeyCode.D))
         {
-            strafeRight();
+            strafeRight(latSpd);
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            strafeLeft();
+            strafeLeft(latSpd);
         }
 
         // move forward
         if (Input.GetKey(KeyCode.W))
         {
-            moveForward();
+            moveForward(latSpd);
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            moveReverse();
+            moveReverse(latSpd);
         }
 
         // turn
         if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
         {
-            turnRight();
+            turnRight(latSpd);
         }
         else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
         {
-            turnLeft();
+            turnLeft(latSpd);
         }
 
         // RL
@@ -112,8 +112,36 @@ public class ThrusterController : MonoBehaviour
     // apply force at position of thruster transform 't'
     // also draws green ray to show thrust in editor
     // TODO: apply ray to camera views and GUI
-    private void applyThrust(Transform t, float spd = 1.0f)
+    public void applyThrust(Transform t, float spd = 1.0f)
     {
+        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        if (drawLines)
+            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+    }
+
+    public void applyLatThrust(int tNum, float spd = 1.0f)
+    {
+        if (tNum >= latThrusters.Length)
+        {
+            Debug.Log("invali thruster num, lat");
+            return;
+        }
+        Transform t = latThrusters[tNum];
+        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        if (drawLines)
+            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+    }
+
+    public void applyVertThrust(int tNum, float spd = 1.0f)
+    {
+        if (tNum >= vertThrusters.Length)
+        {
+            Debug.Log("invali thruster num, vert");
+            return;
+        }
+        Transform t = vertThrusters[tNum];
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
         if (drawLines)
             ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
@@ -123,65 +151,65 @@ public class ThrusterController : MonoBehaviour
     // 4 vectored thruster move forward command
     // +/- latSpd to control output direction
     // thrusters ordered clockwise {frontRight, backRight, backLeft, fronLeft}
-    public void moveForward()
+    public void moveForward(float spd)
     {
-        applyThrust(latThrusters[0], latSpd);
-        applyThrust(latThrusters[1], latSpd);
-        applyThrust(latThrusters[2], latSpd);
-        applyThrust(latThrusters[3], latSpd);
+        applyThrust(latThrusters[0], spd);
+        applyThrust(latThrusters[1], spd);
+        applyThrust(latThrusters[2], spd);
+        applyThrust(latThrusters[3], spd);
     }
 
-    public void moveReverse()
+    public void moveReverse(float spd)
     {
-        applyThrust(latThrusters[0], -latSpd);
-        applyThrust(latThrusters[1], -latSpd);
-        applyThrust(latThrusters[2], -latSpd);
-        applyThrust(latThrusters[3], -latSpd);
+        applyThrust(latThrusters[0], -spd);
+        applyThrust(latThrusters[1], -spd);
+        applyThrust(latThrusters[2], -spd);
+        applyThrust(latThrusters[3], -spd);
     }
 
-    public void strafeRight()
+    public void strafeRight(float spd)
     {
-        applyThrust(latThrusters[0], -latSpd);
-        applyThrust(latThrusters[1], latSpd);
-        applyThrust(latThrusters[2], -latSpd);
-        applyThrust(latThrusters[3], latSpd);
+        applyThrust(latThrusters[0], -spd);
+        applyThrust(latThrusters[1], spd);
+        applyThrust(latThrusters[2], -spd);
+        applyThrust(latThrusters[3], spd);
     }
 
-    public void strafeLeft()
+    public void strafeLeft(float spd)
     {
-        applyThrust(latThrusters[0], latSpd);
-        applyThrust(latThrusters[1], -latSpd);
-        applyThrust(latThrusters[2], latSpd);
-        applyThrust(latThrusters[3], -latSpd);
+        applyThrust(latThrusters[0], spd);
+        applyThrust(latThrusters[1], -spd);
+        applyThrust(latThrusters[2], spd);
+        applyThrust(latThrusters[3], -spd);
     }
 
-    public void turnRight()
+    public void turnRight(float spd)
     {
-        applyThrust(latThrusters[0], -latSpd);
-        applyThrust(latThrusters[1], -latSpd);
-        applyThrust(latThrusters[2], latSpd);
-        applyThrust(latThrusters[3], latSpd);
+        applyThrust(latThrusters[0], -spd);
+        applyThrust(latThrusters[1], -spd);
+        applyThrust(latThrusters[2], spd);
+        applyThrust(latThrusters[3], spd);
     }
 
-    public void turnLeft()
+    public void turnLeft(float spd)
     {
-        applyThrust(latThrusters[0], latSpd);
-        applyThrust(latThrusters[1], latSpd);
-        applyThrust(latThrusters[2], -latSpd);
-        applyThrust(latThrusters[3], -latSpd);
+        applyThrust(latThrusters[0], spd);
+        applyThrust(latThrusters[1], spd);
+        applyThrust(latThrusters[2], -spd);
+        applyThrust(latThrusters[3], -spd);
     }
 
-    public void vertUp()
+    public void vertUp(float spd)
     {
         foreach(Transform t in vertThrusters){
-            applyThrust(t, vertSpd);
+            applyThrust(t, spd);
         }
     }
 
-    public void vertDown()
+    public void vertDown(float spd)
     {
         foreach(Transform t in vertThrusters){
-            applyThrust(t, -vertSpd);
+            applyThrust(t, -spd);
         }
     }
 

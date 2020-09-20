@@ -22,8 +22,12 @@ class SimpleEcho(WebSocket):
                 "msgNum" : 1,
                 "msgType" : "command",
                 "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
-                "latThrust" : [6.0,7.0,8.0,9.0],
-                "vertThrust" : [10.0, 11.0]
+                "thrustFwd" : 1.0,
+                "thrustRight" : 1.0,
+                "thrustRear" : 0.0,
+                "thrustLeft" : 0.0,
+                "vertA" : 3.0,
+                "vertB" : 3.0,
         }
 
         resp = json.dumps(obj)

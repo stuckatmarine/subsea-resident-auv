@@ -7,7 +7,7 @@ public class CommandModel
     public string source;
     public int msgNum;
     public string msgType;
-    public long timestamp;
+    public string timestamp;
     public float thrustFwd;
     public float thrustRight;
     public float thrustRear;

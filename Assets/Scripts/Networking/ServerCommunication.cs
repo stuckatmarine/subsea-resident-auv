@@ -45,6 +45,8 @@ public class ServerCommunication : MonoBehaviour
         private Texture2D frontCamTexture;
     // WebSocket Client
     private WsClient client;
+    private GameObject thrusterController;
+    private float[] forces = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 
     // Class with messages for "lobby"
     // public LobbyMessaging Lobby { private set; get; }
@@ -56,16 +58,19 @@ public class ServerCommunication : MonoBehaviour
     {
         server = "ws://" + host + ":" + port;
         client = new WsClient(server);
-        frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
-        // Messaging
+                // Messaging
         // Lobby = new LobbyMessaging(this);
         ConnectToServer();
 
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
-        srauv = GameObject.Find("Dock").GetComponent<Transform>();
+        dock = GameObject.Find("Dock").GetComponent<Transform>();
         tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
         tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
         tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
+
+        frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
+
+        // thrusterController = GameObject.Find("SRAUV").GetComponent<ThrusterController>();  
     }
 
 
@@ -89,6 +94,15 @@ public class ServerCommunication : MonoBehaviour
             SendRequest("placeholder");
             lastTxTime = (int)Time.time * 1000;
         }
+
+        // apply thruste vals
+        
+        srauv.GetComponent<ThrusterController>().applyLatThrust(0, forces[0]);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(1, forces[1]);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(2, forces[2]);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(3, forces[3]);
+        srauv.GetComponent<ThrusterController>().applyVertThrust(0, forces[4]);
+        srauv.GetComponent<ThrusterController>().applyVertThrust(1, forces[5]);
     }
 
     /// <summary>
@@ -107,6 +121,25 @@ public class ServerCommunication : MonoBehaviour
         {
             case "command":
                 Debug.Log("Apply Forces Here");
+                {
+                    // only impulses, works but slow
+                    // srauv.GetComponent<ThrusterController>().applyLatThrust(0, message.thrustFwd);
+                    // srauv.GetComponent<ThrusterController>().applyLatThrust(1, message.thrustRight);
+                    // srauv.GetComponent<ThrusterController>().applyLatThrust(2, message.thrustRear);
+                    // srauv.GetComponent<ThrusterController>().applyLatThrust(3, message.thrustLeft);
+                    // srauv.GetComponent<ThrusterController>().applyVertThrust(0, message.vertA);
+                    // srauv.GetComponent<ThrusterController>().applyVertThrust(1, message.vertB);
+
+                    // alternative example, higher level thruster control, not implement for all
+                    // srauv.GetComponent<ThrusterController>().moveForward(thrustFwd);
+
+                    forces[0] = message.thrustFwd;
+                    forces[1] = message.thrustRight;
+                    forces[2] = message.thrustRear;
+                    forces[3] = message.thrustLeft;
+                    forces[4] = message.vertA;
+                    forces[5] = message.vertB;
+                }
                 break;
             case "reset":
                 SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
