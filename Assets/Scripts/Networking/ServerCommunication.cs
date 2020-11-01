@@ -167,6 +167,8 @@ public class ServerCommunication : MonoBehaviour
         tm.source = "sim";
         tm.msgNum = txNum++;
         tm.msgType = "telem";
+        DateTime timestamp = DateTime.Now;
+        tm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
         tm.depth = distSensorVals[4].GetComponent<TMPro.TextMeshProUGUI>().text;
         tm.alt = distSensorVals[5].GetComponent<TMPro.TextMeshProUGUI>().text;
         tm.fwdDist = distSensorVals[0].GetComponent<TMPro.TextMeshProUGUI>().text;
@@ -176,14 +178,35 @@ public class ServerCommunication : MonoBehaviour
         tm.posX = srauv.position.x;
         tm.posY = srauv.position.y;
         tm.posZ = srauv.position.z;
+        tm.heading = Mathf.Atan2(srauv.forward.y, srauv.forward.x);
         if (dock)
+        {
             tm.dockDist = Vector3.Distance(srauv.position, dock.position);
+            tm.dockDistX = srauv.position.x - dock.position.x;
+            tm.dockDistY = srauv.position.y - dock.position.y;
+            tm.dockDistZ = srauv.position.z - dock.position.z;
+        }
         if (tree1)
+        {
             tm.tree1Dist = Vector3.Distance(srauv.position, tree1.position);
+            tm.tree1DistX = srauv.position.x - tree1.position.x;
+            tm.tree1DistY = srauv.position.y - tree1.position.y;
+            tm.tree1DistZ = srauv.position.z - tree1.position.z;
+        }
         if (tree2)
+        {
             tm.tree2Dist = Vector3.Distance(srauv.position, tree2.position);
+            tm.tree2DistX = srauv.position.x - tree2.position.x;
+            tm.tree2DistY = srauv.position.y - tree2.position.y;
+            tm.tree2DistZ = srauv.position.z - tree2.position.z;
+        }
         if (tree3)
+        {
             tm.tree3Dist = Vector3.Distance(srauv.position, tree3.position);
+            tm.tree3DistX = srauv.position.x - tree3.position.x;
+            tm.tree3DistY = srauv.position.y - tree3.position.y;
+            tm.tree3DistZ = srauv.position.z - tree3.position.z;
+        }
         
         string msg = JsonUtility.ToJson(tm);
 
