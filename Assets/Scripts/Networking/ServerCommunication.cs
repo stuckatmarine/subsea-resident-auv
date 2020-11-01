@@ -179,6 +179,8 @@ public class ServerCommunication : MonoBehaviour
         tm.posY = srauv.position.y;
         tm.posZ = srauv.position.z;
         tm.heading = srauv.rotation.y * 360.0f;
+        tm.roll = srauv.rotation.x * 360.0f;
+        tm.pitch = srauv.rotation.z * 360.0f;
         if (dock)
         {
             tm.dockDist = Vector3.Distance(srauv.position, dock.position);

@@ -16,6 +16,8 @@ public class TelemetryModel
     public float posY;
     public float posZ;
     public float heading;
+    public float roll;
+    public float pitch;
     public float dockDist;
     public float dockDistX;
     public float dockDistY;
