@@ -178,7 +178,7 @@ public class ServerCommunication : MonoBehaviour
         tm.posX = srauv.position.x;
         tm.posY = srauv.position.y;
         tm.posZ = srauv.position.z;
-        tm.heading = Mathf.Atan2(srauv.forward.y, srauv.forward.x);
+        tm.heading = srauv.rotation.y * 360.0f;
         if (dock)
         {
             tm.dockDist = Vector3.Distance(srauv.position, dock.position);
@@ -219,6 +219,7 @@ public class ServerCommunication : MonoBehaviour
             cm.source = "sim";
             cm.msgNum = txNum++;
             cm.msgType = "cam";
+            cm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
 
             frontCamTexture = getScreenshot(frontCam);
             // frontCamTexSture = frontCam;
