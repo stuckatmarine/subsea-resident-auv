@@ -13,26 +13,43 @@ class SimpleEcho(WebSocket):
     def handleMessage(self):
         # echo message back to client
         # self.sendMessage(self.data)
-        recvMsg = self.data
-        print(f"< {recvMsg}")
+        recvMsg = json.loads(self.data)
 
-        #  test response object
-        obj = {
-                "source" : "server",
-                "msgNum" : 1,
-                "msgType" : "command",
-                "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
-                "thrustFwd" : 1.0,
-                "thrustRight" : 1.0,
-                "thrustRear" : 0.0,
-                "thrustLeft" : 0.0,
-                "vertA" : 3.0,
-                "vertB" : 3.0,
-        }
+        if recvMsg["source"] == "sim":
 
-        resp = json.dumps(obj)
-        self.sendMessage(resp)
-        print(f"> {resp}")
+            imgStr = ""
+
+            # remove imgStr from printing
+            if recvMsg["imgStr"]:
+                recvMsg["imgStr"] = "replaced str"
+                # imgStr = recvMsg["imgStr"]
+
+            print(f"< {recvMsg}")
+
+            if false: # server respond with placeholder msg
+                #  test response object
+                obj = {
+                        "source" : "server",
+                        "msgNum" : 1,
+                        "msgType" : "command",
+                        "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
+                        "thrustFwd" : 0.0,
+                        "thrustRight" : 0.0,
+                        "thrustRear" : 0.0,
+                        "thrustLeft" : 0.0,
+                        "vertA" : 0.0,
+                        "vertB" : 0.0,
+                }
+
+                resp = json.dumps(obj)
+                self.sendMessage(resp)
+                print(f"> {resp}")
+
+        elif recvMsg["source"] == "gamepad":
+            # forward gamepad input to sim
+            self.sendMessage(self.data)
+            print(f"> {self.data}")
+
 
     def handleConnected(self):
         print(self.address, 'connected')
