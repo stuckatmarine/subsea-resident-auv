@@ -4,11 +4,15 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using System.Text;
 
+
+
 /// <summary>
 /// Forefront class for the server communication.
 /// </summary>
 public class ServerCommunication : MonoBehaviour
 {
+    public bool enableLogging = true;
+
     // Server IP address
     [SerializeField]
     private string hostIP;
@@ -35,14 +39,33 @@ public class ServerCommunication : MonoBehaviour
     // Final server address
     private string server;
     
-        public Transform[] distSensorVals;
-        public Transform srauv;
-        public Transform dock;
-        public Transform tree1;
-        public Transform tree2;
-        public Transform tree3;
-        public Camera frontCam;
-        private Texture2D frontCamTexture;
+    // public Transform[] distSensorVals;
+    public float[] distancesFloat;
+    public Transform srauv;
+    public Transform dock;
+    public Transform tree1;
+    public Transform tree2;
+    public Transform tree3;
+    public Camera frontCam;
+    private Texture2D frontCamTexture;
+
+    //  UI
+    public Transform simHeading;
+    public Transform simX;
+    public Transform simY;
+    public Transform simZ;
+
+    public Transform telHeading;
+    public Transform telX;
+    public Transform telY;
+    public Transform telZ;
+    public Transform telLatFwd;
+    public Transform telLatRight;
+    public Transform telLatRear;
+    public Transform telLatLeft;
+    public Transform telDepth;
+    public Transform telAlt;
+
     // WebSocket Client
     private WsClient client;
     private GameObject thrusterController;
@@ -69,6 +92,7 @@ public class ServerCommunication : MonoBehaviour
         tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
+        distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
 
         // thrusterController = GameObject.Find("SRAUV").GetComponent<ThrusterController>();  
     }
@@ -141,6 +165,24 @@ public class ServerCommunication : MonoBehaviour
                     forces[5] = message.vertB;
                 }
                 break;
+            case "telemetry":
+                Debug.Log("Updating UI with telemetry from server");
+                {
+                    //  Update UI
+                    var tel = JsonUtility.FromJson<TelemetryModel>(msg);
+
+                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
+                    telLatFwd.GetComponent<TMPro.TextMeshProUGUI>().text = tel.fwdDist.ToString("#.00");
+                    telLatRight.GetComponent<TMPro.TextMeshProUGUI>().text = tel.rightDist.ToString("#.00");
+                    telLatRear.GetComponent<TMPro.TextMeshProUGUI>().text = tel.rearDist.ToString("#.00");
+                    telLatLeft.GetComponent<TMPro.TextMeshProUGUI>().text = tel.leftDist.ToString("#.00");
+                    telDepth.GetComponent<TMPro.TextMeshProUGUI>().text = tel.depth.ToString("#.00");
+                    telAlt.GetComponent<TMPro.TextMeshProUGUI>().text = tel.alt.ToString("#.00");
+                    telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posX.ToString("#.00");
+                    telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posY.ToString("#.00");
+                    telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posZ.ToString("#.00");
+                }
+                break;
             case "reset":
                 SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
                 break;
@@ -169,12 +211,12 @@ public class ServerCommunication : MonoBehaviour
         tm.msgType = "telem";
         DateTime timestamp = DateTime.Now;
         tm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
-        tm.depth = distSensorVals[4].GetComponent<TMPro.TextMeshProUGUI>().text;
-        tm.alt = distSensorVals[5].GetComponent<TMPro.TextMeshProUGUI>().text;
-        tm.fwdDist = distSensorVals[0].GetComponent<TMPro.TextMeshProUGUI>().text;
-        tm.rightDist = distSensorVals[1].GetComponent<TMPro.TextMeshProUGUI>().text;
-        tm.rearDist = distSensorVals[2].GetComponent<TMPro.TextMeshProUGUI>().text;
-        tm.leftDist = distSensorVals[3].GetComponent<TMPro.TextMeshProUGUI>().text;
+        tm.fwdDist = distancesFloat[0];
+        tm.rightDist = distancesFloat[1];
+        tm.rearDist = distancesFloat[2];
+        tm.leftDist = distancesFloat[3];
+        tm.depth = distancesFloat[4];
+        tm.alt = distancesFloat[5];
         tm.posX = srauv.position.x;
         tm.posY = srauv.position.y;
         tm.posZ = srauv.position.z;
@@ -212,8 +254,16 @@ public class ServerCommunication : MonoBehaviour
         
         string msg = JsonUtility.ToJson(tm);
 
-        Debug.Log("Sending: " + msg);
+        if (enableLogging)
+            Debug.Log("Sending: " + msg);
+
         client.Send(msg);
+
+        //  Update UI
+        simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tm.heading.ToString("#.0");
+        simX.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posX.ToString("#.00");
+        simY.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posY.ToString("#.00");
+        simZ.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posZ.ToString("#.00");
 
         // send screenshot too after every x msgs
         if (txNum % 2 == 0)
@@ -230,7 +280,9 @@ public class ServerCommunication : MonoBehaviour
             cm.imgStr = Convert.ToBase64String(bytes);
 
             msg = JsonUtility.ToJson(cm);
-            Debug.Log("Sending Img: " + msg);
+            if (enableLogging)
+                Debug.Log("Sending Img: " + msg);
+
             client.Send(msg);
         }
     }

@@ -8,6 +8,8 @@ public class ThrusterController : MonoBehaviour
 {
     public Transform[] vertThrusters; // front, rear
     public Transform[] latThrusters; // clockwise from 0deg heading
+    public Transform[] UiVertThrusters;
+    public Transform[] UiLatThrusters;
     public Rigidbody rb;
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
@@ -26,8 +28,8 @@ public class ThrusterController : MonoBehaviour
     void Update()
     {
         // ehcange what spacebar does
-        if (Input.GetKeyDown(KeyCode.Space))
-            SceneManager.LoadScene (SceneManager.GetActiveScene ().name); // resets lvl
+        if (Input.GetKeyDown(KeyCode.Escape))
+            resetScene();
             // WS.SendRequest("test msg");
 
 
@@ -132,8 +134,14 @@ public class ThrusterController : MonoBehaviour
         }
         Transform t = latThrusters[tNum];
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-        if (drawLines)
-            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+
+        // UI thrust
+        Transform uiT = UiLatThrusters[tNum];
+        uiT.GetChild(0).gameObject.SetActive(spd < 0);
+        uiT.GetChild(1).gameObject.SetActive(spd > 0);
+    
+        // if (drawLines)
+        //     ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
@@ -146,9 +154,15 @@ public class ThrusterController : MonoBehaviour
         }
         Transform t = vertThrusters[tNum];
         rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-        if (drawLines)
-            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
-        // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
+
+        // UI thrust
+        Transform uiT = UiVertThrusters[tNum];
+        uiT.GetChild(0).gameObject.SetActive(spd < 0);
+        uiT.GetChild(1).gameObject.SetActive(spd > 0);
+
+        // if (drawLines)
+        //     ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        // // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
     // 4 vectored thruster move forward command
@@ -216,5 +230,8 @@ public class ThrusterController : MonoBehaviour
         }
     }
 
-    
+    public void resetScene()
+    {
+        SceneManager.LoadScene (SceneManager.GetActiveScene ().name); // resets lvl
+    }
 }

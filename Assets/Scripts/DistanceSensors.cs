@@ -7,6 +7,7 @@ public class DistanceSensors : MonoBehaviour
 {
     public Transform[] sensorArr;
     public Transform[] sensorValueArr;
+    public float[] distancesFloat;
     public float latMax;
     public float latMin;
     public float vertMax;
@@ -15,15 +16,7 @@ public class DistanceSensors : MonoBehaviour
     public Color colorHigh;
     public Color colorLow;
 
-    public Material lineMaterial;
     public bool drawLines = true;
-    private LineDrawer ld;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        ld = new LineDrawer(lineMaterial);
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -44,9 +37,11 @@ public class DistanceSensors : MonoBehaviour
         RaycastHit hit;
 
         if (drawLines)
-            ld.DrawLine(t.transform.position, t.transform.position + ((max * 0.5f) * t.transform.forward), Color.red);
+            ;
 
         Physics.Raycast(t.transform.position, t.transform.position + (max * t.transform.forward), out hit);
+
+        distancesFloat[i] = hit.distance;
 
         if (hit.distance < max)
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = hit.distance.ToString("#.00");

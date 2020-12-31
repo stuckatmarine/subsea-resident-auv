@@ -8,10 +8,10 @@ public class TelemetryModel
     public int msgNum;
     public string msgType;
     public string timestamp;
-    public string depth;
-    public string alt;
+    public float depth;
+    public float alt;
     // Keeping to primitives for ease of json parsing troubleshooting
-    public string fwdDist, rightDist, rearDist, leftDist;
+    public float fwdDist, rightDist, rearDist, leftDist;
     public float posX;
     public float posY;
     public float posZ;
