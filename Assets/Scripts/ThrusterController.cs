@@ -13,6 +13,9 @@ public class ThrusterController : MonoBehaviour
     public Rigidbody rb;
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
+    
+    public bool enableManualCmds = false;
+    public bool enableAbsoluteCmds = false;
 
     public ServerCommunication WS;
     public Material lineMaterial;
@@ -30,37 +33,67 @@ public class ThrusterController : MonoBehaviour
         // ehcange what spacebar does
         if (Input.GetKeyDown(KeyCode.Escape))
             resetScene();
-            // WS.SendRequest("test msg");
-
 
         // verts
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            vertUp(vertSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x,
+                                                 transform.position.y + 0.1f,
+                                                 transform.position.z);
+            else
+                vertUp(vertSpd);
+
+            // transform.position = transform.position + new Vector3(horizontalInput * movementSpeed * Time.deltaTime, verticalInput * movementSpeed * Time.deltaTime, 0);
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            vertDown(vertSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x,
+                                                 transform.position.y - 0.1f,
+                                                 transform.position.z);
+            else
+                vertDown(vertSpd);
         }
 
         // move laterlly
         if (Input.GetKey(KeyCode.D))
         {
-            strafeRight(latSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x,
+                                                 transform.position.y,
+                                                 transform.position.z + 0.1f);
+            else
+                strafeRight(latSpd);
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            strafeLeft(latSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x,
+                                                 transform.position.y,
+                                                 transform.position.z - 0.1f);
+            else
+                strafeLeft(latSpd);
         }
 
         // move forward
         if (Input.GetKey(KeyCode.W))
         {
-            moveForward(latSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x - 0.1f,
+                                                 transform.position.y,
+                                                 transform.position.z);
+            else
+                moveForward(latSpd);
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            moveReverse(latSpd);
+            if (enableAbsoluteCmds)
+                transform.position = new Vector3(transform.position.x + 0.1f,
+                                                 transform.position.y,
+                                                 transform.position.z);
+            else
+                moveReverse(latSpd);
         }
 
         // turn
@@ -72,6 +105,13 @@ public class ThrusterController : MonoBehaviour
         {
             turnLeft(latSpd);
         }
+
+        //////    Individual thrusters     //////
+        // 
+        //   fwd
+        //  Y    U
+        //  
+        //  T    I
 
         // RL
         if (Input.GetKey(KeyCode.T))
@@ -119,7 +159,9 @@ public class ThrusterController : MonoBehaviour
     // TODO: apply ray to camera views and GUI
     public void applyThrust(Transform t, float spd = 1.0f)
     {
-        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        if (enableManualCmds)
+            rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+
         if (drawLines)
             ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
@@ -233,5 +275,19 @@ public class ThrusterController : MonoBehaviour
     public void resetScene()
     {
         SceneManager.LoadScene (SceneManager.GetActiveScene ().name); // resets lvl
+    }
+
+    public void enableManual()
+    {
+        enableManualCmds = true;
+        enableAbsoluteCmds = false;
+        rb.isKinematic = false;
+    }
+
+    public void enableAbsolute()
+    {
+        enableAbsoluteCmds = true;
+        enableManualCmds = false;
+        rb.isKinematic = true;
     }
 }

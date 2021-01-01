@@ -12,25 +12,19 @@ class SimpleEcho(WebSocket):
 
     def handleMessage(self):
         # echo message back to client
-        # self.sendMessage(self.data)
         recvMsg = json.loads(self.data)
 
         if recvMsg["source"] == "sim":
 
             imgStr = ""
 
-            # remove imgStr from printing
-            # try:
+            # remove imgStr from printing, saving resources
             if 'imgStr' in recvMsg.keys():
                 recvMsg["imgStr"] = "replaced str"
-                # imgStr = recvMsg["imgStr"]
-            # except:
-            #     print(f" no img str")
 
             print(f"< {recvMsg}")
 
-            # if true: # server respond with placeholder msg
-            #  test response object
+            # server respond with placeholder msg
             cmd = {
                     "source" : "server",
                     "msgNum" : 1,

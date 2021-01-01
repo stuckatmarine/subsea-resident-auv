@@ -12,6 +12,7 @@ using System.Text;
 public class ServerCommunication : MonoBehaviour
 {
     public bool enableLogging = false;
+    public bool enableVehicleCmds = false;
 
     // Server IP address
     [SerializeField]
@@ -144,8 +145,21 @@ public class ServerCommunication : MonoBehaviour
         switch (message.msgType)
         {
             case "command":
-                Debug.Log("Apply Forces Here");
                 {
+                    if (!enableVehicleCmds)
+                    {
+                        Debug.Log("vehicle cmds not eabled");
+                        break;
+                    }
+                    
+                    Debug.Log("Apply Forces Here");
+                    forces[0] = message.thrustFwd;
+                    forces[1] = message.thrustRight;
+                    forces[2] = message.thrustRear;
+                    forces[3] = message.thrustLeft;
+                    forces[4] = message.vertA;
+                    forces[5] = message.vertB;
+
                     // only impulses, works but slow
                     // srauv.GetComponent<ThrusterController>().applyLatThrust(0, message.thrustFwd);
                     // srauv.GetComponent<ThrusterController>().applyLatThrust(1, message.thrustRight);
@@ -156,13 +170,6 @@ public class ServerCommunication : MonoBehaviour
 
                     // alternative example, higher level thruster control, not implement for all
                     // srauv.GetComponent<ThrusterController>().moveForward(thrustFwd);
-
-                    forces[0] = message.thrustFwd;
-                    forces[1] = message.thrustRight;
-                    forces[2] = message.thrustRear;
-                    forces[3] = message.thrustLeft;
-                    forces[4] = message.vertA;
-                    forces[5] = message.vertB;
                 }
                 break;
             case "telemetry":
@@ -306,5 +313,11 @@ public class ServerCommunication : MonoBehaviour
         // Replace the original active Render Texture.
         RenderTexture.active = currentRT;
         return image;
+    }
+
+    public void enableVehicle()
+    {
+        enableVehicleCmds = true;
+        srauv.GetComponent<Rigidbody>().isKinematic = false;
     }
 }
