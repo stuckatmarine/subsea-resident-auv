@@ -11,7 +11,7 @@ using System.Text;
 /// </summary>
 public class ServerCommunication : MonoBehaviour
 {
-    public bool enableLogging = true;
+    public bool enableLogging = false;
 
     // Server IP address
     [SerializeField]
@@ -180,7 +180,7 @@ public class ServerCommunication : MonoBehaviour
                     telAlt.GetComponent<TMPro.TextMeshProUGUI>().text = tel.alt.ToString("#.00");
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posX.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posY.ToString("#.00");
-                    telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posZ.ToString("#.00");
+                    telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posZ.ToString("#.00");
                 }
                 break;
             case "reset":

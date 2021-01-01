@@ -21,9 +21,9 @@ class SimpleEcho(WebSocket):
 
             # remove imgStr from printing
             # try:
-            #     if recvMsg["imgStr"]:
-            #         recvMsg["imgStr"] = "replaced str"
-            #         # imgStr = recvMsg["imgStr"]
+            if 'imgStr' in recvMsg.keys():
+                recvMsg["imgStr"] = "replaced str"
+                # imgStr = recvMsg["imgStr"]
             # except:
             #     print(f" no img str")
 
@@ -59,12 +59,18 @@ class SimpleEcho(WebSocket):
                     "leftDist" : 0.2,
                     "depth" : 10.0,
                     "alt" : 11.0,
+                    "posX" : 11.0,
+                    "posY" : 12.0,
+                    "posZ" : 11.11,
+                    "heading" : 315.2,
                     "assetDistances" : 
                     {
                         "cage" : 12.0,
                         "tree1" : 13.0,
                         "tree2" : 14.0
                     }
+
+
             }
 
             resp = json.dumps(tel)
