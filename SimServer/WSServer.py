@@ -63,8 +63,6 @@ class SimpleEcho(WebSocket):
                         "tree1" : 13.0,
                         "tree2" : 14.0
                     }
-
-
             }
 
             resp = json.dumps(tel)
@@ -76,6 +74,10 @@ class SimpleEcho(WebSocket):
             self.sendMessage(self.data)
             print(f"> {self.data}")
 
+        elif recvMsg["source"] == "vehicle":
+            # forward vehicle input to sim
+            self.sendMessage(self.data)
+            print(f"> {self.data}")
 
     def handleConnected(self):
         print(self.address, 'connected')

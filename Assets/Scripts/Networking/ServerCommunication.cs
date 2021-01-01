@@ -160,7 +160,7 @@ public class ServerCommunication : MonoBehaviour
                     forces[4] = message.vertA;
                     forces[5] = message.vertB;
 
-                    // only impulses, works but slow
+                    // only impulses
                     // srauv.GetComponent<ThrusterController>().applyLatThrust(0, message.thrustFwd);
                     // srauv.GetComponent<ThrusterController>().applyLatThrust(1, message.thrustRight);
                     // srauv.GetComponent<ThrusterController>().applyLatThrust(2, message.thrustRear);
