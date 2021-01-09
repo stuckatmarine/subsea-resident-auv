@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using System.Text;
-
-
+using UnityEngine.UI;
 
 /// <summary>
 /// Forefront class for the server communication.
@@ -60,12 +59,12 @@ public class ServerCommunication : MonoBehaviour
     public Transform telX;
     public Transform telY;
     public Transform telZ;
-    public Transform telLatFwd;
-    public Transform telLatRight;
-    public Transform telLatRear;
-    public Transform telLatLeft;
-    public Transform telDepth;
-    public Transform telAlt;
+    public float latMax;
+    public float latMin;
+    public float vertMax;
+    public float vertMin;
+    public float[] telDistanceFloats;
+    public Transform[] telDistanceTransforms;
 
     // WebSocket Client
     private WsClient client;
@@ -178,16 +177,26 @@ public class ServerCommunication : MonoBehaviour
                     //  Update UI
                     var tel = JsonUtility.FromJson<TelemetryModel>(msg);
 
-                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
-                    telLatFwd.GetComponent<TMPro.TextMeshProUGUI>().text = tel.fwdDist.ToString("#.00");
-                    telLatRight.GetComponent<TMPro.TextMeshProUGUI>().text = tel.rightDist.ToString("#.00");
-                    telLatRear.GetComponent<TMPro.TextMeshProUGUI>().text = tel.rearDist.ToString("#.00");
-                    telLatLeft.GetComponent<TMPro.TextMeshProUGUI>().text = tel.leftDist.ToString("#.00");
-                    telDepth.GetComponent<TMPro.TextMeshProUGUI>().text = tel.depth.ToString("#.00");
-                    telAlt.GetComponent<TMPro.TextMeshProUGUI>().text = tel.alt.ToString("#.00");
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posX.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posY.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posZ.ToString("#.00");
+                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
+                    telDistanceFloats[0] = tel.fwdDist;
+                    telDistanceFloats[1] = tel.rightDist;
+                    telDistanceFloats[2] = tel.rearDist;
+                    telDistanceFloats[3] = tel.leftDist;
+                    telDistanceFloats[4] = tel.depth;
+                    telDistanceFloats[5] = tel.alt;
+                    
+                    // colorize/"max" limits
+                    for (int i = 0; i < 4; i++)
+                    {
+                        updateValues(i, latMin, latMax);
+                    }
+                    for (int i = 4; i < 6; i++)
+                    {
+                        updateValues(i, vertMin, vertMax);
+                    }
                 }
                 break;
             case "reset":
@@ -215,7 +224,7 @@ public class ServerCommunication : MonoBehaviour
     {
         tm.source = "sim";
         tm.msgNum = txNum++;
-        tm.msgType = "telem";
+        tm.msgType = "telemetry";
         DateTime timestamp = DateTime.Now;
         tm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
         tm.fwdDist = distancesFloat[0];
@@ -319,5 +328,21 @@ public class ServerCommunication : MonoBehaviour
     {
         enableVehicleCmds = true;
         srauv.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    private void updateValues(int i, float min, float max)
+    {
+        if (telDistanceFloats[i] < max)
+            telDistanceTransforms[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = telDistanceFloats[i].ToString("#.00");
+        else
+            telDistanceTransforms[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "MAX";
+
+        // min distance for close proximity checks
+        if (telDistanceFloats[i] < min)
+        {
+            telDistanceTransforms[i].GetComponent<Image>().color = Color.red;
+        }
+        else
+            telDistanceTransforms[i].GetComponent<Image>().color = Color.grey;
     }
 }

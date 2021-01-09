@@ -19,7 +19,8 @@ public class ThrusterController : MonoBehaviour
 
     public ServerCommunication WS;
     public Material lineMaterial;
-    public bool drawLines = true;
+    public bool drawLinesCmd = false;
+    public bool drawLinesManual = true;
     private LineDrawer ld;
 
     void Start()
@@ -99,7 +100,13 @@ public class ThrusterController : MonoBehaviour
         // turn
         if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
         {
-            turnRight(latSpd);
+            if (enableAbsoluteCmds)
+            {
+                Quaternion target = Quaternion.Euler(transform.rotation.x + 1.0f, transform.rotation.y, transform.rotation.z);
+                transform.rotation = target;
+            }
+            else
+                turnRight(latSpd);
         }
         else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
         {
@@ -162,7 +169,7 @@ public class ThrusterController : MonoBehaviour
         if (enableManualCmds)
             rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
 
-        if (drawLines)
+        if (drawLinesManual)
             ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
@@ -182,8 +189,8 @@ public class ThrusterController : MonoBehaviour
         uiT.GetChild(0).gameObject.SetActive(spd < 0);
         uiT.GetChild(1).gameObject.SetActive(spd > 0);
     
-        // if (drawLines)
-        //     ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        if (drawLinesCmd)
+            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
@@ -202,8 +209,8 @@ public class ThrusterController : MonoBehaviour
         uiT.GetChild(0).gameObject.SetActive(spd < 0);
         uiT.GetChild(1).gameObject.SetActive(spd > 0);
 
-        // if (drawLines)
-        //     ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        if (drawLinesCmd)
+            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
