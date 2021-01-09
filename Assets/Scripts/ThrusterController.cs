@@ -101,16 +101,16 @@ public class ThrusterController : MonoBehaviour
         if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
         {
             if (enableAbsoluteCmds)
-            {
-                Quaternion target = Quaternion.Euler(transform.rotation.x + 1.0f, transform.rotation.y, transform.rotation.z);
-                transform.rotation = target;
-            }
+                transform.Rotate(transform.rotation.x, transform.rotation.y + 1.0f, transform.rotation.z, Space.Self);
             else
                 turnRight(latSpd);
         }
         else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
         {
-            turnLeft(latSpd);
+            if (enableAbsoluteCmds)
+                transform.Rotate(transform.rotation.x, transform.rotation.y - 1.0f, transform.rotation.z, Space.Self);
+            else
+                turnLeft(latSpd);
         }
 
         //////    Individual thrusters     //////
