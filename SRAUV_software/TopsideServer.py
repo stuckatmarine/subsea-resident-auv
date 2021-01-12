@@ -1,42 +1,25 @@
 #!/usr/bin/env python
-# SRAUV
+# Topside Server
 
-import socket
 import sys
-sys.path.append('../Modules')
+import json
+import time
+from datetime import datetime
+from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 from SRAUV_settings import SETTINGS
 import Timestamp
 import CommandMsg
 import TelemetryMsg
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-# Bind the socket to the port
-server_address = ('localhost', 8001)
-print(f"{sys.stderr}, 'starting up on %s port %s' - {server_address}")
-sock.bind(server_address)
-
-while True:
-    print(f"{sys.stderr}, '\nwaiting to receive message' - {server_address}")
-    data, address = sock.recvfrom(4096)
-    
-    print(f"{sys.stderr}, 'received %s bytes from %s' - {server_address}")
-    print(f"{sys.stderr}, 'datas' - {data}")
-    
-    if data:
-        sent = sock.sendto(data, address)
-        print(f"{sys.stderr}, 'sent %s bytes back to %s' - {server_address}")
-
-
 def main():
-    # try:
-    uri = "ws://" + SETTINGS["ip_server"] + ":" + str(SETTINGS["port_server"])
-    ws = websocket.create_connection(uri)
-    # except ws.error:
-    #     print("Failed To Create Socket")
-    #     sys.exit()
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Bind the socket to the port
+    server_address = ('localhost', 8001)
+    print(f"{sys.stderr}, 'starting up on %s port %s' - {server_address}")
+    sock.bind(server_address)
 
     update_interval_ms = SETTINGS["tel_tx_interval_ms"] # update loop timer
     last_update_ms = 0
@@ -50,6 +33,16 @@ def main():
     tel = TelemetryMsg.make(source, "sim")
 
     print(f'SRAUV up, timestamp:{Timestamp.make()} state:{tel["state"]}')
+
+    print(f"{sys.stderr}, '\nwaiting to receive message' - {server_address}")
+    data, address = sock.recvfrom(4096)
+    
+    print(f"{sys.stderr}, 'received %s bytes from %s' - {server_address}")
+    print(f"{sys.stderr}, 'datas' - {data}")
+    
+    if data:
+        sent = sock.sendto(data, address)
+        print(f"{sys.stderr}, 'sent %s bytes back to %s' - {server_address}")
 
     while 1:
         # use update interval

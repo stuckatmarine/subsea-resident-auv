@@ -4,7 +4,7 @@ def make(source, dest = ''):
     tel = {
         "source" : source,
         "dest" : dest,
-        "msgNum" : 1,
+        "msgNum" : 0,
         "state" : "none",
         "msgType" : "telemetry",
         "timestamp" : Timestamp.make(),

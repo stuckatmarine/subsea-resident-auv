@@ -1,11 +1,11 @@
 {
-    "ip_server": "localhost",
-    "port_server": 8001,
-    "ip_cameras": "192.168.90.1",
-    "portSend": 9001,
-    "update_interval_ms": 100,
+    "topside_ip": "localhost",
+    "topside_port": 7001,
+    "srauv_ip": "localhost",
+    "srauv_port": 8001,
+    "camera_port": 9001,
+    "update_interval_ms": 200,
     "tel_tx_interval_ms": 500,
     "cmd_tx_interval_ms": 500,
-    "server_connect_retry_ms": 5000,
-    "require_server_socket": false
+    "default_comms_response_str": "no comms update"
 }
