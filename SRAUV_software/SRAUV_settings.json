@@ -1,0 +1,11 @@
+{
+    "ip_server": "localhost",
+    "port_server": 8001,
+    "ip_cameras": "192.168.90.1",
+    "portSend": 9001,
+    "update_interval_ms": 100,
+    "tel_tx_interval_ms": 500,
+    "cmd_tx_interval_ms": 500,
+    "server_connect_retry_ms": 5000,
+    "require_server_socket": false
+}

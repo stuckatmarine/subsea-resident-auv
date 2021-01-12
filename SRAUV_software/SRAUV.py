@@ -4,61 +4,42 @@
 from inputs import get_gamepad
 import asyncio
 import json
+import sys
 import websocket
 import time
+from datetime import datetime
+
+from SRAUV_settings import SETTINGS
+import Timestamp
+import CommandMsg
+import TelemetryMsg
 
 def main():
-    uri = "ws://localhost:8000"
+    # try:
+    uri = "ws://" + SETTINGS["ip_server"] + ":" + str(SETTINGS["port_server"])
     ws = websocket.create_connection(uri)
+    # except ws.error:
+    #     print("Failed To Create Socket")
+    #     sys.exit()
 
-    interval_ms = 100 # update loop timer
+    update_interval_ms = SETTINGS["tel_tx_interval_ms"] # update loop timer
     last_update_ms = 0
+    source = "vehicle"
     state = "idle"
     txCmds = True
-
     tx_num = 0
     hasCmd = False
-    cmd = {
-        "source" : "vehicle",
-        "msgNum" : tx_num,
-        "msgType" : "command",
-        "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
-        "thrustFwd" : 0.0,
-        "thrustRight" : 0.0,
-        "thrustRear" : 0.0,
-        "thrustLeft" : 0.0,
-        "vertA" : 0.0,
-        "vertB" : 0.0
-    }
 
-    tel = {
-        "source" : "vehicle",
-        "msgNum" : 1,
-        "state" : "none",
-        "msgType" : "telemetry",
-        "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
-        "fwdDist" : 6.1, 
-        "rightDist" : 7.1,
-        "rearDist" : 8.1,
-        "leftDist" : 0.1,
-        "depth" : 10.1,
-        "alt" : 11.1,
-        "posX" : 11.1,
-        "posY" : 12.1,
-        "posZ" : 11.1,
-        "heading" : 315.1,
-        "assetDistances" : 
-        {
-            "cage" : 12.1,
-            "tree1" : 13.1,
-            "tree2" : 14.1
-        }
-    }
+    cmd = CommandMsg.make(source, "sim")
+    tel = TelemetryMsg.make(source, "sim")
+
+    print(f'SRAUV up, timestamp:{Timestamp.make()} state:{tel["state"]}')
 
     while 1:
         # use update interval
         time_now = int(round(time.time() * 1000))
-        if time_now - last_update_ms >= interval_ms:
+        if time_now - last_update_ms >= update_interval_ms:
+            delta_us_start = datetime.utcnow().microsecond
 
             if state == "idle":
                 state = "running"
@@ -81,6 +62,13 @@ def main():
             ws.send(json.dumps(tel))
             last_update_ms = int(round(time.time() * 1000))
             tx_num += 1
+
+            delta_us = datetime.utcnow().microsecond - delta_us_start
+            if delta_us < 0:
+                delta_us += 1000000
+            print(f'timestamp:{Timestamp.make()} state:{tel["state"]}, delta_us:{delta_us}')
+        # else:
+        #     time.sleep(.001) # 1 ms, accurate on pc without this, might be needed on PI
 
     ws.close()
 
