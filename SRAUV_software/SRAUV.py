@@ -21,7 +21,8 @@ import CommandMsg
 import TelemetryMsg
 
 ###################  Globals Variables  ###################
-UPDATE_INTERVAL_MS = SETTINGS["update_interval_ms"] # update loop timer
+UPDATE_INTERVAL_MS = SETTINGS["update_interval_ms"]
+TEL_TX_INTERVAL_MS = SETTINGS["tel_tx_interval_ms"]
 srauv_address = (SETTINGS["srauv_ip"], SETTINGS["srauv_port"])
 source = "vehicle"
 state = "idle"
@@ -35,7 +36,7 @@ dist_sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 cmd = CommandMsg.make(source, "sim")
 tel = TelemetryMsg.make(source, "sim")
 
-log_filename = str(f"Logs/{str(time.time())}.log")
+log_filename = str(f'Logs/{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.log')
 logging.basicConfig(filename=log_filename, filemode='w', format='%(asctime)s - %(message)s',level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
@@ -48,15 +49,7 @@ except socket.error:
     sys.exit()
 
 ###################  Update Loop  ###################
-def send_telemetry():
-    sock.sendto(str.encode(json.dumps(tel)), srauv_address)
-    tel["msgNum"] += 1
 
-    data, server = sock.recvfrom(4096)
-    data = data.decode("utf-8")
-
-    if data != '':
-        print(f"recv {data} from {server}")
 
 # def update_loop(tel):
 #     delta_us_start = datetime.utcnow().microsecond
@@ -131,6 +124,24 @@ def send_telemetry():
 #         if recvMsg["dest"] == "sim":
 #             sim_forward(recvMsg)
 
+def update_telemetry():
+    tel["fwdDist"] = dist_sensor_data[0]
+    tel["rightDist"] = dist_sensor_data[0]
+    tel["rearDist"] = dist_sensor_data[0]
+    tel["leftDist"] = dist_sensor_data[0]
+    tel["depth"] = dist_sensor_data[0]
+    tel["alt"] = dist_sensor_data[0]
+
+def send_telemetry():
+    sock.sendto(str.encode(json.dumps(tel)), srauv_address)
+    tel["msgNum"] += 1
+
+    data, server = sock.recvfrom(4096)
+    data = data.decode("utf-8")
+
+    if data != '':
+        print(f"recv {data} from {server}")
+
 def setup_distance_module(ds_config, data_arr):
     for id in range(ds_config["num_sensors"]):
         data_arr[id] = float(id)
@@ -149,20 +160,15 @@ def stop_threads():
     while has_live_threads(threads):
         try:
             for t in threads:
-                t.kill_received = True
-                
-            # synchronization timeout of threads kill
-            [t.join(1) for t in threads
-             if t is not None and t.is_alive()()]
-
-            
-        except:
-            logging.error("Thread stopping err")
+                t.kill_received = True  
+        except Exception as e:
+            logging.error(f"Thread stopping err:{e}")
             
     logging.info("Stopped threads")
 
 def main():
     last_update_ms = 0
+    last_tel_tx_ms = 0
     tel["state"] = "idle"
     logging.info(f'state:{tel["state"]} MSG:SRAUV main starting')
 
@@ -170,7 +176,7 @@ def main():
 
     while True:
         try:
-            # use update interval
+            # update system
             time_now = int(round(time.time() * 1000))
             if time_now - last_update_ms >= UPDATE_INTERVAL_MS:
                 delta_us_start = datetime.utcnow().microsecond
@@ -183,15 +189,10 @@ def main():
 
                 elif tel["state"] == "running":
                     tel["state"] = "running"
-                    
                     # read inputs
-                    print("checking inputs")
-                    
                     # do thrust
 
                 logging.info(f"dist_sensor_data:{dist_sensor_data}")
-
-                send_telemetry()
 
                 last_update_ms = int(round(time.time() * 1000))
                 ul_delta_us = datetime.utcnow().microsecond - delta_us_start
@@ -199,12 +200,26 @@ def main():
                     ul_delta_us += 1000000
                 logging.info(f'state:{tel["state"]} ul_delta_us:{ul_delta_us}')
             
-            else:
-                time.sleep(0.001)
+            # tel tx
+            if time_now - last_tel_tx_ms >= TEL_TX_INTERVAL_MS:
+                delta_us_start = datetime.utcnow().microsecond
+
+                update_telemetry()
+                send_telemetry()
+                last_tel_tx_ms = int(round(time.time() * 1000))
+
+                tel_delta_us = datetime.utcnow().microsecond - delta_us_start
+                if tel_delta_us < 0:
+                    tel_delta_us += 1000000
+                logging.info(f'state:{tel["state"]} tel_delta_us:{tel_delta_us}')
+            
+            # else:
+            #     time.sleep(0.001)
 
         except KeyboardInterrupt:
-            logging.info("Exiting via interrupt")
+            logging.info("Keyboad Interrup caught, closing gracefully")
             stop_threads()
+            logging.info("sys.exit()")
             sys.exit()
 
 if __name__ == "__main__":
