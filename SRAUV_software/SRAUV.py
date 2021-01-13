@@ -11,9 +11,11 @@ import threading
 import signal
 from datetime import datetime
 from datetime import timedelta
+from twisted.internet import task, reactor
 
 from inputs import get_gamepad
 from SRAUV_settings import SETTINGS
+import DistanceSensor
 import Timestamp
 import CommandMsg
 import TelemetryMsg
@@ -27,6 +29,8 @@ txCmds = True
 hasCmd = False
 supress_img = True
 sim_echo = False
+threads = []
+dist_sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 cmd = CommandMsg.make(source, "sim")
 tel = TelemetryMsg.make(source, "sim")
@@ -127,11 +131,42 @@ def send_telemetry():
 #         if recvMsg["dest"] == "sim":
 #             sim_forward(recvMsg)
 
+def setup_distance_module(ds_config, data_arr):
+    for id in range(ds_config["num_sensors"]):
+        data_arr[id] = float(id)
+        threads.append(DistanceSensor.ds_thread(ds_config,id, data_arr))
+
+    for t in threads:
+        t.start()
+
+    logging.info(f'state:{tel["state"]} MSG:Distance sensors started')
+
+def has_live_threads(threads):
+    return True in [t.is_alive() for t in threads]
+
+def stop_threads():
+    logging.info("Trying to stop threads...")
+    while has_live_threads(threads):
+        try:
+            for t in threads:
+                t.kill_received = True
+                
+            # synchronization timeout of threads kill
+            [t.join(1) for t in threads
+             if t is not None and t.is_alive()()]
+
+            
+        except:
+            logging.error("Thread stopping err")
+            
+    logging.info("Stopped threads")
+
 def main():
     last_update_ms = 0
     tel["state"] = "idle"
+    logging.info(f'state:{tel["state"]} MSG:SRAUV main starting')
 
-    logging.info(f'state:{tel["state"]} MSG:SRAUV main up')
+    setup_distance_module(SETTINGS["dist_sensor_config"], dist_sensor_data)
 
     while True:
         try:
@@ -140,16 +175,21 @@ def main():
             if time_now - last_update_ms >= UPDATE_INTERVAL_MS:
                 delta_us_start = datetime.utcnow().microsecond
 
+                # read sensore
+                # calc nav data
+
                 if tel["state"] == "idle":
                     tel["state"] = "running"
 
                 elif tel["state"] == "running":
                     tel["state"] = "running"
-                    # read sensore
+                    
                     # read inputs
                     print("checking inputs")
-                    # get nav data
+                    
                     # do thrust
+
+                logging.info(f"dist_sensor_data:{dist_sensor_data}")
 
                 send_telemetry()
 
@@ -164,6 +204,7 @@ def main():
 
         except KeyboardInterrupt:
             logging.info("Exiting via interrupt")
+            stop_threads()
             sys.exit()
 
 if __name__ == "__main__":

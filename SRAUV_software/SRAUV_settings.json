@@ -7,5 +7,11 @@
     "update_interval_ms": 200,
     "tel_tx_interval_ms": 500,
     "cmd_tx_interval_ms": 500,
-    "default_comms_response_str": "no comms update"
+    "default_comms_response_str": "no comms update",
+    "dist_sensor_config":{
+        "num_sensors": 6,
+        "min_cm": 10,
+        "max_cm": 200,
+        "poll_interval_s": 0.5
+    }
 }
