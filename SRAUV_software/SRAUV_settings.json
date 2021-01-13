@@ -8,10 +8,18 @@
     "tel_tx_interval_ms": 500,
     "cmd_tx_interval_ms": 500,
     "default_comms_response_str": "no comms update",
+    "enable_manual_controls": true,
     "dist_sensor_config":{
-        "num_sensors": 6,
+        "num_sensors": 5,
         "min_cm": 10,
         "max_cm": 200,
         "poll_interval_s": 0.5
+    },
+    "esc_config":{
+        "num_thrusters": 6,
+        "min_thrust": -100,
+        "max_thrust": 100,
+        "deadman_timeout_s": 1,
+        "thrust_interval_s": 0.5
     }
 }

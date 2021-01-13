@@ -8,9 +8,11 @@ import time
 import logging
 import threading
 from datetime import datetime
+from time import perf_counter
 
 from SRAUV_settings import SETTINGS
 import DistanceSensor
+import ThrusterController
 import Timestamp
 import CommandMsg
 import TelemetryMsg
@@ -22,13 +24,20 @@ srauv_address = (SETTINGS["srauv_ip"], SETTINGS["srauv_port"])
 source = "vehicle"
 starting_state = "idle"
 threads = []
-dist_sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+dist_sensor_values = [0.0, 0.0, 0.0, 0.0, 0.0]
+ds_threads = []
+thrust_values = [0, 0, 0, 0, 0, 0] # int, -100 to 100 as percent max thrust
+th_threads = []
 
 cmd = CommandMsg.make(source, "sim")
 tel = TelemetryMsg.make(source, "sim")
 
 log_filename = str(f'Logs/{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.log')
-logging.basicConfig(filename=log_filename, filemode='w', format='%(asctime)s - %(message)s',level=logging.INFO)
+logging.basicConfig(
+                    filename=log_filename,
+                    filemode='w',
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    level=logging.INFO) 
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 try:
@@ -115,12 +124,12 @@ except socket.error:
 #             sim_forward(recvMsg)
 
 def update_telemetry():
-    tel["fwdDist"] = dist_sensor_data[0]
-    tel["rightDist"] = dist_sensor_data[0]
-    tel["rearDist"] = dist_sensor_data[0]
-    tel["leftDist"] = dist_sensor_data[0]
-    tel["depth"] = dist_sensor_data[0]
-    tel["alt"] = dist_sensor_data[0]
+    tel["fwdDist"] = dist_sensor_values[0]
+    tel["rightDist"] = dist_sensor_values[0]
+    tel["rearDist"] = dist_sensor_values[0]
+    tel["leftDist"] = dist_sensor_values[0]
+    tel["alt"] = dist_sensor_values[0]
+
 
 def send_telemetry():
     try:
@@ -136,18 +145,48 @@ def send_telemetry():
     except socket.error:
         logging.warning("Failed to send over socket, srauv_address:%s", srauv_address)
 
-def setup_distance_module(ds_config, data_arr):
-    for id in range(ds_config["num_sensors"]):
-        data_arr[id] = float(id)
-        threads.append(DistanceSensor.ds_thread(ds_config,id, data_arr))
 
-    for t in threads:
+def setup_distance_threads(ds_config, data_arr):
+    logging.info(f'state:{tel["state"]} MSG:Creating distance sensor threads')
+
+    ds_threads = []
+    for id in range(ds_config["num_sensors"]):
+        ds_threads.append(DistanceSensor.ds_thread(ds_config, id, data_arr))
+
+    for t in ds_threads:
         t.start()
 
-    logging.info(f'state:{tel["state"]} MSG:Distance sensors started')
+    threads.extend(ds_threads)
+
+
+def setup_esc_threads(th_config, data_arr):
+    logging.info(f'state:{tel["state"]} MSG:Creating thruster threads')
+
+    for id in range(th_config["num_thrusters"]):
+        th_threads.append(ThrusterController.thruster_thread(th_config, id, data_arr))
+
+    for t in th_threads:
+        t.start()
+
+    threads.extend(th_threads)
+
+
+def apply_thrust(enable):
+    for t in th_threads:
+        t.do_thrust(enable)
 
 def has_live_threads(threads):
     return True in [t.is_alive() for t in threads]
+
+
+def start_threads():
+    try:
+        setup_distance_threads(SETTINGS["dist_sensor_config"], dist_sensor_values)
+        setup_esc_threads(SETTINGS["esc_config"], thrust_values)
+    except Exception as e:
+        logging.error(f"Thread creation err:{e}")
+    logging.info(f'state:{tel["state"]} MSG:All threads should be started. num threads:{len(threads)}')
+
 
 def stop_threads():
     logging.info("Trying to stop threads...")
@@ -160,60 +199,65 @@ def stop_threads():
             
     logging.info("Stopped threads")
 
+
 def main():
     last_update_ms = 0
     last_tel_tx_ms = 0
     tel["state"] = starting_state
     logging.info(f'state:{tel["state"]} MSG:SRAUV main starting')
 
-    setup_distance_module(SETTINGS["dist_sensor_config"], dist_sensor_data)
+    start_threads()
+
+    #  state change test
+    test_counter = 0
+    test_running_cap = 20
 
     while True:
         try:
             # update system
             time_now = int(round(time.time() * 1000))
             if time_now - last_update_ms >= UPDATE_INTERVAL_MS:
-                delta_us_start = datetime.utcnow().microsecond
+                ul_perf_timer_start = perf_counter() 
 
                 # read sensore
                 # calc nav data
 
-                if tel["state"] == "idle":
-                    tel["state"] = "running"
+                if tel["state"] == "idle": 
+                    apply_thrust(False)
+                    if test_counter < test_running_cap: # stat change tesing if
+                        tel["state"] = "running" 
 
                 elif tel["state"] == "running":
                     tel["state"] = "running"
                     # read inputs
-                    # do thrust
+                    apply_thrust(True)
+                    
 
-                logging.info(f"dist_sensor_data:{dist_sensor_data}")
+                    # run for test_running_cap loops before going to idle
+                    test_counter += 1
+                    if test_counter > test_running_cap:
+                        tel["state"] = "idle"
 
+                logging.info(f"dist_sensor_values:{dist_sensor_values}")
                 last_update_ms = int(round(time.time() * 1000))
-                ul_delta_us = datetime.utcnow().microsecond - delta_us_start
-                if ul_delta_us < 0:
-                    ul_delta_us += 1000000
-                logging.info(f'state:{tel["state"]} ul_delta_us:{ul_delta_us}')
             
-            # tel tx
-            if time_now - last_tel_tx_ms >= TEL_TX_INTERVAL_MS:
-                delta_us_start = datetime.utcnow().microsecond
+                # tel tx, needs own thread
+                if time_now - last_tel_tx_ms >= TEL_TX_INTERVAL_MS:
+                    update_telemetry()
+                    send_telemetry()
+                    last_tel_tx_ms = int(round(time.time() * 1000))
+                
 
-                update_telemetry()
-                send_telemetry()
-                last_tel_tx_ms = int(round(time.time() * 1000))
+                # ul perf timer
+                ul_perf_timer_end = perf_counter() 
+                logging.info(f'state:{tel["state"]} ul_perf_s:{ul_perf_timer_end-ul_perf_timer_start}')
 
-                tel_delta_us = datetime.utcnow().microsecond - delta_us_start
-                if tel_delta_us < 0:
-                    tel_delta_us += 1000000
-                logging.info(f'state:{tel["state"]} tel_delta_us:{tel_delta_us}')
-            
-            # else:
-            #     time.sleep(0.001)
+            time.sleep(0.001)
 
         except KeyboardInterrupt:
             logging.info("Keyboad Interrup caught, closing gracefully")
             stop_threads()
-            logging.info("sys.exit()")
+            logging.info("Calling sys.exit()")
             sys.exit()
 
 if __name__ == "__main__":
