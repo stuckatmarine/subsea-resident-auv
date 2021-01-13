@@ -67,3 +67,4 @@ crashlytics-build.properties
 # Python ignore list
 /SRAUV_software/__pycache__/
 /SRAUV_software/Logs/
+*.pyc
