@@ -1,35 +1,26 @@
 #!/usr/bin/env python
-# SRAUV
+# SRAUV.py
 
-import asyncio
 import json
 import sys
 import socket
 import time
 import logging
 import threading
-import signal
 from datetime import datetime
-from datetime import timedelta
-from twisted.internet import task, reactor
 
-from inputs import get_gamepad
 from SRAUV_settings import SETTINGS
 import DistanceSensor
 import Timestamp
 import CommandMsg
 import TelemetryMsg
 
-###################  Globals Variables  ###################
+###################  Globals  ###################
 UPDATE_INTERVAL_MS = SETTINGS["update_interval_ms"]
 TEL_TX_INTERVAL_MS = SETTINGS["tel_tx_interval_ms"]
 srauv_address = (SETTINGS["srauv_ip"], SETTINGS["srauv_port"])
 source = "vehicle"
-state = "idle"
-txCmds = True
-hasCmd = False
-supress_img = True
-sim_echo = False
+starting_state = "idle"
 threads = []
 dist_sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
@@ -40,7 +31,6 @@ log_filename = str(f'Logs/{datetime.now().strftime("%m-%d-%Y_%H-%M-%S")}.log')
 logging.basicConfig(filename=log_filename, filemode='w', format='%(asctime)s - %(message)s',level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
-# Try opening a socket for communication
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet, udp
     sock.settimeout(3)
@@ -133,14 +123,18 @@ def update_telemetry():
     tel["alt"] = dist_sensor_data[0]
 
 def send_telemetry():
-    sock.sendto(str.encode(json.dumps(tel)), srauv_address)
-    tel["msgNum"] += 1
+    try:
+        sock.sendto(str.encode(json.dumps(tel)), srauv_address)
+        tel["msgNum"] += 1
 
-    data, server = sock.recvfrom(4096)
-    data = data.decode("utf-8")
+        data, server = sock.recvfrom(4096)
+        data = data.decode("utf-8")
 
-    if data != '':
-        print(f"recv {data} from {server}")
+        if data != '':
+            print(f"recv {data} from {server}")
+
+    except socket.error:
+        logging.warning("Failed to send over socket, srauv_address:%s", srauv_address)
 
 def setup_distance_module(ds_config, data_arr):
     for id in range(ds_config["num_sensors"]):
@@ -169,7 +163,7 @@ def stop_threads():
 def main():
     last_update_ms = 0
     last_tel_tx_ms = 0
-    tel["state"] = "idle"
+    tel["state"] = starting_state
     logging.info(f'state:{tel["state"]} MSG:SRAUV main starting')
 
     setup_distance_module(SETTINGS["dist_sensor_config"], dist_sensor_data)
