@@ -7,7 +7,7 @@ import json
 import time
 
 async def hello():
-    uri = "ws://localhost:8000"
+    uri = "ws://localhost:8001"
     async with websockets.connect(uri) as websocket:
         inp = input("Input msg number? ")
 
