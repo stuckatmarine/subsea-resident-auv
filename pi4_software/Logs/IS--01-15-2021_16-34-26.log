@@ -1,0 +1,4 @@
+2021-01-15 16:34:26,244 INFO LocalSocketThread started
+2021-01-15 16:35:05,973 INFO addr:('127.0.0.1', 50144) data:b'{"source": "sim", "msgNum": "2", "msgType": "telemetry", "timestamp": "2021-01-15 16:35.05", "cardDist": [6.0, 7.0, 8.0, 9.0], "depth": 10.0, "alt": 11.0, "assetDistances": {"cage": 12.0, "tree1": 13.0, "tree2": 14.0}}'
+2021-01-15 16:35:09,422 INFO addr:('127.0.0.1', 50144) data:b'{"source": "sim", "msgNum": "5", "msgType": "telemetry", "timestamp": "2021-01-15 16:35.09", "cardDist": [6.0, 7.0, 8.0, 9.0], "depth": 10.0, "alt": 11.0, "assetDistances": {"cage": 12.0, "tree1": 13.0, "tree2": 14.0}}'
+2021-01-15 16:35:15,460 INFO addr:('127.0.0.1', 50146) data:b'stop'

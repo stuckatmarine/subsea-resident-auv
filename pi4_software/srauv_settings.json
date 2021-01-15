@@ -1,13 +1,13 @@
 {
-    "topside_ip": "localhost",
-    "topside_port": 7001,
-    "srauv_ip": "localhost",
-    "srauv_port": 8001,
-    "camera_port": 9001,
+    "external_ip": "localhost",
+    "external_port": 8001,
+    "internal_ip": "localhost",
+    "main_msg_port": 7001,
+    "main_cam_port": 7002,
     "update_interval_ms": 200,
     "tel_tx_interval_ms": 500,
     "cmd_tx_interval_ms": 500,
-    "default_comms_response_str": "no comms update",
+    "default_comms_response_str": "",
     "enable_manual_controls": true,
     "dist_sensor_config":{
         "num_sensors": 5,
@@ -15,7 +15,7 @@
         "max_cm": 200,
         "poll_interval_s": 0.5
     },
-    "esc_config":{
+    "thruster_config":{
         "num_thrusters": 6,
         "min_thrust": -100,
         "max_thrust": 100,

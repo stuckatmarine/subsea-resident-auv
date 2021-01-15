@@ -24,7 +24,7 @@ except socket.error:
 srauv_socket.bind(srauv_address)
 
 
-def sendData():
+def send_data():
     """Send data to topsides."""
     global srauv_socket, send
     sendData = send.get()
@@ -36,7 +36,7 @@ def sendData():
     print("sent response: " + sendData + " to " + str(topside_address))
 
 
-def receiveData():
+def receive_data():
     """Receive data from topsides."""
     global threads
     while True:
@@ -76,7 +76,7 @@ def receiveData():
         # Setup threading for receiving data
         flag = threading.Event()
         stop = threading.Event()
-        threads.append(threading.Thread(target=executeData, args=(file, flag, stop,)))
+        threads.append(threading.Thread(target=execute_data, args=(file, flag, stop,)))
         stop_events.append(stop)
         threads[len(threads) - 1].start()
         flag.wait()
@@ -84,7 +84,7 @@ def receiveData():
         threads = [i for i in threads if i.isAlive()]
 
 
-def executeData(file, flag, stop):
+def execute_data(file, flag, stop):
     try:
         exec(open(file).read(), {"send": send, "flag": flag, "stop": stop})
     except Exception as e:
@@ -93,8 +93,8 @@ def executeData(file, flag, stop):
 
 
 # Setup threading for receiving data
-threads.append(threading.Thread(target=sendData))
+threads.append(threading.Thread(target=send_data))
 
 if __name__ == "__main__":
     threads[0].start()
-    receiveData()
+    receive_data()

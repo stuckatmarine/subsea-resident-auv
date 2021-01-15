@@ -1,4 +1,4 @@
-import Timestamp
+import timestamp
 
 def make(source, dest = ''):
     tel = {
@@ -7,7 +7,7 @@ def make(source, dest = ''):
         "msgNum" : 0,
         "state" : "none",
         "msgType" : "telemetry",
-        "timestamp" : Timestamp.make(),
+        "timestamp" : timestamp.make(),
         "fwdDist" : 6.1,            # sensor val
         "rightDist" : 7.1,          # sensor val
         "rearDist" : 8.1,           # sensor val

@@ -1,4 +1,4 @@
-import Timestamp
+import timestamp
 
 def make(source, dest = ''):
     cmd = {
@@ -6,7 +6,7 @@ def make(source, dest = ''):
         "dest" : dest,
         "msgNum" : 0,
         "msgType" : "command",
-        "timestamp" : Timestamp.make(),
+        "timestamp" : timestamp.make(),
         "thrustFwd" : 0.0,          # -10.0 to 10.0
         "thrustRight" : 0.0,        # -10.0 to 10.0
         "thrustRear" : 0.0,         # -10.0 to 10.0

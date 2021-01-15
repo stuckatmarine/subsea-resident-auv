@@ -1,0 +1,739 @@
+2021-01-15 16:34:26,240 INFO state:none MSG:SRAUV main() starting
+2021-01-15 16:34:26,240 INFO state:idle MSG:Creating srauv socket threads
+2021-01-15 16:34:26,245 INFO state:idle MSG:Creating distance sensor threads
+2021-01-15 16:34:26,246 INFO state:idle MSG:Creating thruster threads
+2021-01-15 16:34:26,247 INFO state:idle MSG:All threads should be started. num threads:12
+2021-01-15 16:34:26,247 INFO state:idle MSG:Starting update loop
+2021-01-15 16:34:26,247 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 0.0, 'rightDist': 0.0, 'rearDist': 0.0, 'leftDist': 0.0, 'depth': 10.1, 'alt': 0.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:26,248 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:26,248 INFO state:running ul_perf_s:0.00037600000000000133
+2021-01-15 16:34:26,446 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 1.0, 'rightDist': 1.0, 'rearDist': 1.0, 'leftDist': 1.0, 'depth': 10.1, 'alt': 1.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:26,446 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:26,446 INFO state:idle ul_perf_s:0.00022840000000001748
+2021-01-15 16:34:26,650 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 1.0, 'rightDist': 1.0, 'rearDist': 1.0, 'leftDist': 1.0, 'depth': 10.1, 'alt': 1.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:26,650 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:26,650 INFO state:running ul_perf_s:0.0003066999999999931
+2021-01-15 16:34:26,853 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 2.0, 'rightDist': 2.0, 'rearDist': 2.0, 'leftDist': 2.0, 'depth': 10.1, 'alt': 2.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:26,853 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:26,853 INFO state:idle ul_perf_s:0.0006781000000000148
+2021-01-15 16:34:27,054 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 2.0, 'rightDist': 2.0, 'rearDist': 2.0, 'leftDist': 2.0, 'depth': 10.1, 'alt': 2.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:27,054 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:27,054 INFO state:running ul_perf_s:0.0007228000000000234
+2021-01-15 16:34:27,256 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 2.0, 'rightDist': 2.0, 'rearDist': 2.0, 'leftDist': 2.0, 'depth': 10.1, 'alt': 2.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:27,256 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:27,256 INFO state:idle ul_perf_s:0.0005239999999999689
+2021-01-15 16:34:27,458 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 3.0, 'rightDist': 3.0, 'rearDist': 3.0, 'leftDist': 3.0, 'depth': 10.1, 'alt': 3.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:27,458 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:27,458 INFO state:running ul_perf_s:0.0003343000000000096
+2021-01-15 16:34:27,661 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 3.0, 'rightDist': 3.0, 'rearDist': 3.0, 'leftDist': 3.0, 'depth': 10.1, 'alt': 3.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:27,661 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:27,661 INFO state:idle ul_perf_s:0.0002770999999999191
+2021-01-15 16:34:27,863 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 4.0, 'rightDist': 4.0, 'rearDist': 4.0, 'leftDist': 4.0, 'depth': 10.1, 'alt': 4.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:27,863 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:27,863 INFO state:running ul_perf_s:0.0006755000000000511
+2021-01-15 16:34:28,066 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 4.0, 'rightDist': 4.0, 'rearDist': 4.0, 'leftDist': 4.0, 'depth': 10.1, 'alt': 4.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:28,066 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:28,066 INFO state:idle ul_perf_s:0.0003105999999999387
+2021-01-15 16:34:28,271 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 4.0, 'rightDist': 4.0, 'rearDist': 4.0, 'leftDist': 4.0, 'depth': 10.1, 'alt': 4.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:28,271 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:28,271 INFO state:running ul_perf_s:0.0002880999999996803
+2021-01-15 16:34:28,474 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 5.0, 'rightDist': 5.0, 'rearDist': 5.0, 'leftDist': 5.0, 'depth': 10.1, 'alt': 5.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:28,474 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:28,474 INFO state:idle ul_perf_s:0.0004059000000000701
+2021-01-15 16:34:28,674 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 5.0, 'rightDist': 5.0, 'rearDist': 5.0, 'leftDist': 5.0, 'depth': 10.1, 'alt': 5.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:28,674 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:28,674 INFO state:running ul_perf_s:0.00039949999999988606
+2021-01-15 16:34:28,877 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 6.0, 'rightDist': 6.0, 'rearDist': 6.0, 'leftDist': 6.0, 'depth': 10.1, 'alt': 6.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:28,877 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:28,877 INFO state:idle ul_perf_s:0.00026880000000018
+2021-01-15 16:34:29,080 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 6.0, 'rightDist': 6.0, 'rearDist': 6.0, 'leftDist': 6.0, 'depth': 10.1, 'alt': 6.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:29,080 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:29,080 INFO state:running ul_perf_s:0.00036380000000013624
+2021-01-15 16:34:29,282 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 6.0, 'rightDist': 6.0, 'rearDist': 6.0, 'leftDist': 6.0, 'depth': 10.1, 'alt': 6.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:29,282 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:29,282 INFO state:idle ul_perf_s:0.00032870000000029265
+2021-01-15 16:34:29,483 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 7.0, 'rightDist': 7.0, 'rearDist': 7.0, 'leftDist': 7.0, 'depth': 10.1, 'alt': 7.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:29,483 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:29,483 INFO state:running ul_perf_s:0.0007630999999999055
+2021-01-15 16:34:29,687 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 7.0, 'rightDist': 7.0, 'rearDist': 7.0, 'leftDist': 7.0, 'depth': 10.1, 'alt': 7.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:29,687 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:29,687 INFO state:idle ul_perf_s:0.00047839999999998994
+2021-01-15 16:34:29,889 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 8.0, 'rightDist': 8.0, 'rearDist': 8.0, 'leftDist': 8.0, 'depth': 10.1, 'alt': 8.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:29,889 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:29,889 INFO state:running ul_perf_s:0.0003272999999999193
+2021-01-15 16:34:30,094 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 8.0, 'rightDist': 8.0, 'rearDist': 8.0, 'leftDist': 8.0, 'depth': 10.1, 'alt': 8.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:30,094 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:30,094 INFO state:idle ul_perf_s:0.0005861000000000338
+2021-01-15 16:34:30,298 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 8.0, 'rightDist': 8.0, 'rearDist': 8.0, 'leftDist': 8.0, 'depth': 10.1, 'alt': 8.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:30,298 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:30,299 INFO state:running ul_perf_s:0.0006959999999995858
+2021-01-15 16:34:30,500 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 9.0, 'rightDist': 9.0, 'rearDist': 9.0, 'leftDist': 9.0, 'depth': 10.1, 'alt': 9.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:30,500 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:30,500 INFO state:idle ul_perf_s:0.0007114000000001397
+2021-01-15 16:34:30,701 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 9.0, 'rightDist': 9.0, 'rearDist': 9.0, 'leftDist': 9.0, 'depth': 10.1, 'alt': 9.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:30,701 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:30,702 INFO state:running ul_perf_s:0.0008742000000001582
+2021-01-15 16:34:30,906 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 10.0, 'rightDist': 10.0, 'rearDist': 10.0, 'leftDist': 10.0, 'depth': 10.1, 'alt': 10.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:30,906 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:30,906 INFO state:idle ul_perf_s:0.0003190999999995725
+2021-01-15 16:34:31,109 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 10.0, 'rightDist': 10.0, 'rearDist': 10.0, 'leftDist': 10.0, 'depth': 10.1, 'alt': 10.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:31,109 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:31,109 INFO state:running ul_perf_s:0.0004971999999998644
+2021-01-15 16:34:31,312 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 10.0, 'rightDist': 10.0, 'rearDist': 10.0, 'leftDist': 10.0, 'depth': 10.1, 'alt': 10.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:31,312 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:31,312 INFO state:idle ul_perf_s:0.00021570000000004086
+2021-01-15 16:34:31,514 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 11.0, 'rightDist': 11.0, 'rearDist': 11.0, 'leftDist': 11.0, 'depth': 10.1, 'alt': 11.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:31,514 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:31,514 INFO state:running ul_perf_s:0.00024369999999951375
+2021-01-15 16:34:31,716 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 11.0, 'rightDist': 11.0, 'rearDist': 11.0, 'leftDist': 11.0, 'depth': 10.1, 'alt': 11.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:31,716 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:31,716 INFO state:idle ul_perf_s:0.0002901999999993521
+2021-01-15 16:34:31,920 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 12.0, 'rightDist': 12.0, 'rearDist': 12.0, 'leftDist': 12.0, 'depth': 10.1, 'alt': 12.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:31,920 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:31,920 INFO state:running ul_perf_s:0.00026569999999992433
+2021-01-15 16:34:32,123 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 12.0, 'rightDist': 12.0, 'rearDist': 12.0, 'leftDist': 12.0, 'depth': 10.1, 'alt': 12.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:32,123 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:32,123 INFO state:idle ul_perf_s:0.000281600000000104
+2021-01-15 16:34:32,329 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 12.0, 'rightDist': 12.0, 'rearDist': 12.0, 'leftDist': 12.0, 'depth': 10.1, 'alt': 12.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:32,329 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:32,329 INFO state:running ul_perf_s:0.0003313999999994266
+2021-01-15 16:34:32,530 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 13.0, 'rightDist': 13.0, 'rearDist': 13.0, 'leftDist': 13.0, 'depth': 10.1, 'alt': 13.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:32,530 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:32,530 INFO state:idle ul_perf_s:0.00038159999999987093
+2021-01-15 16:34:32,733 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 13.0, 'rightDist': 13.0, 'rearDist': 13.0, 'leftDist': 13.0, 'depth': 10.1, 'alt': 13.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:32,733 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:32,733 INFO state:running ul_perf_s:0.0002763999999997324
+2021-01-15 16:34:32,936 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 14.0, 'rightDist': 14.0, 'rearDist': 14.0, 'leftDist': 14.0, 'depth': 10.1, 'alt': 14.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:32,936 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:32,936 INFO state:idle ul_perf_s:0.00022059999999957114
+2021-01-15 16:34:33,141 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 14.0, 'rightDist': 14.0, 'rearDist': 14.0, 'leftDist': 14.0, 'depth': 10.1, 'alt': 14.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:33,141 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:33,142 INFO state:running ul_perf_s:0.0009357000000003168
+2021-01-15 16:34:33,342 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 14.0, 'rightDist': 14.0, 'rearDist': 14.0, 'leftDist': 14.0, 'depth': 10.1, 'alt': 14.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:33,342 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:33,342 INFO state:idle ul_perf_s:0.00034419999999979467
+2021-01-15 16:34:33,543 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 15.0, 'rightDist': 15.0, 'rearDist': 15.0, 'leftDist': 15.0, 'depth': 10.1, 'alt': 15.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:33,543 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:33,543 INFO state:running ul_perf_s:0.0003407000000006377
+2021-01-15 16:34:33,746 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 15.0, 'rightDist': 15.0, 'rearDist': 15.0, 'leftDist': 15.0, 'depth': 10.1, 'alt': 15.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:33,746 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:33,746 INFO state:idle ul_perf_s:0.00026389999999931746
+2021-01-15 16:34:33,950 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 16.0, 'rightDist': 16.0, 'rearDist': 16.0, 'leftDist': 16.0, 'depth': 10.1, 'alt': 16.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:33,950 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:33,950 INFO state:running ul_perf_s:0.00027910000000019863
+2021-01-15 16:34:34,152 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 16.0, 'rightDist': 16.0, 'rearDist': 16.0, 'leftDist': 16.0, 'depth': 10.1, 'alt': 16.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:34,152 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:34,152 INFO state:idle ul_perf_s:0.0003142000000000422
+2021-01-15 16:34:34,366 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 16.0, 'rightDist': 16.0, 'rearDist': 16.0, 'leftDist': 16.0, 'depth': 10.1, 'alt': 16.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:34,366 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:34,366 INFO state:running ul_perf_s:0.00022509999999975605
+2021-01-15 16:34:34,568 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 17.0, 'rightDist': 17.0, 'rearDist': 17.0, 'leftDist': 17.0, 'depth': 10.1, 'alt': 17.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:34,568 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:34,568 INFO state:idle ul_perf_s:0.0002319000000010618
+2021-01-15 16:34:34,772 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 17.0, 'rightDist': 17.0, 'rearDist': 17.0, 'leftDist': 17.0, 'depth': 10.1, 'alt': 17.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:34,772 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:34,772 INFO state:running ul_perf_s:0.00023870000000059122
+2021-01-15 16:34:34,974 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 18.0, 'rightDist': 18.0, 'rearDist': 18.0, 'leftDist': 18.0, 'depth': 10.1, 'alt': 18.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:34,974 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:34,974 INFO state:idle ul_perf_s:0.0003951999999998179
+2021-01-15 16:34:35,176 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 18.0, 'rightDist': 18.0, 'rearDist': 18.0, 'leftDist': 18.0, 'depth': 10.1, 'alt': 18.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:35,176 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:35,176 INFO state:running ul_perf_s:0.0002646999999988964
+2021-01-15 16:34:35,379 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 18.0, 'rightDist': 18.0, 'rearDist': 18.0, 'leftDist': 18.0, 'depth': 10.1, 'alt': 18.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:35,379 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:35,379 INFO state:idle ul_perf_s:0.00024019999999858044
+2021-01-15 16:34:35,582 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 19.0, 'rightDist': 19.0, 'rearDist': 19.0, 'leftDist': 19.0, 'depth': 10.1, 'alt': 19.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:35,582 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:35,582 INFO state:running ul_perf_s:0.00044399999999988893
+2021-01-15 16:34:35,786 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 19.0, 'rightDist': 19.0, 'rearDist': 19.0, 'leftDist': 19.0, 'depth': 10.1, 'alt': 19.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:35,786 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:35,786 INFO state:idle ul_perf_s:0.0003095999999995769
+2021-01-15 16:34:35,990 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 20.0, 'rightDist': 20.0, 'rearDist': 20.0, 'leftDist': 20.0, 'depth': 10.1, 'alt': 20.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:35,990 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:35,990 INFO state:running ul_perf_s:0.0007418000000001257
+2021-01-15 16:34:36,192 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 20.0, 'rightDist': 20.0, 'rearDist': 20.0, 'leftDist': 20.0, 'depth': 10.1, 'alt': 20.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:36,192 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:36,192 INFO state:idle ul_perf_s:0.00043089999999956774
+2021-01-15 16:34:36,395 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 20.0, 'rightDist': 20.0, 'rearDist': 20.0, 'leftDist': 20.0, 'depth': 10.1, 'alt': 20.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:36,396 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:36,396 INFO state:running ul_perf_s:0.0012580999999993736
+2021-01-15 16:34:36,599 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 21.0, 'rightDist': 21.0, 'rearDist': 21.0, 'leftDist': 21.0, 'depth': 10.1, 'alt': 21.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:36,599 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:36,599 INFO state:idle ul_perf_s:0.0007681000000001603
+2021-01-15 16:34:36,801 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 21.0, 'rightDist': 21.0, 'rearDist': 21.0, 'leftDist': 21.0, 'depth': 10.1, 'alt': 21.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:36,801 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:36,801 INFO state:running ul_perf_s:0.00023540000000110695
+2021-01-15 16:34:37,002 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 21.0, 'rightDist': 21.0, 'rearDist': 21.0, 'leftDist': 21.0, 'depth': 10.1, 'alt': 21.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:37,002 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:37,002 INFO state:idle ul_perf_s:0.00032449999999961676
+2021-01-15 16:34:37,203 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 22.0, 'rightDist': 22.0, 'rearDist': 22.0, 'leftDist': 22.0, 'depth': 10.1, 'alt': 22.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:37,203 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:37,203 INFO state:running ul_perf_s:0.000219200000000086
+2021-01-15 16:34:37,405 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 22.0, 'rightDist': 22.0, 'rearDist': 22.0, 'leftDist': 22.0, 'depth': 10.1, 'alt': 22.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:37,405 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:37,405 INFO state:idle ul_perf_s:0.00024560000000128923
+2021-01-15 16:34:37,610 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 23.0, 'rightDist': 23.0, 'rearDist': 23.0, 'leftDist': 23.0, 'depth': 10.1, 'alt': 23.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:37,610 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:37,610 INFO state:running ul_perf_s:0.00020760000000130674
+2021-01-15 16:34:37,814 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 23.0, 'rightDist': 23.0, 'rearDist': 23.0, 'leftDist': 23.0, 'depth': 10.1, 'alt': 23.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:37,814 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:37,814 INFO state:idle ul_perf_s:0.0005024999999996282
+2021-01-15 16:34:38,017 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 23.0, 'rightDist': 23.0, 'rearDist': 23.0, 'leftDist': 23.0, 'depth': 10.1, 'alt': 23.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:38,017 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:38,018 INFO state:running ul_perf_s:0.0009091000000012173
+2021-01-15 16:34:38,221 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 24.0, 'rightDist': 24.0, 'rearDist': 24.0, 'leftDist': 24.0, 'depth': 10.1, 'alt': 24.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:38,221 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:38,221 INFO state:idle ul_perf_s:0.0003245000000013931
+2021-01-15 16:34:38,422 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 24.0, 'rightDist': 24.0, 'rearDist': 24.0, 'leftDist': 24.0, 'depth': 10.1, 'alt': 24.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:38,422 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:38,422 INFO state:running ul_perf_s:0.00026890000000001635
+2021-01-15 16:34:38,624 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 25.0, 'rightDist': 25.0, 'rearDist': 25.0, 'leftDist': 25.0, 'depth': 10.1, 'alt': 25.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:38,624 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:38,624 INFO state:idle ul_perf_s:0.00028869999999869833
+2021-01-15 16:34:38,828 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 25.0, 'rightDist': 25.0, 'rearDist': 25.0, 'leftDist': 25.0, 'depth': 10.1, 'alt': 25.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:38,828 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:38,828 INFO state:running ul_perf_s:0.000339799999999002
+2021-01-15 16:34:39,032 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 25.0, 'rightDist': 25.0, 'rearDist': 25.0, 'leftDist': 25.0, 'depth': 10.1, 'alt': 25.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:39,032 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:39,032 INFO state:idle ul_perf_s:0.0002840000000006171
+2021-01-15 16:34:39,233 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 26.0, 'rightDist': 26.0, 'rearDist': 26.0, 'leftDist': 26.0, 'depth': 10.1, 'alt': 26.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:39,233 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:39,233 INFO state:running ul_perf_s:0.0003691999999997364
+2021-01-15 16:34:39,436 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 26.0, 'rightDist': 26.0, 'rearDist': 26.0, 'leftDist': 26.0, 'depth': 10.1, 'alt': 26.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:39,436 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:39,437 INFO state:idle ul_perf_s:0.0012676000000002574
+2021-01-15 16:34:39,641 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 27.0, 'rightDist': 27.0, 'rearDist': 27.0, 'leftDist': 27.0, 'depth': 10.1, 'alt': 27.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:39,641 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:39,641 INFO state:running ul_perf_s:0.0003133000000001829
+2021-01-15 16:34:39,845 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 27.0, 'rightDist': 27.0, 'rearDist': 27.0, 'leftDist': 27.0, 'depth': 10.1, 'alt': 27.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:39,846 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:39,846 INFO state:idle ul_perf_s:0.0012722000000007228
+2021-01-15 16:34:40,049 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 27.0, 'rightDist': 27.0, 'rearDist': 27.0, 'leftDist': 27.0, 'depth': 10.1, 'alt': 27.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:40,049 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:40,050 INFO state:running ul_perf_s:0.0009244999999999948
+2021-01-15 16:34:40,250 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 28.0, 'rightDist': 28.0, 'rearDist': 28.0, 'leftDist': 28.0, 'depth': 10.1, 'alt': 28.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:40,250 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:40,250 INFO state:idle ul_perf_s:0.0005246999999997115
+2021-01-15 16:34:40,451 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 28.0, 'rightDist': 28.0, 'rearDist': 28.0, 'leftDist': 28.0, 'depth': 10.1, 'alt': 28.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:40,451 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:40,451 INFO state:running ul_perf_s:0.0002316000000011087
+2021-01-15 16:34:40,652 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 29.0, 'rightDist': 29.0, 'rearDist': 29.0, 'leftDist': 29.0, 'depth': 10.1, 'alt': 29.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:40,652 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:40,652 INFO state:idle ul_perf_s:0.0002133999999998082
+2021-01-15 16:34:40,858 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 29.0, 'rightDist': 29.0, 'rearDist': 29.0, 'leftDist': 29.0, 'depth': 10.1, 'alt': 29.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:40,858 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:40,858 INFO state:running ul_perf_s:0.0002633000000002994
+2021-01-15 16:34:41,062 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 29.0, 'rightDist': 29.0, 'rearDist': 29.0, 'leftDist': 29.0, 'depth': 10.1, 'alt': 29.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:41,062 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:41,062 INFO state:idle ul_perf_s:0.00021790000000088128
+2021-01-15 16:34:41,264 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 30.0, 'rightDist': 30.0, 'rearDist': 30.0, 'leftDist': 30.0, 'depth': 10.1, 'alt': 30.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:41,264 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:41,264 INFO state:running ul_perf_s:0.00020879999999934284
+2021-01-15 16:34:41,466 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 30.0, 'rightDist': 30.0, 'rearDist': 30.0, 'leftDist': 30.0, 'depth': 10.1, 'alt': 30.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:41,466 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:41,466 INFO state:idle ul_perf_s:0.0006263000000004126
+2021-01-15 16:34:41,671 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 31.0, 'rightDist': 31.0, 'rearDist': 31.0, 'leftDist': 31.0, 'depth': 10.1, 'alt': 31.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:41,671 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:41,671 INFO state:running ul_perf_s:0.0002539000000005842
+2021-01-15 16:34:41,875 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 31.0, 'rightDist': 31.0, 'rearDist': 31.0, 'leftDist': 31.0, 'depth': 10.1, 'alt': 31.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:41,875 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:41,875 INFO state:idle ul_perf_s:0.00026199999999931833
+2021-01-15 16:34:42,078 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 31.0, 'rightDist': 31.0, 'rearDist': 31.0, 'leftDist': 31.0, 'depth': 10.1, 'alt': 31.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:42,078 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:42,078 INFO state:running ul_perf_s:0.00045649999999852753
+2021-01-15 16:34:42,281 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 32.0, 'rightDist': 32.0, 'rearDist': 32.0, 'leftDist': 32.0, 'depth': 10.1, 'alt': 32.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:42,281 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:42,281 INFO state:idle ul_perf_s:0.00021529999999714278
+2021-01-15 16:34:42,482 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 32.0, 'rightDist': 32.0, 'rearDist': 32.0, 'leftDist': 32.0, 'depth': 10.1, 'alt': 32.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:42,482 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:42,482 INFO state:running ul_perf_s:0.00025270000000077175
+2021-01-15 16:34:42,685 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 33.0, 'rightDist': 33.0, 'rearDist': 33.0, 'leftDist': 33.0, 'depth': 10.1, 'alt': 33.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:42,686 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:42,686 INFO state:idle ul_perf_s:0.0009559000000010087
+2021-01-15 16:34:42,888 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 33.0, 'rightDist': 33.0, 'rearDist': 33.0, 'leftDist': 33.0, 'depth': 10.1, 'alt': 33.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:42,888 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:42,888 INFO state:running ul_perf_s:0.0002385999999994226
+2021-01-15 16:34:43,091 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 33.0, 'rightDist': 33.0, 'rearDist': 33.0, 'leftDist': 33.0, 'depth': 10.1, 'alt': 33.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:43,091 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:43,092 INFO state:idle ul_perf_s:0.0008370000000006428
+2021-01-15 16:34:43,294 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 34.0, 'rightDist': 34.0, 'rearDist': 34.0, 'leftDist': 34.0, 'depth': 10.1, 'alt': 34.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:43,294 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:43,294 INFO state:running ul_perf_s:0.0003297999999993806
+2021-01-15 16:34:43,497 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 34.0, 'rightDist': 34.0, 'rearDist': 34.0, 'leftDist': 34.0, 'depth': 10.1, 'alt': 34.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:43,497 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:43,497 INFO state:idle ul_perf_s:0.0003627000000001601
+2021-01-15 16:34:43,702 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 35.0, 'rightDist': 35.0, 'rearDist': 35.0, 'leftDist': 35.0, 'depth': 10.1, 'alt': 35.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:43,702 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:43,702 INFO state:running ul_perf_s:0.0003644999999998788
+2021-01-15 16:34:43,905 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 35.0, 'rightDist': 35.0, 'rearDist': 35.0, 'leftDist': 35.0, 'depth': 10.1, 'alt': 35.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:43,905 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:43,905 INFO state:idle ul_perf_s:0.0009174999999999045
+2021-01-15 16:34:44,106 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 35.0, 'rightDist': 35.0, 'rearDist': 35.0, 'leftDist': 35.0, 'depth': 10.1, 'alt': 35.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:44,106 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:44,107 INFO state:running ul_perf_s:0.0008492999999987205
+2021-01-15 16:34:44,309 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 36.0, 'rightDist': 36.0, 'rearDist': 36.0, 'leftDist': 36.0, 'depth': 10.1, 'alt': 36.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:44,309 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:44,310 INFO state:idle ul_perf_s:0.0007180999999967241
+2021-01-15 16:34:44,511 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 36.0, 'rightDist': 36.0, 'rearDist': 36.0, 'leftDist': 36.0, 'depth': 10.1, 'alt': 36.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:44,511 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:44,512 INFO state:running ul_perf_s:0.0007505999999999347
+2021-01-15 16:34:44,713 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 37.0, 'rightDist': 37.0, 'rearDist': 37.0, 'leftDist': 37.0, 'depth': 10.1, 'alt': 37.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:44,713 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:44,713 INFO state:idle ul_perf_s:0.0004118999999995765
+2021-01-15 16:34:44,913 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 37.0, 'rightDist': 37.0, 'rearDist': 37.0, 'leftDist': 37.0, 'depth': 10.1, 'alt': 37.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:44,913 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:44,914 INFO state:running ul_perf_s:0.0008236999999979844
+2021-01-15 16:34:45,115 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 37.0, 'rightDist': 37.0, 'rearDist': 37.0, 'leftDist': 37.0, 'depth': 10.1, 'alt': 37.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:45,115 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:45,115 INFO state:idle ul_perf_s:0.0012135999999998148
+2021-01-15 16:34:45,317 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 38.0, 'rightDist': 38.0, 'rearDist': 38.0, 'leftDist': 38.0, 'depth': 10.1, 'alt': 38.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:45,317 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:45,317 INFO state:running ul_perf_s:0.00052119999999789
+2021-01-15 16:34:45,519 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 38.0, 'rightDist': 38.0, 'rearDist': 38.0, 'leftDist': 38.0, 'depth': 10.1, 'alt': 38.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:45,519 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:45,520 INFO state:idle ul_perf_s:0.00025829999999871234
+2021-01-15 16:34:45,719 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 39.0, 'rightDist': 39.0, 'rearDist': 39.0, 'leftDist': 39.0, 'depth': 10.1, 'alt': 39.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:45,719 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:45,719 INFO state:running ul_perf_s:0.0007944999999978108
+2021-01-15 16:34:45,922 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 39.0, 'rightDist': 39.0, 'rearDist': 39.0, 'leftDist': 39.0, 'depth': 10.1, 'alt': 39.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:45,922 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:45,922 INFO state:idle ul_perf_s:0.0005155999999999494
+2021-01-15 16:34:46,127 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 39.0, 'rightDist': 39.0, 'rearDist': 39.0, 'leftDist': 39.0, 'depth': 10.1, 'alt': 39.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:46,127 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:46,127 INFO state:running ul_perf_s:0.0003428999999997018
+2021-01-15 16:34:46,331 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 40.0, 'rightDist': 40.0, 'rearDist': 40.0, 'leftDist': 40.0, 'depth': 10.1, 'alt': 40.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:46,331 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:46,331 INFO state:idle ul_perf_s:0.0004044000000007486
+2021-01-15 16:34:46,535 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 40.0, 'rightDist': 40.0, 'rearDist': 40.0, 'leftDist': 40.0, 'depth': 10.1, 'alt': 40.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:46,535 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:46,535 INFO state:running ul_perf_s:0.0002629000000027304
+2021-01-15 16:34:46,740 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 41.0, 'rightDist': 41.0, 'rearDist': 41.0, 'leftDist': 41.0, 'depth': 10.1, 'alt': 41.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:46,740 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:46,741 INFO state:idle ul_perf_s:0.0010302000000024236
+2021-01-15 16:34:46,943 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 41.0, 'rightDist': 41.0, 'rearDist': 41.0, 'leftDist': 41.0, 'depth': 10.1, 'alt': 41.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:46,943 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:46,943 INFO state:running ul_perf_s:0.0006859999999981881
+2021-01-15 16:34:47,145 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 41.0, 'rightDist': 41.0, 'rearDist': 41.0, 'leftDist': 41.0, 'depth': 10.1, 'alt': 41.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:47,145 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:47,146 INFO state:idle ul_perf_s:0.0008765000000003909
+2021-01-15 16:34:47,348 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 42.0, 'rightDist': 42.0, 'rearDist': 42.0, 'leftDist': 42.0, 'depth': 10.1, 'alt': 42.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:47,348 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:47,349 INFO state:running ul_perf_s:0.000699499999999631
+2021-01-15 16:34:47,551 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 42.0, 'rightDist': 42.0, 'rearDist': 42.0, 'leftDist': 42.0, 'depth': 10.1, 'alt': 42.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:47,551 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:47,551 INFO state:idle ul_perf_s:0.00021450000000200475
+2021-01-15 16:34:47,753 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 43.0, 'rightDist': 43.0, 'rearDist': 43.0, 'leftDist': 43.0, 'depth': 10.1, 'alt': 43.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:47,753 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:47,753 INFO state:running ul_perf_s:0.0002440999999997473
+2021-01-15 16:34:47,958 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 43.0, 'rightDist': 43.0, 'rearDist': 43.0, 'leftDist': 43.0, 'depth': 10.1, 'alt': 43.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:47,958 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:47,958 INFO state:idle ul_perf_s:0.0002937000000002854
+2021-01-15 16:34:48,160 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 43.0, 'rightDist': 43.0, 'rearDist': 43.0, 'leftDist': 43.0, 'depth': 10.1, 'alt': 43.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:48,160 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:48,160 INFO state:running ul_perf_s:0.0002974999999985073
+2021-01-15 16:34:48,363 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 44.0, 'rightDist': 44.0, 'rearDist': 44.0, 'leftDist': 44.0, 'depth': 10.1, 'alt': 44.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:48,363 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:48,363 INFO state:idle ul_perf_s:0.00024889999999899715
+2021-01-15 16:34:48,566 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 44.0, 'rightDist': 44.0, 'rearDist': 44.0, 'leftDist': 44.0, 'depth': 10.1, 'alt': 44.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:48,566 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:48,566 INFO state:running ul_perf_s:0.000752899999998391
+2021-01-15 16:34:48,768 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 45.0, 'rightDist': 45.0, 'rearDist': 45.0, 'leftDist': 45.0, 'depth': 10.1, 'alt': 45.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:48,768 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:48,768 INFO state:idle ul_perf_s:0.0003054999999996255
+2021-01-15 16:34:48,971 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 45.0, 'rightDist': 45.0, 'rearDist': 45.0, 'leftDist': 45.0, 'depth': 10.1, 'alt': 45.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:48,971 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:48,972 INFO state:running ul_perf_s:0.0011531999999974119
+2021-01-15 16:34:49,174 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 45.0, 'rightDist': 45.0, 'rearDist': 45.0, 'leftDist': 45.0, 'depth': 10.1, 'alt': 45.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:49,175 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:49,175 INFO state:idle ul_perf_s:0.0009170999999987828
+2021-01-15 16:34:49,376 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 46.0, 'rightDist': 46.0, 'rearDist': 46.0, 'leftDist': 46.0, 'depth': 10.1, 'alt': 46.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:49,376 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:49,376 INFO state:running ul_perf_s:0.0003206999999996185
+2021-01-15 16:34:49,576 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 46.0, 'rightDist': 46.0, 'rearDist': 46.0, 'leftDist': 46.0, 'depth': 10.1, 'alt': 46.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:49,577 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:49,577 INFO state:idle ul_perf_s:0.0011224999999974727
+2021-01-15 16:34:49,780 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 46.0, 'rightDist': 46.0, 'rearDist': 46.0, 'leftDist': 46.0, 'depth': 10.1, 'alt': 46.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:49,780 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:49,780 INFO state:running ul_perf_s:0.00032700000000218665
+2021-01-15 16:34:49,986 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 47.0, 'rightDist': 47.0, 'rearDist': 47.0, 'leftDist': 47.0, 'depth': 10.1, 'alt': 47.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:49,986 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:49,986 INFO state:idle ul_perf_s:0.00030579999999957863
+2021-01-15 16:34:50,190 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 47.0, 'rightDist': 47.0, 'rearDist': 47.0, 'leftDist': 47.0, 'depth': 10.1, 'alt': 47.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:50,190 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:50,190 INFO state:running ul_perf_s:0.000472500000000764
+2021-01-15 16:34:50,393 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 48.0, 'rightDist': 48.0, 'rearDist': 48.0, 'leftDist': 48.0, 'depth': 10.1, 'alt': 48.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:50,393 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:50,393 INFO state:idle ul_perf_s:0.0006325999999994281
+2021-01-15 16:34:50,608 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 48.0, 'rightDist': 48.0, 'rearDist': 48.0, 'leftDist': 48.0, 'depth': 10.1, 'alt': 48.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:50,608 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:50,608 INFO state:running ul_perf_s:0.0006129999999977542
+2021-01-15 16:34:50,811 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 49.0, 'rightDist': 49.0, 'rearDist': 49.0, 'leftDist': 49.0, 'depth': 10.1, 'alt': 49.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:50,811 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:50,811 INFO state:idle ul_perf_s:0.00047980000000080736
+2021-01-15 16:34:51,014 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 49.0, 'rightDist': 49.0, 'rearDist': 49.0, 'leftDist': 49.0, 'depth': 10.1, 'alt': 49.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:51,014 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:51,015 INFO state:running ul_perf_s:0.0009548999999999808
+2021-01-15 16:34:51,219 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 49.0, 'rightDist': 49.0, 'rearDist': 49.0, 'leftDist': 49.0, 'depth': 10.1, 'alt': 49.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:51,219 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:51,219 INFO state:idle ul_perf_s:0.0004889000000005694
+2021-01-15 16:34:51,423 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 50.0, 'rightDist': 50.0, 'rearDist': 50.0, 'leftDist': 50.0, 'depth': 10.1, 'alt': 50.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:51,423 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:51,424 INFO state:running ul_perf_s:0.0011229000000021472
+2021-01-15 16:34:51,625 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 50.0, 'rightDist': 50.0, 'rearDist': 50.0, 'leftDist': 50.0, 'depth': 10.1, 'alt': 50.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:51,625 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:51,625 INFO state:idle ul_perf_s:0.00023690000000087252
+2021-01-15 16:34:51,839 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 51.0, 'rightDist': 51.0, 'rearDist': 51.0, 'leftDist': 51.0, 'depth': 10.1, 'alt': 51.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:51,839 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:51,839 INFO state:running ul_perf_s:0.00022650000000012938
+2021-01-15 16:34:52,042 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 51.0, 'rightDist': 51.0, 'rearDist': 51.0, 'leftDist': 51.0, 'depth': 10.1, 'alt': 51.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:52,042 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:52,042 INFO state:idle ul_perf_s:0.0005910999999976241
+2021-01-15 16:34:52,243 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 51.0, 'rightDist': 51.0, 'rearDist': 51.0, 'leftDist': 51.0, 'depth': 10.1, 'alt': 51.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:52,243 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:52,243 INFO state:running ul_perf_s:0.00023980000000278778
+2021-01-15 16:34:52,450 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 52.0, 'rightDist': 52.0, 'rearDist': 52.0, 'leftDist': 52.0, 'depth': 10.1, 'alt': 52.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:52,450 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:52,450 INFO state:idle ul_perf_s:0.0006154999999985478
+2021-01-15 16:34:52,652 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 52.0, 'rightDist': 52.0, 'rearDist': 52.0, 'leftDist': 52.0, 'depth': 10.1, 'alt': 52.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:52,652 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:52,652 INFO state:running ul_perf_s:0.0006771999999983791
+2021-01-15 16:34:52,858 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 53.0, 'rightDist': 53.0, 'rearDist': 53.0, 'leftDist': 53.0, 'depth': 10.1, 'alt': 53.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:52,858 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:52,858 INFO state:idle ul_perf_s:0.00021290000000107057
+2021-01-15 16:34:53,062 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 53.0, 'rightDist': 53.0, 'rearDist': 53.0, 'leftDist': 53.0, 'depth': 10.1, 'alt': 53.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:53,062 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:53,062 INFO state:running ul_perf_s:0.00046799999999791453
+2021-01-15 16:34:53,265 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 53.0, 'rightDist': 53.0, 'rearDist': 53.0, 'leftDist': 53.0, 'depth': 10.1, 'alt': 53.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:53,265 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:53,265 INFO state:idle ul_perf_s:0.00026000000000081513
+2021-01-15 16:34:53,469 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 54.0, 'rightDist': 54.0, 'rearDist': 54.0, 'leftDist': 54.0, 'depth': 10.1, 'alt': 54.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:53,469 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:53,469 INFO state:running ul_perf_s:0.0002598999999996465
+2021-01-15 16:34:53,685 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 54.0, 'rightDist': 54.0, 'rearDist': 54.0, 'leftDist': 54.0, 'depth': 10.1, 'alt': 54.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:53,685 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:53,685 INFO state:idle ul_perf_s:0.0003722000000010439
+2021-01-15 16:34:53,885 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 55.0, 'rightDist': 55.0, 'rearDist': 55.0, 'leftDist': 55.0, 'depth': 10.1, 'alt': 55.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:53,885 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:53,885 INFO state:running ul_perf_s:0.0003072000000017283
+2021-01-15 16:34:54,086 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 55.0, 'rightDist': 55.0, 'rearDist': 55.0, 'leftDist': 55.0, 'depth': 10.1, 'alt': 55.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:54,086 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:54,086 INFO state:idle ul_perf_s:0.0002653999999999712
+2021-01-15 16:34:54,290 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 55.0, 'rightDist': 55.0, 'rearDist': 55.0, 'leftDist': 55.0, 'depth': 10.1, 'alt': 55.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:54,290 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:54,290 INFO state:running ul_perf_s:0.00036319999999889774
+2021-01-15 16:34:54,492 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 56.0, 'rightDist': 56.0, 'rearDist': 56.0, 'leftDist': 56.0, 'depth': 10.1, 'alt': 56.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:54,492 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:54,492 INFO state:idle ul_perf_s:0.0005056999999979439
+2021-01-15 16:34:54,696 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 56.0, 'rightDist': 56.0, 'rearDist': 56.0, 'leftDist': 56.0, 'depth': 10.1, 'alt': 56.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:54,696 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:54,696 INFO state:running ul_perf_s:0.00027970000000010486
+2021-01-15 16:34:54,896 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 57.0, 'rightDist': 57.0, 'rearDist': 57.0, 'leftDist': 57.0, 'depth': 10.1, 'alt': 57.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:54,896 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:54,896 INFO state:idle ul_perf_s:0.0007394000000005008
+2021-01-15 16:34:55,099 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 57.0, 'rightDist': 57.0, 'rearDist': 57.0, 'leftDist': 57.0, 'depth': 10.1, 'alt': 57.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:55,099 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:55,099 INFO state:running ul_perf_s:0.0007650999999988528
+2021-01-15 16:34:55,301 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 57.0, 'rightDist': 57.0, 'rearDist': 57.0, 'leftDist': 57.0, 'depth': 10.1, 'alt': 57.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:55,301 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:55,301 INFO state:idle ul_perf_s:0.00022009999999994534
+2021-01-15 16:34:55,503 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 58.0, 'rightDist': 58.0, 'rearDist': 58.0, 'leftDist': 58.0, 'depth': 10.1, 'alt': 58.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:55,503 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:55,503 INFO state:running ul_perf_s:0.00023320000000026653
+2021-01-15 16:34:55,706 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 58.0, 'rightDist': 58.0, 'rearDist': 58.0, 'leftDist': 58.0, 'depth': 10.1, 'alt': 58.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:55,706 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:55,706 INFO state:idle ul_perf_s:0.0003638000000023567
+2021-01-15 16:34:55,911 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 59.0, 'rightDist': 59.0, 'rearDist': 59.0, 'leftDist': 59.0, 'depth': 10.1, 'alt': 59.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:55,911 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:55,911 INFO state:running ul_perf_s:0.0005050999999980377
+2021-01-15 16:34:56,114 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 59.0, 'rightDist': 59.0, 'rearDist': 59.0, 'leftDist': 59.0, 'depth': 10.1, 'alt': 59.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:56,114 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:56,115 INFO state:idle ul_perf_s:0.0010966000000003362
+2021-01-15 16:34:56,314 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 59.0, 'rightDist': 59.0, 'rearDist': 59.0, 'leftDist': 59.0, 'depth': 10.1, 'alt': 59.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:56,314 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:56,314 INFO state:running ul_perf_s:0.0003315999999990993
+2021-01-15 16:34:56,517 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 60.0, 'rightDist': 60.0, 'rearDist': 60.0, 'leftDist': 60.0, 'depth': 10.1, 'alt': 60.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:56,517 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:56,517 INFO state:idle ul_perf_s:0.00023970000000161917
+2021-01-15 16:34:56,720 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 60.0, 'rightDist': 60.0, 'rearDist': 60.0, 'leftDist': 60.0, 'depth': 10.1, 'alt': 60.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:56,720 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:56,720 INFO state:running ul_perf_s:0.0006374000000022306
+2021-01-15 16:34:56,924 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 61.0, 'rightDist': 61.0, 'rearDist': 61.0, 'leftDist': 61.0, 'depth': 10.1, 'alt': 61.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:56,924 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:56,924 INFO state:idle ul_perf_s:0.00022979999999961365
+2021-01-15 16:34:57,124 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 61.0, 'rightDist': 61.0, 'rearDist': 61.0, 'leftDist': 61.0, 'depth': 10.1, 'alt': 61.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:57,124 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:57,124 INFO state:running ul_perf_s:0.0005802999999993119
+2021-01-15 16:34:57,327 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 61.0, 'rightDist': 61.0, 'rearDist': 61.0, 'leftDist': 61.0, 'depth': 10.1, 'alt': 61.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:57,327 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:57,327 INFO state:idle ul_perf_s:0.0005504000000016163
+2021-01-15 16:34:57,529 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 62.0, 'rightDist': 62.0, 'rearDist': 62.0, 'leftDist': 62.0, 'depth': 10.1, 'alt': 62.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:57,529 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:57,529 INFO state:running ul_perf_s:0.00034060000000124546
+2021-01-15 16:34:57,732 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 62.0, 'rightDist': 62.0, 'rearDist': 62.0, 'leftDist': 62.0, 'depth': 10.1, 'alt': 62.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:57,732 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:57,732 INFO state:idle ul_perf_s:0.00024189999999890688
+2021-01-15 16:34:57,935 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 62.0, 'rightDist': 62.0, 'rearDist': 62.0, 'leftDist': 62.0, 'depth': 10.1, 'alt': 62.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:57,935 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:57,935 INFO state:running ul_perf_s:0.0005737999999979593
+2021-01-15 16:34:58,139 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 63.0, 'rightDist': 63.0, 'rearDist': 63.0, 'leftDist': 63.0, 'depth': 10.1, 'alt': 63.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:58,139 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:58,140 INFO state:idle ul_perf_s:0.0011193000000027098
+2021-01-15 16:34:58,340 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 63.0, 'rightDist': 63.0, 'rearDist': 63.0, 'leftDist': 63.0, 'depth': 10.1, 'alt': 63.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:58,340 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:58,341 INFO state:running ul_perf_s:0.0009474000000011529
+2021-01-15 16:34:58,542 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 64.0, 'rightDist': 64.0, 'rearDist': 64.0, 'leftDist': 64.0, 'depth': 10.1, 'alt': 64.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:58,542 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:58,543 INFO state:idle ul_perf_s:0.0008553999999989514
+2021-01-15 16:34:58,745 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 64.0, 'rightDist': 64.0, 'rearDist': 64.0, 'leftDist': 64.0, 'depth': 10.1, 'alt': 64.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:58,745 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:58,745 INFO state:running ul_perf_s:0.00033790000000522014
+2021-01-15 16:34:58,948 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 64.0, 'rightDist': 64.0, 'rearDist': 64.0, 'leftDist': 64.0, 'depth': 10.1, 'alt': 64.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:58,948 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:58,949 INFO state:idle ul_perf_s:0.000827499999999759
+2021-01-15 16:34:59,150 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 65.0, 'rightDist': 65.0, 'rearDist': 65.0, 'leftDist': 65.0, 'depth': 10.1, 'alt': 65.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:59,150 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:59,150 INFO state:running ul_perf_s:0.00038450000000267437
+2021-01-15 16:34:59,354 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 65.0, 'rightDist': 65.0, 'rearDist': 65.0, 'leftDist': 65.0, 'depth': 10.1, 'alt': 65.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:59,355 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:59,355 INFO state:idle ul_perf_s:0.000969300000001283
+2021-01-15 16:34:59,555 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 66.0, 'rightDist': 66.0, 'rearDist': 66.0, 'leftDist': 66.0, 'depth': 10.1, 'alt': 66.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:59,555 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:59,556 INFO state:running ul_perf_s:0.0007816999999974428
+2021-01-15 16:34:59,757 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 66.0, 'rightDist': 66.0, 'rearDist': 66.0, 'leftDist': 66.0, 'depth': 10.1, 'alt': 66.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:59,757 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:59,757 INFO state:idle ul_perf_s:0.0003321000000013896
+2021-01-15 16:34:59,958 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 66.0, 'rightDist': 66.0, 'rearDist': 66.0, 'leftDist': 66.0, 'depth': 10.1, 'alt': 66.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:34:59,958 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:34:59,958 INFO state:running ul_perf_s:0.0002744999999961806
+2021-01-15 16:35:00,162 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 67.0, 'rightDist': 67.0, 'rearDist': 67.0, 'leftDist': 67.0, 'depth': 10.1, 'alt': 67.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:00,162 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:00,162 INFO state:idle ul_perf_s:0.000705399999993972
+2021-01-15 16:35:00,363 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 67.0, 'rightDist': 67.0, 'rearDist': 67.0, 'leftDist': 67.0, 'depth': 10.1, 'alt': 67.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:00,363 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:00,363 INFO state:running ul_perf_s:0.00021740000000392
+2021-01-15 16:35:00,567 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 68.0, 'rightDist': 68.0, 'rearDist': 68.0, 'leftDist': 68.0, 'depth': 10.1, 'alt': 68.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:00,567 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:00,567 INFO state:idle ul_perf_s:0.0006811000000013223
+2021-01-15 16:35:00,769 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 68.0, 'rightDist': 68.0, 'rearDist': 68.0, 'leftDist': 68.0, 'depth': 10.1, 'alt': 68.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:00,769 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:00,769 INFO state:running ul_perf_s:0.0002423999999976445
+2021-01-15 16:35:00,974 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 68.0, 'rightDist': 68.0, 'rearDist': 68.0, 'leftDist': 68.0, 'depth': 10.1, 'alt': 68.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:00,974 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:00,974 INFO state:idle ul_perf_s:0.00024129999999900065
+2021-01-15 16:35:01,177 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 69.0, 'rightDist': 69.0, 'rearDist': 69.0, 'leftDist': 69.0, 'depth': 10.1, 'alt': 69.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:01,177 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:01,177 INFO state:running ul_perf_s:0.00023380000000372547
+2021-01-15 16:35:01,380 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 69.0, 'rightDist': 69.0, 'rearDist': 69.0, 'leftDist': 69.0, 'depth': 10.1, 'alt': 69.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:01,380 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:01,381 INFO state:idle ul_perf_s:0.000922400000000323
+2021-01-15 16:35:01,585 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 70.0, 'rightDist': 70.0, 'rearDist': 70.0, 'leftDist': 70.0, 'depth': 10.1, 'alt': 70.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:01,585 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:01,585 INFO state:running ul_perf_s:0.00021269999999873335
+2021-01-15 16:35:01,788 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 70.0, 'rightDist': 70.0, 'rearDist': 70.0, 'leftDist': 70.0, 'depth': 10.1, 'alt': 70.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:01,788 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:01,788 INFO state:idle ul_perf_s:0.0002518000000009124
+2021-01-15 16:35:01,989 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 70.0, 'rightDist': 70.0, 'rearDist': 70.0, 'leftDist': 70.0, 'depth': 10.1, 'alt': 70.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:01,989 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:01,989 INFO state:running ul_perf_s:0.00045339999999782776
+2021-01-15 16:35:02,190 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 71.0, 'rightDist': 71.0, 'rearDist': 71.0, 'leftDist': 71.0, 'depth': 10.1, 'alt': 71.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:02,190 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:02,190 INFO state:idle ul_perf_s:0.00025390000000413693
+2021-01-15 16:35:02,391 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 71.0, 'rightDist': 71.0, 'rearDist': 71.0, 'leftDist': 71.0, 'depth': 10.1, 'alt': 71.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:02,391 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:02,391 INFO state:running ul_perf_s:0.0005594000000002097
+2021-01-15 16:35:02,595 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 72.0, 'rightDist': 72.0, 'rearDist': 72.0, 'leftDist': 72.0, 'depth': 10.1, 'alt': 72.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:02,595 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:02,595 INFO state:idle ul_perf_s:0.0008763000000016063
+2021-01-15 16:35:02,797 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 72.0, 'rightDist': 72.0, 'rearDist': 72.0, 'leftDist': 72.0, 'depth': 10.1, 'alt': 72.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:02,797 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:02,797 INFO state:running ul_perf_s:0.0007976999999996792
+2021-01-15 16:35:02,999 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 72.0, 'rightDist': 72.0, 'rearDist': 72.0, 'leftDist': 72.0, 'depth': 10.1, 'alt': 72.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:02,999 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:02,999 INFO state:idle ul_perf_s:0.0007502999999999815
+2021-01-15 16:35:03,202 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 73.0, 'rightDist': 73.0, 'rearDist': 73.0, 'leftDist': 73.0, 'depth': 10.1, 'alt': 73.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:03,202 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:03,202 INFO state:running ul_perf_s:0.00046119999999660877
+2021-01-15 16:35:03,405 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 73.0, 'rightDist': 73.0, 'rearDist': 73.0, 'leftDist': 73.0, 'depth': 10.1, 'alt': 73.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:03,406 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:03,406 INFO state:idle ul_perf_s:0.0011377999999950816
+2021-01-15 16:35:03,606 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 74.0, 'rightDist': 74.0, 'rearDist': 74.0, 'leftDist': 74.0, 'depth': 10.1, 'alt': 74.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:03,606 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:03,606 INFO state:running ul_perf_s:0.0006604999999950678
+2021-01-15 16:35:03,809 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 74.0, 'rightDist': 74.0, 'rearDist': 74.0, 'leftDist': 74.0, 'depth': 10.1, 'alt': 74.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:03,809 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:03,810 INFO state:idle ul_perf_s:0.0008234999999956472
+2021-01-15 16:35:04,012 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 74.0, 'rightDist': 74.0, 'rearDist': 74.0, 'leftDist': 74.0, 'depth': 10.1, 'alt': 74.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:04,012 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:04,012 INFO state:running ul_perf_s:0.000400200000001405
+2021-01-15 16:35:04,215 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 75.0, 'rightDist': 75.0, 'rearDist': 75.0, 'leftDist': 75.0, 'depth': 10.1, 'alt': 75.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:04,215 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:04,215 INFO state:idle ul_perf_s:0.00036090000000399414
+2021-01-15 16:35:04,417 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 75.0, 'rightDist': 75.0, 'rearDist': 75.0, 'leftDist': 75.0, 'depth': 10.1, 'alt': 75.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:04,417 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:04,417 INFO state:running ul_perf_s:0.001300900000003935
+2021-01-15 16:35:04,617 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 76.0, 'rightDist': 76.0, 'rearDist': 76.0, 'leftDist': 76.0, 'depth': 10.1, 'alt': 76.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:04,617 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:04,617 INFO state:idle ul_perf_s:0.0004976999999968257
+2021-01-15 16:35:04,819 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 76.0, 'rightDist': 76.0, 'rearDist': 76.0, 'leftDist': 76.0, 'depth': 10.1, 'alt': 76.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:04,819 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:04,819 INFO state:running ul_perf_s:0.0004652999999947838
+2021-01-15 16:35:05,023 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 76.0, 'rightDist': 76.0, 'rearDist': 76.0, 'leftDist': 76.0, 'depth': 10.1, 'alt': 76.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:05,023 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:05,023 INFO state:idle ul_perf_s:0.0002426999999940449
+2021-01-15 16:35:05,222 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 77.0, 'rightDist': 77.0, 'rearDist': 77.0, 'leftDist': 77.0, 'depth': 10.1, 'alt': 77.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:05,222 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:05,222 INFO state:running ul_perf_s:0.0005650999999957662
+2021-01-15 16:35:05,427 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 77.0, 'rightDist': 77.0, 'rearDist': 77.0, 'leftDist': 77.0, 'depth': 10.1, 'alt': 77.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:05,427 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:05,428 INFO state:idle ul_perf_s:0.0007582999999939943
+2021-01-15 16:35:05,628 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 78.0, 'rightDist': 78.0, 'rearDist': 78.0, 'leftDist': 78.0, 'depth': 10.1, 'alt': 78.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:05,628 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:05,628 INFO state:running ul_perf_s:0.0004027999999962617
+2021-01-15 16:35:05,831 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 78.0, 'rightDist': 78.0, 'rearDist': 78.0, 'leftDist': 78.0, 'depth': 10.1, 'alt': 78.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:05,831 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:05,831 INFO state:idle ul_perf_s:0.0005825999999942155
+2021-01-15 16:35:06,035 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 78.0, 'rightDist': 78.0, 'rearDist': 78.0, 'leftDist': 78.0, 'depth': 10.1, 'alt': 78.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:06,035 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:06,035 INFO state:running ul_perf_s:0.00023209999999806996
+2021-01-15 16:35:06,251 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 79.0, 'rightDist': 79.0, 'rearDist': 79.0, 'leftDist': 79.0, 'depth': 10.1, 'alt': 79.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:06,251 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:06,252 INFO state:idle ul_perf_s:0.0009713000000033389
+2021-01-15 16:35:06,452 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 79.0, 'rightDist': 79.0, 'rearDist': 79.0, 'leftDist': 79.0, 'depth': 10.1, 'alt': 79.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:06,452 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:06,453 INFO state:running ul_perf_s:0.0007160999999982209
+2021-01-15 16:35:06,653 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 80.0, 'rightDist': 80.0, 'rearDist': 80.0, 'leftDist': 80.0, 'depth': 10.1, 'alt': 80.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:06,653 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:06,653 INFO state:idle ul_perf_s:0.0005857000000020207
+2021-01-15 16:35:06,856 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 80.0, 'rightDist': 80.0, 'rearDist': 80.0, 'leftDist': 80.0, 'depth': 10.1, 'alt': 80.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:06,856 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:06,856 INFO state:running ul_perf_s:0.00026799999999838064
+2021-01-15 16:35:07,060 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 80.0, 'rightDist': 80.0, 'rearDist': 80.0, 'leftDist': 80.0, 'depth': 10.1, 'alt': 80.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:07,060 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:07,060 INFO state:idle ul_perf_s:0.00021999999999877673
+2021-01-15 16:35:07,261 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 81.0, 'rightDist': 81.0, 'rearDist': 81.0, 'leftDist': 81.0, 'depth': 10.1, 'alt': 81.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:07,261 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:07,261 INFO state:running ul_perf_s:0.0006731999999942673
+2021-01-15 16:35:07,464 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 81.0, 'rightDist': 81.0, 'rearDist': 81.0, 'leftDist': 81.0, 'depth': 10.1, 'alt': 81.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:07,464 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:07,464 INFO state:idle ul_perf_s:0.00022009999999994534
+2021-01-15 16:35:07,667 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 82.0, 'rightDist': 82.0, 'rearDist': 82.0, 'leftDist': 82.0, 'depth': 10.1, 'alt': 82.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:07,667 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:07,667 INFO state:running ul_perf_s:0.000731699999995783
+2021-01-15 16:35:07,870 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 82.0, 'rightDist': 82.0, 'rearDist': 82.0, 'leftDist': 82.0, 'depth': 10.1, 'alt': 82.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:07,870 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:07,870 INFO state:idle ul_perf_s:0.0006949000000062711
+2021-01-15 16:35:08,073 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 82.0, 'rightDist': 82.0, 'rearDist': 82.0, 'leftDist': 82.0, 'depth': 10.1, 'alt': 82.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:08,074 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:08,074 INFO state:running ul_perf_s:0.0011705000000006294
+2021-01-15 16:35:08,276 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 83.0, 'rightDist': 83.0, 'rearDist': 83.0, 'leftDist': 83.0, 'depth': 10.1, 'alt': 83.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:08,276 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:08,276 INFO state:idle ul_perf_s:0.000293800000001454
+2021-01-15 16:35:08,477 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 83.0, 'rightDist': 83.0, 'rearDist': 83.0, 'leftDist': 83.0, 'depth': 10.1, 'alt': 83.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:08,477 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:08,477 INFO state:running ul_perf_s:0.00022739999999998872
+2021-01-15 16:35:08,681 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 84.0, 'rightDist': 84.0, 'rearDist': 84.0, 'leftDist': 84.0, 'depth': 10.1, 'alt': 84.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:08,682 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:08,683 INFO state:idle ul_perf_s:0.00221700000000169
+2021-01-15 16:35:08,884 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 84.0, 'rightDist': 84.0, 'rearDist': 84.0, 'leftDist': 84.0, 'depth': 10.1, 'alt': 84.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:08,884 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:08,884 INFO state:running ul_perf_s:0.00029080000000192285
+2021-01-15 16:35:09,087 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 84.0, 'rightDist': 84.0, 'rearDist': 84.0, 'leftDist': 84.0, 'depth': 10.1, 'alt': 84.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:09,087 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:09,088 INFO state:idle ul_perf_s:0.0008199000000033152
+2021-01-15 16:35:09,286 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 85.0, 'rightDist': 85.0, 'rearDist': 85.0, 'leftDist': 85.0, 'depth': 10.1, 'alt': 85.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:09,286 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:09,287 INFO state:running ul_perf_s:0.0012270000000000891
+2021-01-15 16:35:09,488 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 85.0, 'rightDist': 85.0, 'rearDist': 85.0, 'leftDist': 85.0, 'depth': 10.1, 'alt': 85.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:09,488 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:09,488 INFO state:idle ul_perf_s:0.0002481000000003064
+2021-01-15 16:35:09,692 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 85.0, 'rightDist': 85.0, 'rearDist': 85.0, 'leftDist': 85.0, 'depth': 10.1, 'alt': 85.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:09,692 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:09,692 INFO state:running ul_perf_s:0.0005038999999982252
+2021-01-15 16:35:09,895 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 86.0, 'rightDist': 86.0, 'rearDist': 86.0, 'leftDist': 86.0, 'depth': 10.1, 'alt': 86.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:09,895 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:09,895 INFO state:idle ul_perf_s:0.0003469999999978768
+2021-01-15 16:35:10,097 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 86.0, 'rightDist': 86.0, 'rearDist': 86.0, 'leftDist': 86.0, 'depth': 10.1, 'alt': 86.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:10,097 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:10,097 INFO state:running ul_perf_s:0.0002824999999972988
+2021-01-15 16:35:10,300 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 87.0, 'rightDist': 87.0, 'rearDist': 87.0, 'leftDist': 87.0, 'depth': 10.1, 'alt': 87.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:10,300 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:10,300 INFO state:idle ul_perf_s:0.0002838999999994485
+2021-01-15 16:35:10,502 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 87.0, 'rightDist': 87.0, 'rearDist': 87.0, 'leftDist': 87.0, 'depth': 10.1, 'alt': 87.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:10,502 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:10,502 INFO state:running ul_perf_s:0.00024090000000143164
+2021-01-15 16:35:10,703 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 87.0, 'rightDist': 87.0, 'rearDist': 87.0, 'leftDist': 87.0, 'depth': 10.1, 'alt': 87.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:10,703 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:10,703 INFO state:idle ul_perf_s:0.00022080000000102018
+2021-01-15 16:35:10,908 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 88.0, 'rightDist': 88.0, 'rearDist': 88.0, 'leftDist': 88.0, 'depth': 10.1, 'alt': 88.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:10,908 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:10,909 INFO state:running ul_perf_s:0.0008562000000011949
+2021-01-15 16:35:11,111 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 88.0, 'rightDist': 88.0, 'rearDist': 88.0, 'leftDist': 88.0, 'depth': 10.1, 'alt': 88.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:11,111 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:11,111 INFO state:idle ul_perf_s:0.0006023999999982266
+2021-01-15 16:35:11,317 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 89.0, 'rightDist': 89.0, 'rearDist': 89.0, 'leftDist': 89.0, 'depth': 10.1, 'alt': 89.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:11,317 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:11,317 INFO state:running ul_perf_s:0.0003106999999999971
+2021-01-15 16:35:11,520 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 89.0, 'rightDist': 89.0, 'rearDist': 89.0, 'leftDist': 89.0, 'depth': 10.1, 'alt': 89.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:11,520 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:11,520 INFO state:idle ul_perf_s:0.00022969999999844504
+2021-01-15 16:35:11,724 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 89.0, 'rightDist': 89.0, 'rearDist': 89.0, 'leftDist': 89.0, 'depth': 10.1, 'alt': 89.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:11,724 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:11,724 INFO state:running ul_perf_s:0.0004459000000025526
+2021-01-15 16:35:11,924 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 90.0, 'rightDist': 90.0, 'rearDist': 90.0, 'leftDist': 90.0, 'depth': 10.1, 'alt': 90.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:11,924 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:11,924 INFO state:idle ul_perf_s:0.0002461999999994191
+2021-01-15 16:35:12,126 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 90.0, 'rightDist': 90.0, 'rearDist': 90.0, 'leftDist': 90.0, 'depth': 10.1, 'alt': 90.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:12,126 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:12,126 INFO state:running ul_perf_s:0.0002154000000018641
+2021-01-15 16:35:12,328 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 91.0, 'rightDist': 91.0, 'rearDist': 91.0, 'leftDist': 91.0, 'depth': 10.1, 'alt': 91.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:12,328 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:12,328 INFO state:idle ul_perf_s:0.0004616000000012832
+2021-01-15 16:35:12,529 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 91.0, 'rightDist': 91.0, 'rearDist': 91.0, 'leftDist': 91.0, 'depth': 10.1, 'alt': 91.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:12,529 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:12,529 INFO state:running ul_perf_s:0.0002345999999988635
+2021-01-15 16:35:12,734 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 91.0, 'rightDist': 91.0, 'rearDist': 91.0, 'leftDist': 91.0, 'depth': 10.1, 'alt': 91.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:12,734 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:12,734 INFO state:idle ul_perf_s:0.0002502999999975941
+2021-01-15 16:35:12,936 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 92.0, 'rightDist': 92.0, 'rearDist': 92.0, 'leftDist': 92.0, 'depth': 10.1, 'alt': 92.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:12,936 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:12,936 INFO state:running ul_perf_s:0.0002460999999982505
+2021-01-15 16:35:13,137 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 92.0, 'rightDist': 92.0, 'rearDist': 92.0, 'leftDist': 92.0, 'depth': 10.1, 'alt': 92.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:13,137 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:13,137 INFO state:idle ul_perf_s:0.00027599999999949887
+2021-01-15 16:35:13,338 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 93.0, 'rightDist': 93.0, 'rearDist': 93.0, 'leftDist': 93.0, 'depth': 10.1, 'alt': 93.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:13,338 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:13,338 INFO state:running ul_perf_s:0.0003796999999963191
+2021-01-15 16:35:13,540 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 93.0, 'rightDist': 93.0, 'rearDist': 93.0, 'leftDist': 93.0, 'depth': 10.1, 'alt': 93.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:13,540 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:13,540 INFO state:idle ul_perf_s:0.0002667999999985682
+2021-01-15 16:35:13,745 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 93.0, 'rightDist': 93.0, 'rearDist': 93.0, 'leftDist': 93.0, 'depth': 10.1, 'alt': 93.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:13,745 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:13,745 INFO state:running ul_perf_s:0.0002455999999995129
+2021-01-15 16:35:13,946 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 94.0, 'rightDist': 94.0, 'rearDist': 94.0, 'leftDist': 94.0, 'depth': 10.1, 'alt': 94.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:13,946 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:13,946 INFO state:idle ul_perf_s:0.0003947000000010803
+2021-01-15 16:35:14,150 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 94.0, 'rightDist': 94.0, 'rearDist': 94.0, 'leftDist': 94.0, 'depth': 10.1, 'alt': 94.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:14,150 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:14,150 INFO state:running ul_perf_s:0.0005044999999981314
+2021-01-15 16:35:14,351 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 95.0, 'rightDist': 95.0, 'rearDist': 95.0, 'leftDist': 95.0, 'depth': 10.1, 'alt': 95.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:14,351 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:14,351 INFO state:idle ul_perf_s:0.0003628999999989446
+2021-01-15 16:35:14,552 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 95.0, 'rightDist': 95.0, 'rearDist': 95.0, 'leftDist': 95.0, 'depth': 10.1, 'alt': 95.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:14,552 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:14,552 INFO state:running ul_perf_s:0.00035619999999880747
+2021-01-15 16:35:14,757 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 95.0, 'rightDist': 95.0, 'rearDist': 95.0, 'leftDist': 95.0, 'depth': 10.1, 'alt': 95.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:14,757 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:14,757 INFO state:idle ul_perf_s:0.00026450000000011187
+2021-01-15 16:35:14,960 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 96.0, 'rightDist': 96.0, 'rearDist': 96.0, 'leftDist': 96.0, 'depth': 10.1, 'alt': 96.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:14,960 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:14,960 INFO state:running ul_perf_s:0.0002763000000030047
+2021-01-15 16:35:15,163 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'running', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 96.0, 'rightDist': 96.0, 'rearDist': 96.0, 'leftDist': 96.0, 'depth': 10.1, 'alt': 96.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:15,163 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:15,163 INFO state:idle ul_perf_s:0.0002443999999997004
+2021-01-15 16:35:15,366 INFO tel:{'source': 'srauv_main', 'dest': 'sim', 'msgNum': 0, 'state': 'idle', 'msgType': 'telemetry', 'timestamp': '2021-01-15 20:04:26.240', 'fwdDist': 97.0, 'rightDist': 97.0, 'rearDist': 97.0, 'leftDist': 97.0, 'depth': 10.1, 'alt': 97.0, 'heading': 315.1, 'posX': 11.1, 'posY': 12.1, 'posZ': 11.1, 'assetDistances': {'cage': 12.1, 'tree1': 13.1, 'tree2': 14.1}}
+2021-01-15 16:35:15,366 INFO thrust_enabled:False thrust_values:[0, 0, 0, 0, 0, 0]
+2021-01-15 16:35:15,366 INFO state:running ul_perf_s:0.0002606000000042741
+2021-01-15 16:35:15,460 INFO Keyboad Interrup caught, closing gracefully
+2021-01-15 16:35:15,460 INFO Trying to stop threads...
+2021-01-15 16:35:15,833 INFO Stopped threads
+2021-01-15 16:35:15,833 INFO Calling sys.exit()

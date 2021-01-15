@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+#   srauv_settings.py
+#   Parse json file with SRAUV config and settings.
+
 import json
 
 filename = "SRAUV_settings.json"
