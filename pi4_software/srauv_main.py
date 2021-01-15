@@ -88,7 +88,7 @@ def evaluate_state():
         # evaluate state
         can_thrust = False
 
-        if over_test_count:
+        if over_test_count():
             tel_msg["state"] = "running" 
 
     elif tel_msg["state"] == "running":
@@ -96,7 +96,7 @@ def evaluate_state():
         # evaluate state
         can_thrust = True
 
-        if over_test_count:
+        if over_test_count():
             tel_msg["state"] = "idle"
 
 
