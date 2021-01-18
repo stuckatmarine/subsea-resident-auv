@@ -10,8 +10,11 @@ using Random = UnityEngine.Random;
 public class Pilot : Agent
 {
 	public float[] goal = new float[]{0.0f, 0.0f, 0.0f}; // this the correct data type?
-    private Transform srauv;
+	private Rigidbody rb;
+    public Transform srauv;
+    private Collider collider;
     private ThrusterController thrustCtrl;
+    public bool colliding = false;
 
     private Camera frontCam;
     private Texture2D frontCamTexture;
@@ -25,6 +28,9 @@ public class Pilot : Agent
     public override void Initialize()
     {
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
+        //startPos = GameObject.Find("startPos").GetComponent<Transform>();
+        rb = srauv.GetComponent<Rigidbody>();
+        collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
@@ -56,6 +62,8 @@ public class Pilot : Agent
         sensor.AddObservation(goal[0] - srauv.position.x); 
         sensor.AddObservation(goal[1] - srauv.position.y);
         sensor.AddObservation(goal[2] - srauv.position.z);
+
+        // maybe add current velocity?
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -112,19 +120,44 @@ public class Pilot : Agent
     public void SetResetParameters()
     {
     	// need more reasonable reset default positions
-    	// how do I set this?
-    	//srauv.position.x = resetParams.GetWithDefault("SRAUVx", 1.0f);
-    	//srauv.position.y = resetParams.GetWithDefault("SRAUVy", 1.0f);
-    	//srauv.position.z = resetParams.GetWithDefault("SRAUVz", 1.0f);
-
+    	// x: 0 - 12, y: 0 - 12, z: 0: 0 - (-12)
+	    srauv.position = new Vector3(
+	    	resetParams.GetWithDefault("SRAUVx", 7f),
+	        resetParams.GetWithDefault("SRAUVy", 7f),
+	        resetParams.GetWithDefault("SRAUVz", -7f));
+    	
     	// need more reasonable reset default positions
-    	goal[0] = resetParams.GetWithDefault("goalx", 1.0f);
-    	goal[1] = resetParams.GetWithDefault("goaly", 1.0f);
-    	goal[2] = resetParams.GetWithDefault("goalz", 1.0f);
+    	goal[0] = resetParams.GetWithDefault("goalx", 3f);
+    	goal[1] = resetParams.GetWithDefault("goaly", 3f);
+    	goal[2] = resetParams.GetWithDefault("goalz", -3f);
     	
     	// reset all current velocties
-    	// help
+		rb.isKinematic = false;
+		rb.isKinematic = true;
 
     	// reset current rotation
+		srauv.rotation = new Quaternion(0f, 0f, 0f, 0f);
     }
+
+    void OnCollisionExit(Collision collisionInfo)
+    {
+    	// TODO: deal with multiple collisions
+    	colliding = false;
+    }
+
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+    	Debug.Log("Colliding!");
+    	colliding = true;
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+    	;
+    }
+
+  	void OnTriggerExit(Collider collision)
+  	{
+  		;
+  	}
 }
