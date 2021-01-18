@@ -60,32 +60,34 @@ public class Pilot : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-    	thrustCtrl.applyLatThrust(0, actionBuffers.ContinuousActions[0]);
-        thrustCtrl.applyLatThrust(1, actionBuffers.ContinuousActions[1]);
-        thrustCtrl.applyLatThrust(2, actionBuffers.ContinuousActions[2]);
-        thrustCtrl.applyLatThrust(3, actionBuffers.ContinuousActions[3]);
-        thrustCtrl.applyVertThrust(0, actionBuffers.ContinuousActions[4]);
-        thrustCtrl.applyVertThrust(1, actionBuffers.ContinuousActions[5]);
+    	var i = -1;
+    	var continuousActions = actionBuffers.ContinuousActions;
 
-        bool collision = false; // help!
-        if (collision) 
+    	thrustCtrl.applyLatThrust(0, continuousActions[++i]);
+        thrustCtrl.applyLatThrust(1, continuousActions[++i]);
+        thrustCtrl.applyLatThrust(2, continuousActions[++i]);
+        thrustCtrl.applyLatThrust(3, continuousActions[++i]);
+        thrustCtrl.applyVertThrust(0, continuousActions[++i]);
+        thrustCtrl.applyVertThrust(1, continuousActions[++i]);
+
+        if (colliding) 
         {
-        	SetReward(-1f);
-        	EndEpisode(); // or not?
+        	AddReward(-0.5f);
+        	//EndEpisode(); // or not?
         }
 
         if (distancesFloat[0] <= 0.5f)
-            SetReward(-0.2f); // 0.5f - distancesFloat[0] ?
+            AddReward(-0.1f); // 0.5f - distancesFloat[0] ?
         if (distancesFloat[1] <= 0.5f)
-            SetReward(-0.2f);
+            AddReward(-0.1f);
         if (distancesFloat[2] <= 0.5f)
-            SetReward(-0.2f);
+            AddReward(-0.1f);
         if (distancesFloat[3] <= 0.5f)
-            SetReward(-0.2f);
+            AddReward(-0.1f);
         if (distancesFloat[4] <= 0.5f)
-            SetReward(-0.2f);
+            AddReward(-0.1f);
         if (distancesFloat[5] <= 0.5f)
-            SetReward(-0.2f);
+            AddReward(-0.1f);
 
         if (goal[0] - srauv.position.x <= 0.1 &&
         	goal[1] - srauv.position.y <= 0.1 &&
@@ -94,6 +96,7 @@ public class Pilot : Agent
         	SetReward(1f);
         	EndEpisode();
         }
+        AddReward(-0.05f);
     }
 
     public override void OnEpisodeBegin()
