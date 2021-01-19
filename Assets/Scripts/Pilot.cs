@@ -9,9 +9,9 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
-	public Transform srauv;
-	public Transform startPos;
-	public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
+    public Transform srauv;
+    public Transform startPos;
+    public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
 
     public bool trigger = false;
     public bool colliding = false;
@@ -23,11 +23,11 @@ public class Pilot : Agent
     private Camera frontCam;
     private Texture2D frontCamTexture;
 
-	private GameObject thrusterController;
+    private GameObject thrusterController;
     private float[] forces = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
-	private float[] distancesFloat;
+    private float[] distancesFloat;
 
-	private EnvironmentParameters resetParams;
+    private EnvironmentParameters resetParams;
 
     public override void Initialize()
     {
@@ -40,14 +40,14 @@ public class Pilot : Agent
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
-    	
-    	resetParams = Academy.Instance.EnvironmentParameters;
+        
+        resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-    	// dist sensors
+        // dist sensors
         sensor.AddObservation(distancesFloat[0]); 
         sensor.AddObservation(distancesFloat[1]);
         sensor.AddObservation(distancesFloat[2]);
@@ -56,7 +56,7 @@ public class Pilot : Agent
         sensor.AddObservation(distancesFloat[5]);
 
         // srauv position
-       	sensor.AddObservation(srauv.position.x); 
+        sensor.AddObservation(srauv.position.x); 
         sensor.AddObservation(srauv.position.y);
         sensor.AddObservation(srauv.position.z);
         sensor.AddObservation(srauv.rotation.y * 360.0f);
@@ -73,10 +73,10 @@ public class Pilot : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-    	var i = -1;
-    	var continuousActions = actionBuffers.ContinuousActions;
+        var i = -1;
+        var continuousActions = actionBuffers.ContinuousActions;
 
-    	thrustCtrl.applyLatThrust(0, continuousActions[++i]);
+        thrustCtrl.applyLatThrust(0, continuousActions[++i]);
         thrustCtrl.applyLatThrust(1, continuousActions[++i]);
         thrustCtrl.applyLatThrust(2, continuousActions[++i]);
         thrustCtrl.applyLatThrust(3, continuousActions[++i]);
@@ -85,8 +85,8 @@ public class Pilot : Agent
 
         if (colliding) 
         {
-        	AddReward(-0.5f);
-        	//EndEpisode(); // or not?
+            AddReward(-0.5f);
+            //EndEpisode(); // or not?
         }
 
         if (distancesFloat[0] <= 0.5f)
@@ -103,11 +103,11 @@ public class Pilot : Agent
             AddReward(-0.1f);
 
         if (goal.x - srauv.position.x <= 0.3 &&
-        	goal.y - srauv.position.y <= 0.3 &&
-        	goal.z - srauv.position.z <= 0.3)
+            goal.y - srauv.position.y <= 0.3 &&
+            goal.z - srauv.position.z <= 0.3)
         {
-        	SetReward(1f);
-        	EndEpisode();
+            SetReward(1f);
+            EndEpisode();
         }
         AddReward(-0.05f);
     }
@@ -119,60 +119,60 @@ public class Pilot : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-    	// ThrusterController should take care of this
+        // ThrusterController should take care of this
     }
 
     public void SetResetParameters()
     {
-    	// if academy resetParams.GetWithDefault()
-	    srauv.position = getRandomLocation();
-    	goal = getRandomLocation();
-    	
-    	// reset all current velocties
-		rb.isKinematic = false;
-		rb.isKinematic = true;
+        // if academy resetParams.GetWithDefault()
+        srauv.position = getRandomLocation();
+        goal = getRandomLocation();
+        
+        // reset all current velocties
+        rb.isKinematic = false;
+        rb.isKinematic = true;
 
-    	// reset current rotation
-		srauv.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        // reset current rotation
+        srauv.rotation = new Quaternion(0f, 0f, 0f, 0f);
     }
 
     private Vector3 getRandomLocation()
     {
-    	// x: 1 - 11, y: 1 - 6, z: (-1) - (-11)
-    	float x = 0.0f, y = 0.0f, z = 0.0f;
+        // x: 1 - 11, y: 1 - 6, z: (-1) - (-11)
+        float x = 0.0f, y = 0.0f, z = 0.0f;
 
-    	do
-    	{
-			x = Random.Range(1f, 11f);
-			y = Random.Range(1f, 6f);
-			z = Random.Range(-1f, -11f);
+        do
+        {
+            x = Random.Range(1f, 11f);
+            y = Random.Range(1f, 6f);
+            z = Random.Range(-1f, -11f);
 
-    		startPos.position = new Vector3(x, y, z);
-    	} while (trigger);
+            startPos.position = new Vector3(x, y, z);
+        } while (trigger);
 
-    	return new Vector3(x, y, z);
+        return new Vector3(x, y, z);
     }
 
     void OnCollisionExit(Collision collisionInfo)
     {
-    	// TODO: deal with multiple collisions
-    	colliding = false;
+        // TODO: deal with multiple collisions
+        colliding = false;
     }
 
     void OnCollisionEnter(Collision collisionInfo)
     {
-    	Debug.Log("Collision Enter!!");
-    	colliding = true;
+        Debug.Log("Collision Enter!!");
+        colliding = true;
     }
 
     void OnTriggerEnter(Collider collision)
     {
-    	Debug.Log("Trigger Enter!!");;
-    	trigger = true;
+        Debug.Log("Trigger Enter!!");;
+        trigger = true;
     }
 
-  	void OnTriggerExit(Collider collision)
-  	{
-  		trigger = false;
-  	}
+    void OnTriggerExit(Collider collision)
+    {
+        trigger = false;
+    }
 }
