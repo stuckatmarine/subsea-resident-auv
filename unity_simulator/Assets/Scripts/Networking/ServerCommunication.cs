@@ -10,6 +10,7 @@ using UnityEngine.UI;
 /// </summary>
 public class ServerCommunication : MonoBehaviour
 {
+    public bool disableWebsocketServer = false;
     public bool enableLogging = false;
     public bool enableVehicleCmds = false;
     public bool sendScreenshots = false;
@@ -80,22 +81,23 @@ public class ServerCommunication : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        server = "ws://" + host + ":" + port;
-        client = new WsClient(server);
-                // Messaging
-        // Lobby = new LobbyMessaging(this);
-        ConnectToServer();
-
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         dock = GameObject.Find("Dock").GetComponent<Transform>();
+        distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
+        
+        if (disableWebsocketServer)
+            return;
+
         tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
         tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
         tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
-        distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
+        
 
-        // thrusterController = GameObject.Find("SRAUV").GetComponent<ThrusterController>();  
+        server = "ws://" + host + ":" + port;
+        client = new WsClient(server);
+        ConnectToServer(); 
     }
 
 
@@ -104,6 +106,15 @@ public class ServerCommunication : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        //  Update UI
+        simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = (srauv.rotation.y * 360.0f).ToString("#.0");
+        simX.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.x.ToString("#.00");
+        simY.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.y.ToString("#.00");
+        simZ.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.z.ToString("#.00");
+
+        if (disableWebsocketServer)
+            return;
+
         // Check if server send new messages
         var cqueue = client.receiveQueue;
         string msg;
@@ -120,8 +131,6 @@ public class ServerCommunication : MonoBehaviour
             lastTxTime = (int)Time.time * 1000;
         }
 
-        // apply thruste vals
-        
         srauv.GetComponent<ThrusterController>().applyLatThrust(0, forces[0]);
         srauv.GetComponent<ThrusterController>().applyLatThrust(1, forces[1]);
         srauv.GetComponent<ThrusterController>().applyLatThrust(2, forces[2]);
@@ -159,17 +168,6 @@ public class ServerCommunication : MonoBehaviour
                     forces[3] = message.thrustLeft;
                     forces[4] = message.vertA;
                     forces[5] = message.vertB;
-
-                    // only impulses
-                    // srauv.GetComponent<ThrusterController>().applyLatThrust(0, message.thrustFwd);
-                    // srauv.GetComponent<ThrusterController>().applyLatThrust(1, message.thrustRight);
-                    // srauv.GetComponent<ThrusterController>().applyLatThrust(2, message.thrustRear);
-                    // srauv.GetComponent<ThrusterController>().applyLatThrust(3, message.thrustLeft);
-                    // srauv.GetComponent<ThrusterController>().applyVertThrust(0, message.vertA);
-                    // srauv.GetComponent<ThrusterController>().applyVertThrust(1, message.vertB);
-
-                    // alternative example, higher level thruster control, not implement for all
-                    // srauv.GetComponent<ThrusterController>().moveForward(thrustFwd);
                 }
                 break;
             case "telemetry":
@@ -276,11 +274,7 @@ public class ServerCommunication : MonoBehaviour
 
         client.Send(msg);
 
-        //  Update UI
-        simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tm.heading.ToString("#.0");
-        simX.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posX.ToString("#.00");
-        simY.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posY.ToString("#.00");
-        simZ.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posZ.ToString("#.00");
+        
 
         // send screenshot too after every x msgs
         if (sendScreenshots && txNum % 2 == 0)

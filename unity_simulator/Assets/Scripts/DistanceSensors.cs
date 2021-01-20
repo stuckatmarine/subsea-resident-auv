@@ -43,13 +43,13 @@ public class DistanceSensors : MonoBehaviour
 
         distancesFloat[i] = hit.distance;
 
-        if (hit.distance < max)
+        if (hit.distance < max && hit.distance > 0.0f)
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = hit.distance.ToString("#.00");
         else
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "MAX";
 
         // min distance for close proximity checks
-        if (hit.distance < min)
+        if (hit.distance < min && hit.distance > 0.0f)
         {
             // Debug.Log( i + "   " + hit.distance);
             sensorValueArr[i].GetComponent<Image>().color = Color.red;
