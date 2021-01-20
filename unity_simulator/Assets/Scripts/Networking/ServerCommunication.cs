@@ -12,6 +12,7 @@ public class ServerCommunication : MonoBehaviour
 {
     public bool enableLogging = false;
     public bool enableVehicleCmds = false;
+    public bool sendScreenshots = false;
 
     // Server IP address
     [SerializeField]
@@ -282,7 +283,7 @@ public class ServerCommunication : MonoBehaviour
         simZ.GetComponent<TMPro.TextMeshProUGUI>().text = tm.posZ.ToString("#.00");
 
         // send screenshot too after every x msgs
-        if (txNum % 2 == 0)
+        if (sendScreenshots && txNum % 2 == 0)
         {
             cm.source = "sim";
             cm.msgNum = txNum++;
