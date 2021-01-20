@@ -1,4 +1,5 @@
-![](Media/ProjectDescription.png)
+
+![Alt text](/Media/ProjectDescription.png?raw=true "Optional Title")
 ![](Media/Team.png)
 
 # Subsea Resident Autonomous Underwater Vehicle
