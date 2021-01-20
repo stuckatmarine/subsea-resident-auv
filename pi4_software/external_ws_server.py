@@ -36,6 +36,7 @@ class GetSrauvResponse(WebSocket):
         try:
             # Received ws msg from external network. Log it
             logger.info(f"sending to {srauv_address}  data:{self.data}")
+            print(f"sending to {srauv_address}  data:{self.data}")
 
             # Forward msg to srauv_main's local socket
             srauv_socket.sendto(self.data.encode("utf-8"), srauv_address)
