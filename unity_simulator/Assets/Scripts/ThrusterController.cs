@@ -14,7 +14,7 @@ public class ThrusterController : MonoBehaviour
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
     
-    public bool enableManualCmds = false;
+    public bool enableManualCmds = true;
     public bool enableAbsoluteCmds = false;
 
     public ServerCommunication WS;
