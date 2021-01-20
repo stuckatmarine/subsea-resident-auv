@@ -1,6 +1,6 @@
 
 ![Alt text](Media/ProjectDescription.PNG?raw=true "Optional Title")
-![](Media/Team.png)
+![Alt text](Media/Team.PNG?raw=true "Optional Title")
 
 # Subsea Resident Autonomous Underwater Vehicle
 ### Memorial University ECE Capstone Project
