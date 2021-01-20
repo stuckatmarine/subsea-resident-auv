@@ -26,6 +26,7 @@ public class ThrusterController : MonoBehaviour
     void Start()
     {
         ld = new LineDrawer(lineMaterial);
+        enableManual();
     }
 
     // Update is called once per frame
