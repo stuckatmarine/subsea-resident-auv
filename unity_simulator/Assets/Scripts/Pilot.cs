@@ -99,11 +99,13 @@ public class Pilot : Agent
         if (distancesFloat[5] <= 0.5f)
             AddReward(-0.05f);
 
-        if (goal.x - srauv.position.x <= 0.3 &&
-            goal.y - srauv.position.y <= 0.3 &&
-            goal.z - srauv.position.z <= 0.3)
+        if (Math.Abs(goal.position.x - srauv.position.x) <= 0.25f &&
+            Math.Abs(goal.position.y - srauv.position.y) <= 0.25f &&
+            Math.Abs(goal.position.z - srauv.position.z) <= 0.25f)
         {
-            Debug.Log("Target Reached!");
+            Debug.Log($"Curr Pos x:{srauv.position.x}, y:{srauv.position.y} z:{srauv.position.z}");
+            Debug.Log($"Goal x:{goal.position.x}, y:{goal.position.y} z:{goal.position.z}");
+            Debug.Log($"Diffs x:{Math.Abs(goal.position.x - srauv.position.x)}, y:{Math.Abs(goal.position.y - srauv.position.y)} z:{Math.Abs(goal.position.z - srauv.position.z)} Target Reached!");
             SetReward(1f);
             EndEpisode();
         }
