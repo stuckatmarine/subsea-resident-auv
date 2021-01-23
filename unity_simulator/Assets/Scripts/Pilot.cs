@@ -130,7 +130,7 @@ public class Pilot : Agent
         rb.isKinematic = false;
 
         // reset current rotation
-        srauv.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
     }
 
     private Vector3 getRandomLocation()
