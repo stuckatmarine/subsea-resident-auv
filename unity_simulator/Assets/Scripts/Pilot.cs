@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,9 +10,9 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
+    public Transform goal;
     public Transform srauv;
     public Transform startPos;
-    public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
 
     public bool trigger = false;
     public bool colliding = false;
@@ -31,9 +32,10 @@ public class Pilot : Agent
 
     public override void Initialize()
     {
+        goal = GameObject.Find("goal").GetComponent<Transform>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         startPos = GameObject.Find("startPos").GetComponent<Transform>();
-        
+
         rb = srauv.GetComponent<Rigidbody>();
         collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
@@ -48,31 +50,33 @@ public class Pilot : Agent
     public override void CollectObservations(VectorSensor sensor) //consider adding norming
     {
         // dist sensors
-        sensor.AddObservation(distancesFloat[0]); 
-        sensor.AddObservation(distancesFloat[1]);
-        sensor.AddObservation(distancesFloat[2]);
-        sensor.AddObservation(distancesFloat[3]);
-        sensor.AddObservation(distancesFloat[4]);
-        sensor.AddObservation(distancesFloat[5]);
+        sensor.AddObservation(normalize(distancesFloat[0], 0.0f, 10.0f));
+        sensor.AddObservation(normalize(distancesFloat[1], 0.0f, 10.0f));
+        sensor.AddObservation(normalize(distancesFloat[2], 0.0f, 10.0f));
+        sensor.AddObservation(normalize(distancesFloat[3], 0.0f, 10.0f));
+        sensor.AddObservation(normalize(distancesFloat[4], 0.0f, 10.0f));
+        sensor.AddObservation(normalize(distancesFloat[5], 0.0f, 10.0f));
 
         // srauv position
-        sensor.AddObservation(srauv.position.x); 
-        sensor.AddObservation(srauv.position.y);
-        sensor.AddObservation(srauv.position.z);
-        sensor.AddObservation(srauv.rotation.y * 360.0f);
-        sensor.AddObservation(srauv.rotation.x * 360.0f);
-        sensor.AddObservation(srauv.rotation.z * 360.0f);
-
-        // dist from goal
-        sensor.AddObservation(goal[0] - srauv.position.x); 
-        sensor.AddObservation(goal[1] - srauv.position.y);
-        sensor.AddObservation(goal[2] - srauv.position.z);
+        sensor.AddObservation(normalize(srauv.position.x, 1.0f, 11.0f));
+        sensor.AddObservation(normalize(srauv.position.y, 1.0f, 6.0f));
+        sensor.AddObservation(normalize(srauv.position.z, -11.0f, 1.0f));
+        sensor.AddObservation(srauv.rotation.x);
+        sensor.AddObservation(srauv.rotation.y);
+        sensor.AddObservation(srauv.rotation.z);
+        
+        // goal position
+        sensor.AddObservation(normalize(goal.position.x, 1.0f, 11.0f));
+        sensor.AddObservation(normalize(goal.position.y, 1.0f, 6.0f));
+        sensor.AddObservation(normalize(goal.position.z, -11.0f, -1.0f));
 
         // maybe add current velocity?
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
+        AddReward(-0.0005f);
+
         var i = -1;
         var continuousActions = actionBuffers.ContinuousActions;
 
@@ -127,8 +131,7 @@ public class Pilot : Agent
     {
         // if academy resetParams.GetWithDefault()
         srauv.position = getRandomLocation();
-        goal = getRandomLocation();
-        Debug.Log(goal);
+        goal.position = getRandomLocation(); // maybe check its not to close already
 
         // reset all current velocties
         rb.isKinematic = true;
@@ -156,15 +159,14 @@ public class Pilot : Agent
     }
 
     private void OnCollisionExit(Collision collisionInfo)
+    private float normalize(float val, float min, float max)
     {
-        // TODO: deal with multiple collisions, maybe int?
-        colliding = false;
+        return (val - min)/(max - min);
     }
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
-        Debug.Log("Collision Enter!!");
-        colliding = true;
+        AddReward(-0.5f);
     }
 
     private void OnTriggerEnter(Collider collision)
