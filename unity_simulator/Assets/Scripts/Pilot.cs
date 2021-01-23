@@ -70,6 +70,9 @@ public class Pilot : Agent
         sensor.AddObservation(normalize(goal.position.z, -11.0f, -1.0f));
 
         // maybe add current velocity?
+        sensor.AddObservation(rb.velocity.x);
+        sensor.AddObservation(rb.velocity.y);
+        sensor.AddObservation(rb.velocity.z);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
