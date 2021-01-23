@@ -15,7 +15,6 @@ public class Pilot : Agent
     public Transform startPos;
 
     public bool trigger = false;
-    public bool colliding = false;
     
     private Rigidbody rb;
     private Collider collider;
@@ -25,7 +24,7 @@ public class Pilot : Agent
     private Texture2D frontCamTexture;
 
     private GameObject thrusterController;
-    private float[] forces = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
+    private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private float[] distancesFloat;
 
     private EnvironmentParameters resetParams;
@@ -87,24 +86,18 @@ public class Pilot : Agent
         thrustCtrl.applyVertThrust(0, continuousActions[++i]*2);
         thrustCtrl.applyVertThrust(1, continuousActions[++i]*2);
 
-        if (colliding) 
-        {
-            AddReward(-0.5f);
-            //EndEpisode(); // or not?
-        }
-
         if (distancesFloat[0] <= 0.5f)
-            AddReward(-0.1f); // 0.5f - distancesFloat[0] ?
+            AddReward(-0.05f); // 0.5f - distancesFloat[0] ?
         if (distancesFloat[1] <= 0.5f)
-            AddReward(-0.1f);
+            AddReward(-0.05f);
         if (distancesFloat[2] <= 0.5f)
-            AddReward(-0.1f);
+            AddReward(-0.05f);
         if (distancesFloat[3] <= 0.5f)
-            AddReward(-0.1f);
+            AddReward(-0.05f);
         if (distancesFloat[4] <= 0.5f)
-            AddReward(-0.1f);
+            AddReward(-0.05f);
         if (distancesFloat[5] <= 0.5f)
-            AddReward(-0.1f);
+            AddReward(-0.05f);
 
         if (goal.x - srauv.position.x <= 0.3 &&
             goal.y - srauv.position.y <= 0.3 &&
@@ -114,7 +107,6 @@ public class Pilot : Agent
             SetReward(1f);
             EndEpisode();
         }
-        AddReward(-0.05f);
     }
 
     public override void OnEpisodeBegin()
@@ -158,7 +150,6 @@ public class Pilot : Agent
         return new Vector3(x, y, z);
     }
 
-    private void OnCollisionExit(Collision collisionInfo)
     private float normalize(float val, float min, float max)
     {
         return (val - min)/(max - min);
