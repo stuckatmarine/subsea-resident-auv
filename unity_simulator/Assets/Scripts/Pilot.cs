@@ -77,7 +77,7 @@ public class Pilot : Agent
         foreach (float dist in distancesFloat)
         {
             if (dist < 0.5f)
-                AddReward(0.5f - dist);
+                AddReward(-(0.5f - dist));
         }
 
         if (Math.Abs(goal.position.x - srauv.position.x) <= 0.25f &&
