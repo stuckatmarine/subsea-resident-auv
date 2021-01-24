@@ -72,18 +72,13 @@ public class Pilot : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        if (distancesFloat[0] <= 0.5f)
-            AddReward(-0.05f); // 0.5f - distancesFloat[0] ?
-        if (distancesFloat[1] <= 0.5f)
-            AddReward(-0.05f);
-        if (distancesFloat[2] <= 0.5f)
-            AddReward(-0.05f);
-        if (distancesFloat[3] <= 0.5f)
-            AddReward(-0.05f);
-        if (distancesFloat[4] <= 0.5f)
-            AddReward(-0.05f);
-        if (distancesFloat[5] <= 0.5f)
-            AddReward(-0.05f);
+        AddReward(-0.005f);
+
+        foreach (float dist in distancesFloat)
+        {
+            if (dist < 0.5f)
+                AddReward(0.5f - dist);
+        }
 
         if (Math.Abs(goal.position.x - srauv.position.x) <= 0.25f &&
             Math.Abs(goal.position.y - srauv.position.y) <= 0.25f &&
