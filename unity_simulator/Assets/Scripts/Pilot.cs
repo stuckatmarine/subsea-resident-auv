@@ -27,10 +27,10 @@ public class Pilot : Agent
     private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private float[] distancesFloat;
 
-    private float LongitudinalSpd = 40.0f;
-    private float LaterialSpd = 40.0f;
-    private float VerticalSpd = 40.0f;
-    private float YawSpd = 40.0f;
+    private float LongitudinalSpd = 3.0f;
+    private float LaterialSpd = 3.0f;
+    private float VerticalSpd = 3.0f;
+    private float YawSpd = 3.0f;
 
     private Vector3 TankMins = new Vector3(1.0f, 1.0f, -11.0f);
     private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
@@ -84,9 +84,10 @@ public class Pilot : Agent
             Math.Abs(goal.position.y - srauv.position.y) <= 0.25f &&
             Math.Abs(goal.position.z - srauv.position.z) <= 0.25f)
         {
+            Debug.Log("------");
             Debug.Log($"Curr Pos x:{srauv.position.x}, y:{srauv.position.y} z:{srauv.position.z}");
             Debug.Log($"Goal x:{goal.position.x}, y:{goal.position.y} z:{goal.position.z}");
-            Debug.Log($"Diffs x:{Math.Abs(goal.position.x - srauv.position.x)}, y:{Math.Abs(goal.position.y - srauv.position.y)} z:{Math.Abs(goal.position.z - srauv.position.z)} Target Reached!");
+            Debug.Log("Target Reached!");
             SetReward(1f);
             EndEpisode();
         }
