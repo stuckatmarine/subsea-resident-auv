@@ -678,10 +678,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 8dcd39a8-2ad4-4e99-891e-d56497181c0c
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: WaypointEditor
+  organizationId: anash1324
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

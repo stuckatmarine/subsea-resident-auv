@@ -27,6 +27,9 @@ public class Pilot : Agent
     private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private float[] distancesFloat;
 
+    private Vector3 tankMins = new Vector3(1.0f, 1.0f, -11.0f);
+    private Vector3 tankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
+
     private EnvironmentParameters resetParams;
 
     public override void Initialize()
@@ -39,40 +42,27 @@ public class Pilot : Agent
         collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
 
-        frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
+        //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
         
         //resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
 
-    public override void CollectObservations(VectorSensor sensor) //consider adding norming
+    public override void CollectObservations(VectorSensor sensor)
     {
         // dist sensors
-        sensor.AddObservation(normalize(distancesFloat[0], 0.0f, 10.0f));
-        sensor.AddObservation(normalize(distancesFloat[1], 0.0f, 10.0f));
-        sensor.AddObservation(normalize(distancesFloat[2], 0.0f, 10.0f));
-        sensor.AddObservation(normalize(distancesFloat[3], 0.0f, 10.0f));
-        sensor.AddObservation(normalize(distancesFloat[4], 0.0f, 10.0f));
-        sensor.AddObservation(normalize(distancesFloat[5], 0.0f, 10.0f));
+        foreach (float observation in distancesFloat) 
+            sensor.AddObservation(normalize(observation, 0.0f, 10.0f));
 
-        // srauv position
-        sensor.AddObservation(normalize(srauv.position.x, 1.0f, 11.0f));
-        sensor.AddObservation(normalize(srauv.position.y, 1.0f, 6.0f));
-        sensor.AddObservation(normalize(srauv.position.z, -11.0f, 1.0f));
-        sensor.AddObservation(srauv.rotation.x);
-        sensor.AddObservation(srauv.rotation.y);
-        sensor.AddObservation(srauv.rotation.z);
-        
+        // srauv info
+        sensor.AddObservation(normalize(srauv.position, tankMins, tankMaxs));
+        sensor.AddObservation(srauv.rotation);
+        sensor.AddObservation(rb.velocity);
+        sensor.AddObservation(rb.angularVelocity);
+
         // goal position
-        sensor.AddObservation(normalize(goal.position.x, 1.0f, 11.0f));
-        sensor.AddObservation(normalize(goal.position.y, 1.0f, 6.0f));
-        sensor.AddObservation(normalize(goal.position.z, -11.0f, -1.0f));
-
-        // maybe add current velocity?
-        sensor.AddObservation(rb.velocity.x);
-        sensor.AddObservation(rb.velocity.y);
-        sensor.AddObservation(rb.velocity.z);
+        sensor.AddObservation(normalize(goal.position, tankMins, tankMaxs));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -145,14 +135,22 @@ public class Pilot : Agent
 
         do
         {
-            x = Random.Range(1f, 11f);
-            y = Random.Range(1f, 6f);
-            z = Random.Range(-1f, -11f);
+            x = Random.Range(tankMins.x, tankMaxs.x);
+            y = Random.Range(tankMins.y, tankMaxs.y);
+            z = Random.Range(tankMins.z, tankMaxs.z);
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger);
 
         return new Vector3(x, y, z);
+    }
+
+    private Vector3 normalize(Vector3 val, Vector3 min, Vector3 max)
+    {
+        return new Vector3(
+            normalize(val.x, min.x, max.x),
+            normalize(val.y, min.y, max.y),
+            normalize(val.z, min.z, max.z));
     }
 
     private float normalize(float val, float min, float max)
