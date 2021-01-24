@@ -27,8 +27,11 @@ public class Pilot : Agent
     private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     private float[] distancesFloat;
 
-    private Vector3 tankMins = new Vector3(1.0f, 1.0f, -11.0f);
-    private Vector3 tankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
+    private float LongitudinalSpd = 40.0f;
+    private float LaterialSpd = 40.0f;
+    private float VerticalSpd = 40.0f;
+    private float YawSpd = 40.0f;
+
     private Vector3 TankMins = new Vector3(1.0f, 1.0f, -11.0f);
     private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
 
@@ -69,18 +72,6 @@ public class Pilot : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        AddReward(-0.0005f);
-
-        var i = -1;
-        var continuousActions = actionBuffers.ContinuousActions;
-
-        thrustCtrl.applyLatThrust(0, continuousActions[++i]*2);
-        thrustCtrl.applyLatThrust(1, continuousActions[++i]*2);
-        thrustCtrl.applyLatThrust(2, continuousActions[++i]*2);
-        thrustCtrl.applyLatThrust(3, continuousActions[++i]*2);
-        thrustCtrl.applyVertThrust(0, continuousActions[++i]*2);
-        thrustCtrl.applyVertThrust(1, continuousActions[++i]*2);
-
         if (distancesFloat[0] <= 0.5f)
             AddReward(-0.05f); // 0.5f - distancesFloat[0] ?
         if (distancesFloat[1] <= 0.5f)
@@ -103,6 +94,56 @@ public class Pilot : Agent
             Debug.Log($"Diffs x:{Math.Abs(goal.position.x - srauv.position.x)}, y:{Math.Abs(goal.position.y - srauv.position.y)} z:{Math.Abs(goal.position.z - srauv.position.z)} Target Reached!");
             SetReward(1f);
             EndEpisode();
+        }
+
+        MoveAgent(actionBuffers.DiscreteActions);
+    }
+
+    private void MoveAgent(ActionSegment<int> act)
+    {
+        var longitudinal = act[0];
+        var laterial = act[1];
+        var vertical = act[2];
+        var yaw = act[3];
+
+        switch (longitudinal)
+        {
+            case 1:
+                thrustCtrl.moveForward(LongitudinalSpd);                
+                break;
+            case 2:
+                thrustCtrl.moveReverse(LongitudinalSpd);
+                break;
+        }
+
+        switch (laterial)
+        {
+            case 1:
+                thrustCtrl.strafeRight(LaterialSpd);
+                break;
+            case 2:
+                thrustCtrl.strafeLeft(LaterialSpd);
+                break;
+        }
+
+        switch (vertical)
+        {
+            case 1:
+                thrustCtrl.vertUp(VerticalSpd);
+                break;
+            case 2:
+                thrustCtrl.vertDown(VerticalSpd);
+                break;
+        }
+
+        switch (yaw)
+        {
+            case 1:
+                thrustCtrl.turnRight(YawSpd);
+                break;
+            case 2:
+                thrustCtrl.turnLeft(YawSpd);
+                break;
         }
     }
 
