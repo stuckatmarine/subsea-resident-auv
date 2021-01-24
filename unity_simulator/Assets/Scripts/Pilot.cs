@@ -29,6 +29,8 @@ public class Pilot : Agent
 
     private Vector3 tankMins = new Vector3(1.0f, 1.0f, -11.0f);
     private Vector3 tankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
+    private Vector3 TankMins = new Vector3(1.0f, 1.0f, -11.0f);
+    private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
 
     private EnvironmentParameters resetParams;
 
@@ -52,17 +54,17 @@ public class Pilot : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // dist sensors
-        foreach (float observation in distancesFloat) 
-            sensor.AddObservation(normalize(observation, 0.0f, 10.0f));
+        foreach (float dist in distancesFloat) 
+            sensor.AddObservation(Normalize(dist, 0.0f, 10.0f));
 
         // srauv info
-        sensor.AddObservation(normalize(srauv.position, tankMins, tankMaxs));
+        sensor.AddObservation(Normalize(srauv.position, TankMins, TankMaxs));
         sensor.AddObservation(srauv.rotation);
         sensor.AddObservation(rb.velocity);
         sensor.AddObservation(rb.angularVelocity);
 
         // goal position
-        sensor.AddObservation(normalize(goal.position, tankMins, tankMaxs));
+        sensor.AddObservation(Normalize(goal.position, TankMins, TankMaxs));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -117,8 +119,8 @@ public class Pilot : Agent
     public void SetResetParameters()
     {
         // if academy resetParams.GetWithDefault()
-        srauv.position = getRandomLocation();
-        goal.position = getRandomLocation(); // maybe check its not to close already
+        srauv.position = GetRandomLocation();
+        goal.position = GetRandomLocation(); // maybe check its not to close already
 
         // reset all current velocties
         rb.isKinematic = true;
@@ -128,16 +130,16 @@ public class Pilot : Agent
         srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
     }
 
-    private Vector3 getRandomLocation()
+    private Vector3 GetRandomLocation()
     {
         // x: 1 - 11, y: 1 - 6, z: (-1) - (-11)
         float x = 0.0f, y = 0.0f, z = 0.0f;
 
         do
         {
-            x = Random.Range(tankMins.x, tankMaxs.x);
-            y = Random.Range(tankMins.y, tankMaxs.y);
-            z = Random.Range(tankMins.z, tankMaxs.z);
+            x = Random.Range(TankMins.x, TankMaxs.x);
+            y = Random.Range(TankMins.y, TankMaxs.y);
+            z = Random.Range(TankMins.z, TankMaxs.z);
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger);
@@ -145,15 +147,15 @@ public class Pilot : Agent
         return new Vector3(x, y, z);
     }
 
-    private Vector3 normalize(Vector3 val, Vector3 min, Vector3 max)
+    private Vector3 Normalize(Vector3 val, Vector3 min, Vector3 max)
     {
         return new Vector3(
-            normalize(val.x, min.x, max.x),
-            normalize(val.y, min.y, max.y),
-            normalize(val.z, min.z, max.z));
+            Normalize(val.x, min.x, max.x),
+            Normalize(val.y, min.y, max.y),
+            Normalize(val.z, min.z, max.z));
     }
 
-    private float normalize(float val, float min, float max)
+    private float Normalize(float val, float min, float max)
     {
         return (val - min)/(max - min);
     }
