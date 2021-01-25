@@ -7,7 +7,6 @@
 
 import threading
 import time
-import logging
 
 class ThrusterThread(threading.Thread):
     def __init__(self, config, id, data_arr):
@@ -24,15 +23,16 @@ class ThrusterThread(threading.Thread):
 
     def apply_thrust(self):
         if self.thrust_enabled == False:
+            #  TODO stop thrusters if first cycle afer stopping
             return
 
         # check if deadman has timedout
         if time.time() - self.last_heartbeat >= self.deadman_timeout_s:
             self.thrust_enabled = False
-            logging.info(f"Thruster_id:{self.id} deadman expired, thrust_enabled:{self.thrust_enabled}")
+            print(f"Deadman expired, Thruster_id:{self.id} thrust_enabled:{self.thrust_enabled}")
         else:
             # update with thrust applying code
-            logging.debug(f"Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
+            print(f"Applying Thrust, Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
 
 
     def do_thrust(self, enable):

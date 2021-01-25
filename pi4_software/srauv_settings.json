@@ -8,11 +8,17 @@
     "tel_tx_interval_ms": 500,
     "cmd_tx_interval_ms": 500,
     "default_comms_response_str": "",
-    "enable_manual_controls": true,
+    "waypoint_tolerence_m": 0.1,
+    "fly_sim": true,
+    "manual_deadman_timeout_ms": 2000,
+    "log_to_stdout": true,
     "dist_sensor_config":{
         "num_sensors": 5,
         "min_cm": 10,
         "max_cm": 200,
+        "poll_interval_s": 0.5
+    },
+    "imu_sensor_config":{
         "poll_interval_s": 0.5
     },
     "thruster_config":{
@@ -20,6 +26,121 @@
         "min_thrust": -100,
         "max_thrust": 100,
         "deadman_timeout_s": 1,
-        "thrust_interval_s": 0.5
+        "thrust_interval_s": 0.5,
+        "max_spd_min_range_m": 0.5,
+        "fwd":[
+            25,
+            25,
+            25,
+            25,
+            0,
+            0
+        ],
+        "rev":[
+            -25,
+            -25,
+            -25,
+            -25,
+            0,
+            0
+        ],
+        "lat_right":[
+            -25,
+            25,
+            -25,
+            25,
+            0,
+            0
+        ],
+        "lat_left":[
+            25,
+            -25,
+            25,
+            -25,
+            0,
+            0
+        ],
+        "rot_right":[
+            -25,
+            -25,
+            25,
+            25,
+            0,
+            0
+        ],
+        "rot_left":[
+            25,
+            25,
+            -25,
+            -25,
+            0,
+            0
+        ],
+        "up":[
+            0,
+            0,
+            0,
+            0,
+            50,
+            50
+        ],
+        "down":[
+            0,
+            0,
+            0,
+            0,
+            -50,
+            -50
+        ]
+    },
+    "waypoint_route":{
+        "0": "base_corner_lo",
+        "1": "middle_tank_lo",
+        "2": "middle_tank_hi",
+        "3": "middle_tank_lo",
+        "4": "base_corner_lo",
+        "5": "base_corner_surface"
+    },
+    "waypoint_targets":{
+        "base_corner_lo":{
+            "tag": "base_corner_lo",
+            "pos_x": 1.0,
+            "pos_y": 0.5,
+            "pos_z": 1.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "base_corner_surface":{
+            "tag": "base_corner_surface",
+            "pos_x": 1.0,
+            "pos_y": 4.0,
+            "pos_z": 1.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "middle_tank_lo":{
+            "tag": "middle_tank_lo",
+            "pos_x": 3.0,
+            "pos_y": 0.5,
+            "pos_z": 3.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "middle_tank_hi":{
+            "tag": "middle_tank_hi",
+            "pos_x": 3.0,
+            "pos_y": 2.0,
+            "pos_z": 3.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        }
     }
 }
