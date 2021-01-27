@@ -1,0 +1,52 @@
+{
+    "route":{
+        "0": "base_corner_lo",
+        "1": "middle_tank_lo",
+        "2": "middle_tank_hi",
+        "3": "middle_tank_lo",
+        "4": "base_corner_lo",
+        "5": "base_corner_surface"
+    },
+    "targets":{
+        "base_corner_lo":{
+            "tag": "base_corner_lo",
+            "pos_x": 1.0,
+            "pos_y": 0.5,
+            "pos_z": 1.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "base_corner_surface":{
+            "tag": "base_corner_surface",
+            "pos_x": 1.0,
+            "pos_y": 4.0,
+            "pos_z": 1.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "middle_tank_lo":{
+            "tag": "middle_tank_lo",
+            "pos_x": 3.0,
+            "pos_y": 0.5,
+            "pos_z": 3.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "middle_tank_hi":{
+            "tag": "middle_tank_hi",
+            "pos_x": 3.0,
+            "pos_y": 2.0,
+            "pos_z": 3.0,
+            "tolerance": 0.2,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        }
+    }
+}

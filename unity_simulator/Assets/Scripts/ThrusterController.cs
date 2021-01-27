@@ -10,12 +10,15 @@ public class ThrusterController : MonoBehaviour
     public Transform[] latThrusters; // clockwise from 0deg heading
     public Transform[] UiVertThrusters;
     public Transform[] UiLatThrusters;
+    public float[] raw_thrust;
+    public float raw_thrust_spd = 25.0f;
+    public string[] dir_thrust;
     public Rigidbody rb;
     public float vertSpd = 5.0f;
     public float latSpd = 5.0f;
     
-    public bool enableManualCmds = true;
-    public bool enableAbsoluteCmds = false;
+    public bool enableManualCmds = true;        // use thrust inputs in sim as force
+    public bool enableAbsoluteCmds = false;     // move around sim without physics
 
     public ServerCommunication WS;
     public Material lineMaterial;
@@ -23,16 +26,32 @@ public class ThrusterController : MonoBehaviour
     public bool drawLinesManual = true;
     private LineDrawer ld;
 
+    public bool raw_thrust_used = false;
+    public bool dir_thrust_used = false;
+
     void Start()
     {
         ld = new LineDrawer(lineMaterial);
-        enableManual();
+        // enableManual();
+
+        raw_thrust = new float[6]{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
+        dir_thrust = new string[4]{"", "", "", ""};
     }
 
     // Update is called once per frame
     void Update()
     {
-        // ehcange what spacebar does
+        for (int i = 0 ; i < 6; i++)
+        {
+            raw_thrust[i] = 0;
+            if (i < 4)
+                dir_thrust[i] = "_";
+        }
+
+        raw_thrust_used = false;
+        dir_thrust_used = false;
+        
+        // exchange what spacebar does
         if (Input.GetKeyDown(KeyCode.Escape))
             resetScene();
 
@@ -46,6 +65,12 @@ public class ThrusterController : MonoBehaviour
             else
                 vertUp(vertSpd);
 
+            dir_thrust[3] = "up";
+            raw_thrust[4] = raw_thrust_spd;
+            raw_thrust[5] = raw_thrust_spd;
+            
+            raw_thrust_used = true;
+            dir_thrust_used = true;
             // transform.position = transform.position + new Vector3(horizontalInput * movementSpeed * Time.deltaTime, verticalInput * movementSpeed * Time.deltaTime, 0);
         }
         else if (Input.GetKey(KeyCode.DownArrow))
@@ -56,6 +81,12 @@ public class ThrusterController : MonoBehaviour
                                                  transform.position.z);
             else
                 vertDown(vertSpd);
+
+            dir_thrust[3] = "down";
+            raw_thrust[4] = -raw_thrust_spd;
+            raw_thrust[5] = -raw_thrust_spd;
+            raw_thrust_used = true;
+            dir_thrust_used = true;
         }
 
         // move laterlly
@@ -67,6 +98,9 @@ public class ThrusterController : MonoBehaviour
                                                  transform.position.z + 0.1f);
             else
                 strafeRight(latSpd);
+
+            dir_thrust[1] = "lat_right";
+            dir_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.A))
         {
@@ -76,6 +110,9 @@ public class ThrusterController : MonoBehaviour
                                                  transform.position.z - 0.1f);
             else
                 strafeLeft(latSpd);
+
+            dir_thrust[1] = "lat_left";
+            dir_thrust_used = true;
         }
 
         // move forward
@@ -87,6 +124,9 @@ public class ThrusterController : MonoBehaviour
                                                  transform.position.z);
             else
                 moveForward(latSpd);
+
+            dir_thrust[0] = "fwd";
+            dir_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.S))
         {
@@ -96,6 +136,9 @@ public class ThrusterController : MonoBehaviour
                                                  transform.position.z);
             else
                 moveReverse(latSpd);
+
+            dir_thrust[0] = "rev";
+            dir_thrust_used = true;
         }
 
         // turn
@@ -105,6 +148,9 @@ public class ThrusterController : MonoBehaviour
                 transform.Rotate(transform.rotation.x, transform.rotation.y + 1.0f, transform.rotation.z, Space.Self);
             else
                 turnRight(latSpd);
+
+            dir_thrust[2] = "rot_right";
+            dir_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
         {
@@ -112,6 +158,9 @@ public class ThrusterController : MonoBehaviour
                 transform.Rotate(transform.rotation.x, transform.rotation.y - 1.0f, transform.rotation.z, Space.Self);
             else
                 turnLeft(latSpd);
+
+            dir_thrust[2] = "rot_left";
+            dir_thrust_used = true;
         }
 
         //////    Individual thrusters     //////
@@ -125,40 +174,56 @@ public class ThrusterController : MonoBehaviour
         if (Input.GetKey(KeyCode.T))
         {
             applyThrust(latThrusters[2], latSpd);
+            raw_thrust[2] = raw_thrust_spd;
+            raw_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.G))
         {
             applyThrust(latThrusters[2], -latSpd);
+            raw_thrust[2] = -raw_thrust_spd;
+            raw_thrust_used = true;
         }
 
         // FL
         if (Input.GetKey(KeyCode.Y))
         {
             applyThrust(latThrusters[3], latSpd);
+            raw_thrust[3] = raw_thrust_spd;
+            raw_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.H))
         {
             applyThrust(latThrusters[3], -latSpd);
+            raw_thrust[3] = -raw_thrust_spd;
+            raw_thrust_used = true;
         }
 
         // FR
         if (Input.GetKey(KeyCode.U))
         {
             applyThrust(latThrusters[0], latSpd);
+            raw_thrust[0] = raw_thrust_spd;
+            raw_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.J))
         {
             applyThrust(latThrusters[0], -latSpd);
+            raw_thrust[0] = -raw_thrust_spd;
+            raw_thrust_used = true;
         }
 
         // RR
         if (Input.GetKey(KeyCode.I))
         {
             applyThrust(latThrusters[1], latSpd);
+            raw_thrust[1] = raw_thrust_spd;
+            raw_thrust_used = true;
         }
         else if (Input.GetKey(KeyCode.K))
         {
             applyThrust(latThrusters[1], -latSpd);
+            raw_thrust[1] = -raw_thrust_spd;
+            raw_thrust_used = true;
         }
     }
 

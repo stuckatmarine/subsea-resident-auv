@@ -11,7 +11,7 @@
     "waypoint_tolerence_m": 0.1,
     "fly_sim": true,
     "manual_deadman_timeout_ms": 2000,
-    "log_to_stdout": true,
+    "log_to_stdout": false,
     "dist_sensor_config":{
         "num_sensors": 5,
         "min_cm": 10,
@@ -92,55 +92,5 @@
             -50,
             -50
         ]
-    },
-    "waypoint_route":{
-        "0": "base_corner_lo",
-        "1": "middle_tank_lo",
-        "2": "middle_tank_hi",
-        "3": "middle_tank_lo",
-        "4": "base_corner_lo",
-        "5": "base_corner_surface"
-    },
-    "waypoint_targets":{
-        "base_corner_lo":{
-            "tag": "base_corner_lo",
-            "pos_x": 1.0,
-            "pos_y": 0.5,
-            "pos_z": 1.0,
-            "tolerance": 0.2,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "base_corner_surface":{
-            "tag": "base_corner_surface",
-            "pos_x": 1.0,
-            "pos_y": 4.0,
-            "pos_z": 1.0,
-            "tolerance": 0.2,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "middle_tank_lo":{
-            "tag": "middle_tank_lo",
-            "pos_x": 3.0,
-            "pos_y": 0.5,
-            "pos_z": 3.0,
-            "tolerance": 0.2,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "middle_tank_hi":{
-            "tag": "middle_tank_hi",
-            "pos_x": 3.0,
-            "pos_y": 2.0,
-            "pos_z": 3.0,
-            "tolerance": 0.2,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        }
     }
 }

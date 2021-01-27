@@ -36,6 +36,7 @@ import telemetry_msg
 import internal_socket_server
 import logger
 from srauv_settings import SETTINGS
+from waypoint_parser import WAYPOINT_INFO
 
 ###################  Globals  ###################
 
@@ -141,6 +142,7 @@ def parse_received_command():
             go_to_idle()
 
         if tel["state"] == "manual":
+            can_thrust = cmd_recv["can_thrust"]
             manual_deadman_timestamp = timestamp.now_int_ms()
 
         logger.info(f"Forcing state to {tel['state']}, can_thrust:{can_thrust}")
@@ -149,15 +151,6 @@ def parse_received_command():
         fly_sim = True
     elif cmd_recv["action"] == "fly_sim_false":
         fly_sim = False
-
-    # update srauv with cmd'ed values
-    if tel["manual"]:
-        thrust_values[0] = cmd_recv["thrust_fwd"]
-        thrust_values[1] = cmd_recv["thrust_right"]
-        thrust_values[2] = cmd_recv["thrus_rear"]
-        thrust_values[3] = cmd_recv["thrust_left"]
-        thrust_values[4] = cmd_recv["thrust_v_right"]
-        thrust_values[5] = cmd_recv["thrust_v_left"]
 
 
 def update_telemetry():
@@ -169,11 +162,12 @@ def update_telemetry():
     tel["left_dist"] = dist_sensor_values[3]
     tel["alt"] = dist_sensor_values[4]
     tel["depth"] = 1.1 # TODO depth sensor getter
+    tel["raw_thrust"] = thrust_values
     logger.info(f"tel:{tel}")
 
 
 def setup_waypoints(waypoint_idx):
-    route = SETTINGS["waypoint_route"]
+    route = WAYPOINT_INFO["route"]
     for w in route:
         logger.info(f"Adding waypoint:'{route[w]}'")
         waypoint_path.append(route[w])
@@ -190,8 +184,14 @@ def update_waypoint(waypoint_idx):
 
     #  TODO add velocity and hold duration handling
     try:
-        target = SETTINGS["waypoint_targets"][waypoint_path[waypoint_idx]]
+        target = WAYPOINT_INFO["targets"][waypoint_path[waypoint_idx]]
         tol = target["tolerance"]
+
+        # update target pos so sim can update visually
+        if fly_sim == True:
+            tel["target_pos_x"] = target["pos_x"]
+            tel["target_pos_y"]  = target["pos_y"]
+            tel["target_pos_z"]  = target["pos_z"]
         
         t_dist_x = tel["pos_x"] - target["pos_x"]
         t_dist_y = tel["pos_y"] - target["pos_y"]
@@ -221,46 +221,9 @@ def update_waypoint(waypoint_idx):
         sys.exit()
 
 def estimate_position():
-    global can_thrust
     # TODO calculate position from distance values
     # TODO update distance to targer t_dist_xyz
 
-    #  mock, update based on thrust
-    delta_t = UPDATE_INTERVAL_MS / 1000
-    THRUST_TO_VERT_SCALE_FACTOR = 0.005
-    thrust_z = 0
-    thrust_x = 0
-    thrust_y = 0
-    
-    for i in range(4):
-        thrust_z += thrust_values[i]
-        if i % 2 == 0:
-            thrust_x -= thrust_values[i]
-        else:
-            thrust_x += thrust_values[i]
-    for i in range(4, 6):
-        thrust_y += thrust_values[i]
-
-    if can_thrust:
-        vel_x = thrust_x * THRUST_TO_VERT_SCALE_FACTOR
-        vel_y = thrust_y * THRUST_TO_VERT_SCALE_FACTOR
-        vel_z = thrust_z * THRUST_TO_VERT_SCALE_FACTOR
-        # vel_rot = thrust_z * THRUST_TO_VERT_SCALE_FACTOR
-    else:
-        vel_x = 0
-        vel_y = 0
-        vel_z = 0
-        # vel_rot = 0
-
-    tel["pos_x"] += vel_x * delta_t
-    tel["pos_y"] += vel_y * delta_t
-    tel["pos_z"] += vel_z * delta_t
-
-    # print(tel)
-    # print(vel_x)
-    # print(vel_y)
-    # print(vel_z)
-    # tel["heading"] += vel_rot * delta_t
     if tel["heading"] >= 360:
         tel["heading"] -= 360
 
@@ -296,6 +259,9 @@ def evaluate_state():
 def add_thrust(val_arr, direction):
     amt = thurster_config[direction]
     for i in range(thurster_config["num_thrusters"]):
+        if i == "":
+            continue
+
         val_arr[i] += amt[i]
 
 
@@ -306,34 +272,50 @@ def calculate_thrust(thrust_values):
     
     print(f"targets x,y,z,h:({t_dist_x}, {t_dist_y}, {t_dist_z}, {t_heading_off})")
     print(f"min range to thrust {thurster_config['max_spd_min_range_m']})")
-        
-    if abs(t_dist_x) > thurster_config["max_spd_min_range_m"]:
-        if t_dist_x > 0:
-            add_thrust(new_thrust_values, "fwd")
-        else:
-            add_thrust(new_thrust_values, "rev")
+    
+    if tel["state"] == "running":
+        if abs(t_dist_x) > thurster_config["max_spd_min_range_m"]:
+            if t_dist_x > 0:
+                add_thrust(new_thrust_values, "fwd")
+            else:
+                add_thrust(new_thrust_values, "rev")
 
-    if abs(t_dist_y) > thurster_config["max_spd_min_range_m"]:
-        if t_dist_y > 0:
-            add_thrust(new_thrust_values, "up")
-        else:
-            add_thrust(new_thrust_values, "down")
+        if abs(t_dist_y) > thurster_config["max_spd_min_range_m"]:
+            if t_dist_y > 0:
+                add_thrust(new_thrust_values, "up")
+            else:
+                add_thrust(new_thrust_values, "down")
 
-    if abs(t_dist_z) > thurster_config["max_spd_min_range_m"]:
-        if t_dist_z > 0:
-            add_thrust(new_thrust_values, "lat_right")
-        else:
-            add_thrust(new_thrust_values, "lat_left")
+        if abs(t_dist_z) > thurster_config["max_spd_min_range_m"]:
+            if t_dist_z > 0:
+                add_thrust(new_thrust_values, "lat_right")
+            else:
+                add_thrust(new_thrust_values, "lat_left")
 
-    if abs(t_heading_off) > SETTINGS["waypoint_targets"][waypoint_path[waypoint_idx]]["heading_tol"]:
-        if t_heading_off > 0:
-            add_thrust(new_thrust_values, "rot_right")
-        else:
-            add_thrust(new_thrust_values, "rot_left")
+        if abs(t_heading_off) > WAYPOINT_INFO["targets"][waypoint_path[waypoint_idx]]["heading_tol"]:
+            if t_heading_off > 0:
+                add_thrust(new_thrust_values, "rot_right")
+            else:
+                add_thrust(new_thrust_values, "rot_left")
+    
+    elif tel["state"] == "manual": # update srauv with cmd'ed values
+        if cmd_recv["thrust_type"] == "raw_thrust":
+            thrust_values[0] = cmd_recv["raw_thrust"][0]
+            thrust_values[1] = cmd_recv["raw_thrust"][1]
+            thrust_values[2] = cmd_recv["raw_thrust"][2]
+            thrust_values[3] = cmd_recv["raw_thrust"][3]
+            thrust_values[4] = cmd_recv["raw_thrust"][4]
+            thrust_values[5] = cmd_recv["raw_thrust"][5]
+
+        elif cmd_recv["thrust_type"] == "dir_thrust":
+            add_thrust(new_thrust_values, cmd_recv["dir_thrust"][0])
+            add_thrust(new_thrust_values, cmd_recv["dir_thrust"][1])
+            add_thrust(new_thrust_values, cmd_recv["dir_thrust"][2])
+            add_thrust(new_thrust_values, cmd_recv["dir_thrust"][3])
 
     for i in range(6):
         thrust_values[i] = new_thrust_values[i]
-    print(f"Thrust valuse {thrust_values}") # TODO: remove when confirmed working
+    print(f"Thrust valuse {thrust_values}")
 
 
 def setup_distance_sensor_threads(ds_config, data_arr):

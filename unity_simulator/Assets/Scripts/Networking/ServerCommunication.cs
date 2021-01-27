@@ -10,6 +10,8 @@ using UnityEngine.UI;
 /// </summary>
 public class ServerCommunication : MonoBehaviour
 {
+    public bool send_cmds = false;
+    public bool send_tel = false;
     public bool disableWebsocketServer = false;
     public bool enableLogging = false;
     public bool enableVehicleCmds = false;
@@ -33,8 +35,9 @@ public class ServerCommunication : MonoBehaviour
 
     public int txIntervalMs = 1000;
     private int lastTxTime = 0;
-    public TelemetryModel tm = new TelemetryModel();
-    public CamShotModel cm = new CamShotModel();
+    public TelemetryModel tel_msg = new TelemetryModel();
+    public CommandModel cmd_msg = new CommandModel();
+    public CamPicModel cam_msg = new CamPicModel();
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
@@ -44,6 +47,8 @@ public class ServerCommunication : MonoBehaviour
     // public Transform[] distSensorVals;
     public float[] distancesFloat;
     public Transform srauv;
+    private Rigidbody rb;
+    public Vector3 goalPos;
     public Transform dock;
     public Transform tree1;
     public Transform tree2;
@@ -68,6 +73,9 @@ public class ServerCommunication : MonoBehaviour
     public float[] telDistanceFloats;
     public Transform[] telDistanceTransforms;
 
+    private float[] raw_thrust_arr;
+    private string[] dir_thrust_arr;
+
     // WebSocket Client
     private WsClient client;
     private GameObject thrusterController;
@@ -82,8 +90,17 @@ public class ServerCommunication : MonoBehaviour
     private void Awake()
     {
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
+        distancesFloat = srauv.GetComponent<DistanceSensors>().distancesFloat;
+        goalPos = srauv.GetComponent<Pilot>().goal;
+        raw_thrust_arr = srauv.GetComponent<ThrusterController>().raw_thrust;
+        cmd_msg.raw_thrust = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
+        
+        cmd_msg.dir_thrust = new string[]{"", "", "", ""};
+        rb = srauv.GetComponent<Rigidbody>();
+
+
         dock = GameObject.Find("Dock").GetComponent<Transform>();
-        distancesFloat = GameObject.Find("SRAUV").GetComponent<DistanceSensors>().distancesFloat;
+
         
         if (disableWebsocketServer)
             return;
@@ -93,7 +110,6 @@ public class ServerCommunication : MonoBehaviour
         tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
-        
 
         server = "ws://" + host + ":" + port;
         client = new WsClient(server);
@@ -125,9 +141,14 @@ public class ServerCommunication : MonoBehaviour
             HandleMessage(msg);
         }
 
+
         if (Time.time * 1000 > lastTxTime + txIntervalMs)
         {
-            SendRequest("placeholder");
+            if (send_cmds)
+                SendCmdRequest("cmd");
+            else if (send_tel)
+                SendTelRequest("tel");
+
             lastTxTime = (int)Time.time * 1000;
         }
 
@@ -151,7 +172,7 @@ public class ServerCommunication : MonoBehaviour
         var message = JsonUtility.FromJson<CommandModel>(msg);
 
         // // Picking correct method for message handling
-        switch (message.msgType)
+        switch (message.msg_type)
         {
             case "command":
                 {
@@ -162,12 +183,8 @@ public class ServerCommunication : MonoBehaviour
                     }
                     
                     Debug.Log("Apply Forces Here");
-                    forces[0] = message.thrustFwd;
-                    forces[1] = message.thrustRight;
-                    forces[2] = message.thrustRear;
-                    forces[3] = message.thrustLeft;
-                    forces[4] = message.vertA;
-                    forces[5] = message.vertB;
+                    for (int i = 0; i < 6; i++)
+                        forces[i] = message.raw_thrust[i];
                 }
                 break;
             case "telemetry":
@@ -176,14 +193,14 @@ public class ServerCommunication : MonoBehaviour
                     //  Update UI
                     var tel = JsonUtility.FromJson<TelemetryModel>(msg);
 
-                    telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posX.ToString("#.00");
-                    telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posY.ToString("#.00");
-                    telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.posZ.ToString("#.00");
+                    telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
+                    telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
+                    telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
                     telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
-                    telDistanceFloats[0] = tel.fwdDist;
-                    telDistanceFloats[1] = tel.rightDist;
-                    telDistanceFloats[2] = tel.rearDist;
-                    telDistanceFloats[3] = tel.leftDist;
+                    telDistanceFloats[0] = tel.fwd_dist;
+                    telDistanceFloats[1] = tel.right_dist;
+                    telDistanceFloats[2] = tel.rear_dist;
+                    telDistanceFloats[3] = tel.left_dist;
                     telDistanceFloats[4] = tel.depth;
                     telDistanceFloats[5] = tel.alt;
                     
@@ -196,13 +213,16 @@ public class ServerCommunication : MonoBehaviour
                     {
                         updateValues(i, vertMin, vertMax);
                     }
+
+                    for (int i = 0; i < 6; i++)
+                        forces[i] = message.raw_thrust[i];
                 }
                 break;
             case "reset":
                 SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
                 break;
             default:
-                Debug.Log("Unknown type of method: " + message.msgType);
+                Debug.Log("Unknown type of method: " + message.msg_type);
                 break;
         }
     }
@@ -219,55 +239,64 @@ public class ServerCommunication : MonoBehaviour
     /// Method which sends data through websocket
     /// </summary>
     /// <param name="message">Message.</param>
-    public void SendRequest(string message)
+    public void SendTelRequest(string message)
     {
-        tm.source = "sim";
-        tm.msgNum = txNum++;
-        tm.msgType = "telemetry";
+        tel_msg.source = "sim";
+        tel_msg.dest = "vehicle";
+        tel_msg.msg_num = txNum++;
+        tel_msg.msg_type = "telemetry";
         DateTime timestamp = DateTime.Now;
-        tm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
-        tm.fwdDist = distancesFloat[0];
-        tm.rightDist = distancesFloat[1];
-        tm.rearDist = distancesFloat[2];
-        tm.leftDist = distancesFloat[3];
-        tm.depth = distancesFloat[4];
-        tm.alt = distancesFloat[5];
-        tm.posX = srauv.position.x;
-        tm.posY = srauv.position.y;
-        tm.posZ = srauv.position.z;
-        tm.heading = srauv.rotation.y * 360.0f;
-        tm.roll = srauv.rotation.x * 360.0f;
-        tm.pitch = srauv.rotation.z * 360.0f;
-        if (dock)
-        {
-            tm.dockDist = Vector3.Distance(srauv.position, dock.position);
-            tm.dockDistX = srauv.position.x - dock.position.x;
-            tm.dockDistY = srauv.position.y - dock.position.y;
-            tm.dockDistZ = srauv.position.z - dock.position.z;
-        }
-        if (tree1)
-        {
-            tm.tree1Dist = Vector3.Distance(srauv.position, tree1.position);
-            tm.tree1DistX = srauv.position.x - tree1.position.x;
-            tm.tree1DistY = srauv.position.y - tree1.position.y;
-            tm.tree1DistZ = srauv.position.z - tree1.position.z;
-        }
-        if (tree2)
-        {
-            tm.tree2Dist = Vector3.Distance(srauv.position, tree2.position);
-            tm.tree2DistX = srauv.position.x - tree2.position.x;
-            tm.tree2DistY = srauv.position.y - tree2.position.y;
-            tm.tree2DistZ = srauv.position.z - tree2.position.z;
-        }
-        if (tree3)
-        {
-            tm.tree3Dist = Vector3.Distance(srauv.position, tree3.position);
-            tm.tree3DistX = srauv.position.x - tree3.position.x;
-            tm.tree3DistY = srauv.position.y - tree3.position.y;
-            tm.tree3DistZ = srauv.position.z - tree3.position.z;
-        }
+        tel_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
+        tel_msg.fwd_dist = distancesFloat[0];
+        tel_msg.right_dist = distancesFloat[1];
+        tel_msg.rear_dist = distancesFloat[2];
+        tel_msg.left_dist = distancesFloat[3];
+        tel_msg.depth = distancesFloat[4];
+        tel_msg.alt = distancesFloat[5];
+        tel_msg.pos_x = srauv.position.x;
+        tel_msg.pos_y = srauv.position.y;
+        tel_msg.pos_z = srauv.position.z;
+        tel_msg.vel_x = rb.velocity.x;
+        tel_msg.vel_y = rb.velocity.y;
+        tel_msg.vel_z = rb.velocity.z;
+        tel_msg.heading = srauv.rotation.y * 360.0f;
+
+        tel_msg.target_pos_x = goalPos.x;
+        tel_msg.target_pos_y = goalPos.y;
+        tel_msg.target_pos_z = goalPos.z;
+
+        // tel_msg.roll = srauv.rotation.x * 360.0f;
+        // tel_msg.pitch = srauv.rotation.z * 360.0f;
+        // if (dock)
+        // {
+        //     tel_msg.dockDist = Vector3.Distance(srauv.position, dock.position);
+        //     tel_msg.dockDistX = srauv.position.x - dock.position.x;
+        //     tel_msg.dockDistY = srauv.position.y - dock.position.y;
+        //     tel_msg.dockDistZ = srauv.position.z - dock.position.z;
+        // }
+        // if (tree1)
+        // {
+        //     tel_msg.tree1Dist = Vector3.Distance(srauv.position, tree1.position);
+        //     tel_msg.tree1DistX = srauv.position.x - tree1.position.x;
+        //     tel_msg.tree1DistY = srauv.position.y - tree1.position.y;
+        //     tel_msg.tree1DistZ = srauv.position.z - tree1.position.z;
+        // }
+        // if (tree2)
+        // {
+        //     tel_msg.tree2Dist = Vector3.Distance(srauv.position, tree2.position);
+        //     tel_msg.tree2DistX = srauv.position.x - tree2.position.x;
+        //     tel_msg.tree2DistY = srauv.position.y - tree2.position.y;
+        //     tel_msg.tree2DistZ = srauv.position.z - tree2.position.z;
+        // }
+        // if (tree3)
+        // {
+        //     tel_msg.tree3Dist = Vector3.Distance(srauv.position, tree3.position);
+        //     tel_msg.tree3DistX = srauv.position.x - tree3.position.x;
+        //     tel_msg.tree3DistY = srauv.position.y - tree3.position.y;
+        //     tel_msg.tree3DistZ = srauv.position.z - tree3.position.z;
+        // }
         
-        string msg = JsonUtility.ToJson(tm);
+        string msg = JsonUtility.ToJson(tel_msg);
 
         if (enableLogging)
             Debug.Log("Sending: " + msg);
@@ -279,24 +308,65 @@ public class ServerCommunication : MonoBehaviour
         // send screenshot too after every x msgs
         if (sendScreenshots && txNum % 2 == 0)
         {
-            cm.source = "sim";
-            cm.msgNum = txNum++;
-            cm.msgType = "cam";
-            cm.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
+            cam_msg.source = "sim";
+            cam_msg.msgNum = txNum++;
+            cam_msg.msgType = "cam";
+            cam_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
 
             frontCamTexture = getScreenshot(frontCam);
             // frontCamTexSture = frontCam;
             byte[] bytes;
             bytes = frontCamTexture.EncodeToJPG();
-            cm.imgStr = Convert.ToBase64String(bytes);
+            cam_msg.imgStr = Convert.ToBase64String(bytes);
 
-            msg = JsonUtility.ToJson(cm);
+            msg = JsonUtility.ToJson(cam_msg);
             if (enableLogging)
                 Debug.Log("Sending Img: " + msg);
 
             client.Send(msg);
         }
     }
+
+    /// <summary>
+    /// Method which sends data through websocket
+    /// </summary>
+    /// <param name="message">Message.</param>
+    public void SendCmdRequest(string message)
+    {
+        cmd_msg.msg_type = "command";
+        cmd_msg.source = "sim";
+        cmd_msg.dest = "vehicle";
+        cmd_msg.msg_num++;
+        DateTime timestamp = DateTime.Now;
+        cmd_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
+        
+        cmd_msg.force_state = "manual";
+        cmd_msg.can_thrust = true;
+        for (int i = 0; i < 4; i++)
+        {
+            string dt = srauv.GetComponent<ThrusterController>().dir_thrust[i];
+            cmd_msg.dir_thrust[i] = dt;
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            cmd_msg.raw_thrust[i] = srauv.GetComponent<ThrusterController>().raw_thrust[i];
+        }
+        if (srauv.GetComponent<ThrusterController>().dir_thrust_used)
+            cmd_msg.thrust_type = "dir_thrust";
+        if (srauv.GetComponent<ThrusterController>().raw_thrust_used)
+            cmd_msg.thrust_type = "raw_thrust";
+        else
+            cmd_msg.thrust_type = "";
+        
+
+        string msg = JsonUtility.ToJson(cmd_msg);
+
+        if (enableLogging)
+            Debug.Log("Sending: " + msg);
+
+        client.Send(msg);
+    }
+
 
     // Take a "screenshot" of a camera's Render Texture.
     private Texture2D getScreenshot(Camera camera)
@@ -340,4 +410,9 @@ public class ServerCommunication : MonoBehaviour
         else
             telDistanceTransforms[i].GetComponent<Image>().color = Color.grey;
     }
+
+    public void toggleSendCmds()
+    {
+        send_cmds =  !send_cmds;
+    } 
 }
