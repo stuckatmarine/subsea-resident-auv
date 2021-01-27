@@ -10,22 +10,21 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
-    public Transform goal;
+    public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform srauv;
     public Transform startPos;
 
-    public bool trigger = false;
+    public int trigger = 0;
     
     private Rigidbody rb;
-    private Collider collider;
+    public Collider collider;
     private ThrusterController thrustCtrl;
     
     private Camera frontCam;
     private Texture2D frontCamTexture;
 
-    private GameObject thrusterController;
-    private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    private float[] distancesFloat;
+    public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    public float[] distancesFloat;
 
     private float LongitudinalSpd = 3.0f;
     private float LaterialSpd = 3.0f;
@@ -35,11 +34,11 @@ public class Pilot : Agent
     private Vector3 TankMins = new Vector3(1.0f, 1.0f, -11.0f);
     private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, -1.0f);
 
-    private EnvironmentParameters resetParams;
+    public EnvironmentParameters resetParams;
 
     public override void Initialize()
     {
-        goal = GameObject.Find("goal").GetComponent<Transform>();
+        //goal = GameObject.Find("goal").GetComponent<Transform>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         startPos = GameObject.Find("startPos").GetComponent<Transform>();
 
@@ -67,7 +66,7 @@ public class Pilot : Agent
         sensor.AddObservation(rb.angularVelocity);
 
         // goal position
-        sensor.AddObservation(Normalize(goal.position, TankMins, TankMaxs));
+        sensor.AddObservation(Normalize(goal, TankMins, TankMaxs));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -80,18 +79,14 @@ public class Pilot : Agent
                 AddReward(-(0.5f - dist));
         }
 
-        if (Math.Abs(goal.position.x - srauv.position.x) <= 0.25f &&
-            Math.Abs(goal.position.y - srauv.position.y) <= 0.25f &&
-            Math.Abs(goal.position.z - srauv.position.z) <= 0.25f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 0.5f &&
+            Math.Abs(goal.y - srauv.position.y) <= 0.5f &&
+            Math.Abs(goal.z - srauv.position.z) <= 0.5f)
         {
-            Debug.Log("------");
-            Debug.Log($"Curr Pos x:{srauv.position.x}, y:{srauv.position.y} z:{srauv.position.z}");
-            Debug.Log($"Goal x:{goal.position.x}, y:{goal.position.y} z:{goal.position.z}");
-            Debug.Log("Target Reached!");
-            SetReward(1f);
+            SetReward(1.0f);
             EndEpisode();
         }
-
+        
         MoveAgent(actionBuffers.DiscreteActions);
     }
 
@@ -157,14 +152,15 @@ public class Pilot : Agent
     {
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
-        goal.position = GetRandomLocation(); // maybe check its not to close already
+        goal = GetRandomLocation(); // maybe check its not to close already
+        startPos.position = new Vector3(3.0f, 15.0f, -3.0f); // collision with this = crash
 
         // reset all current velocties
         rb.isKinematic = true;
         rb.isKinematic = false;
 
         // reset current rotation
-        srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
+        srauv.rotation = new Quaternion(0.0f, Random.Range(-1.0f, 10.0f)/10.0f, 0f, Random.Range(-1.0f, 10.0f)/10.0f);
     }
 
     private Vector3 GetRandomLocation()
@@ -179,7 +175,7 @@ public class Pilot : Agent
             z = Random.Range(TankMins.z, TankMaxs.z);
 
             startPos.position = new Vector3(x, y, z);
-        } while (trigger);
+        } while (trigger > 0);
 
         return new Vector3(x, y, z);
     }
@@ -199,16 +195,18 @@ public class Pilot : Agent
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
-        AddReward(-0.5f);
+        AddReward(-1.0f);
+        EndEpisode();
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        trigger = true;
+
+        trigger += 1;
     }
 
     private void OnTriggerExit(Collider collision)
     {
-        trigger = false;
+        trigger -= 1;
     }
 }
