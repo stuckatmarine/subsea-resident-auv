@@ -178,13 +178,9 @@ public class Pilot : Agent
 
         do
         {
-
             x = Random.Range(-tankBounds.extents.x * 0.9f, tankBounds.extents.x * 0.9f) + tank.position.x + 6.0f;
             y = Random.Range(TankMins.y, TankMaxs.y);
             z = Random.Range(-tankBounds.extents.z * 0.9f, tankBounds.extents.z * 0.9f) + tank.position.z + 6.0f;
-            
-            //x = Random.Range(TankMins.x, TankMaxs.x);
-            //z = Random.Range(TankMins.z, TankMaxs.z);
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
@@ -207,7 +203,8 @@ public class Pilot : Agent
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
-        AddReward(-0.5f);
+        AddReward(-1f);
+        EndEpisode();
     }
 
     private void OnTriggerEnter(Collider c)
