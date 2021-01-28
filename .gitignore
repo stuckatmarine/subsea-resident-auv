@@ -1,3 +1,5 @@
 */__pycache__/*
 /pi4_software/Logs/*
 MLTraining/results/*
+MLTraining/dopamine/*
+MLTraining/envs/old/*
