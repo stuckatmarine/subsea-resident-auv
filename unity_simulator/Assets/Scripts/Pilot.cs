@@ -90,7 +90,7 @@ public class Pilot : Agent
             Math.Abs(goal.y - srauv.position.y) <= 0.25f &&
             Math.Abs(goal.z - srauv.position.z) <= 0.25f)
         {
-            SetReward(1f);
+            SetReward(1.0f);
             EndEpisode();
         }
 
@@ -160,6 +160,7 @@ public class Pilot : Agent
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
         goal = GetRandomLocation(); // maybe check its not to close already
+        startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
 
         // reset all current velocties
         rb.isKinematic = true;
@@ -203,7 +204,7 @@ public class Pilot : Agent
 
     private void OnCollisionEnter(Collision collisionInfo)
     {
-        AddReward(-1f);
+        SetReward(-1.0f);
         EndEpisode();
     }
 
