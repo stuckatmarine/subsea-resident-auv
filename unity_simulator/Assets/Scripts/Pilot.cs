@@ -10,12 +10,14 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
+    public bool lean_training = false;
     public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform tank;
     public Bounds tankBounds;
 
     public Transform srauv;
     public Transform startPos;
+    public Transform goalBox;
 
     public int trigger = 0;
     
@@ -48,6 +50,7 @@ public class Pilot : Agent
         
         srauv = gameObject.transform;
         startPos = gameObject.transform.parent.gameObject.transform.Find("startPos").gameObject.transform;
+        goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
 
         rb = srauv.GetComponent<Rigidbody>();
         collider = srauv.GetComponent<Collider>();
@@ -160,16 +163,20 @@ public class Pilot : Agent
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
         goal = GetRandomLocation(); // maybe check its not to close already
+        goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
 
         // reset all current velocties
-        rb.isKinematic = true;
-        rb.isKinematic = false;
+        // reset current rotation
+        srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
+
+        // rb.isKinematic = true;
+        
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        // reset current rotation
-        srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
+        // rb.isKinematic = false;
+
     }
 
     private Vector3 GetRandomLocation()
