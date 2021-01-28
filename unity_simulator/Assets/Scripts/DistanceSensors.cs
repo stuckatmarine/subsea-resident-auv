@@ -18,6 +18,13 @@ public class DistanceSensors : MonoBehaviour
 
     public bool drawLines = true;
 
+    public bool lean_training = false;
+
+    void Start()
+    {
+        lean_training = gameObject.GetComponent<Pilot>().lean_training;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -36,12 +43,12 @@ public class DistanceSensors : MonoBehaviour
         Transform t = sensorArr[i];
         RaycastHit hit;
 
-        if (drawLines)
-            ;
-
         Physics.Raycast(t.transform.position, t.transform.position + (max * t.transform.forward), out hit);
 
         distancesFloat[i] = hit.distance;
+
+        if (lean_training)
+            return;
 
         if (hit.distance < max && hit.distance > 0.0f)
             sensorValueArr[i].GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = hit.distance.ToString("#.00");

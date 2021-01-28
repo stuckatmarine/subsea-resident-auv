@@ -28,6 +28,7 @@ public class ThrusterController : MonoBehaviour
 
     public bool raw_thrust_used = false;
     public bool dir_thrust_used = false;
+    public bool lean_training = false;
 
     void Start()
     {
@@ -36,11 +37,16 @@ public class ThrusterController : MonoBehaviour
 
         raw_thrust = new float[6]{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
         dir_thrust = new string[4]{"", "", "", ""};
+
+        lean_training = gameObject.GetComponent<Pilot>().lean_training;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (lean_training)
+            return;
+
         for (int i = 0 ; i < 6; i++)
         {
             raw_thrust[i] = 0;

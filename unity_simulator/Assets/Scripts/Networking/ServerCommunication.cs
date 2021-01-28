@@ -122,6 +122,9 @@ public class ServerCommunication : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if (disableWebsocketServer) // extra blocker
+            return;
+
         //  Update UI
         simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = (srauv.rotation.y * 360.0f).ToString("#.0");
         simX.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.x.ToString("#.00");
