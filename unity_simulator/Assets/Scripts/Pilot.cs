@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
-    public bool lean_training = false;
+    public bool lean_training = true;
     public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform tank;
     public Bounds tankBounds;
@@ -37,8 +37,8 @@ public class Pilot : Agent
     private float VerticalSpd = 3.0f;
     private float YawSpd = 3.0f;
 
-    private Vector3 TankMins = new Vector3(1.0f, 1.0f, 1.0f);
-    private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, 11.0f);
+    private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 TankMaxs = new Vector3(12.0f, 6.0f, 12.0f);
 
     private EnvironmentParameters resetParams;
 
@@ -66,22 +66,23 @@ public class Pilot : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // dist sensors
-        foreach (float dist in distancesFloat) 
-            sensor.AddObservation(Normalize(dist, 0.0f, 10.0f));
+        foreach (float dist in distancesFloat) {
+            sensor.AddObservation(Normalize(dist, 0.0f, 12.0f));
+        }
 
         // srauv info
-        sensor.AddObservation(Normalize(srauv.position, TankMins, TankMaxs));
-        sensor.AddObservation(srauv.rotation);
+        sensor.AddObservation(Normalize(srauv.position - tank.position, TankMins, TankMaxs));
         sensor.AddObservation(rb.velocity);
-        sensor.AddObservation(rb.angularVelocity);
+        sensor.AddObservation(Normalize(srauv.rotation.y, 0.0f, 360.0f));
+        sensor.AddObservation(rb.angularVelocity.y); //change this to just the one
 
         // goal position
-        sensor.AddObservation(Normalize(goal, TankMins, TankMaxs));
+        sensor.AddObservation(Normalize(goal - tank.position, TankMins, TankMaxs));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        AddReward(-0.0005f);
+        AddReward(-1f / MaxStep);
 
         foreach (float dist in distancesFloat)
         {
@@ -93,7 +94,7 @@ public class Pilot : Agent
             Math.Abs(goal.y - srauv.position.y) <= 0.25f &&
             Math.Abs(goal.z - srauv.position.z) <= 0.25f)
         {
-            SetReward(1.0f);
+            AddReward(1.0f);
             EndEpisode();
         }
 
@@ -165,18 +166,16 @@ public class Pilot : Agent
         goal = GetRandomLocation(); // maybe check its not to close already
         goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
-
-        // reset all current velocties
+        
         // reset current rotation
         srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
 
         // rb.isKinematic = true;
+        // rb.isKinematic = false;
         
+        // reset all current velocties
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-
-        // rb.isKinematic = false;
-
     }
 
     private Vector3 GetRandomLocation()
