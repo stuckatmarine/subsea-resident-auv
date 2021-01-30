@@ -18,6 +18,10 @@ public class Pilot : Agent
     public Transform srauv;
     public Transform startPos;
     public Transform goalBox;
+    public Rigidbody massUpper;
+    public Rigidbody massLower;
+    public Transform indGreen;
+    public Transform indRed;
 
     public int trigger = 0;
     
@@ -29,18 +33,20 @@ public class Pilot : Agent
     private Texture2D frontCamTexture;
 
     private GameObject thrusterController;
-    private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    private float[] distancesFloat;
+    public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    public float[] distancesFloat;
 
-    private float LongitudinalSpd = 3.0f;
-    private float LaterialSpd = 3.0f;
-    private float VerticalSpd = 3.0f;
-    private float YawSpd = 3.0f;
+    public float LongitudinalSpd = 20.0f;
+    public float LaterialSpd = 20.0f;
+    public float VerticalSpd = 20.0f;
+    public float YawSpd = 20.0f;
 
     private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 TankMaxs = new Vector3(12.0f, 6.0f, 12.0f);
 
     private EnvironmentParameters resetParams;
+    private StatsRecorder statsRecorder;
+    private int successes = 1;
 
     public override void Initialize()
     {
@@ -51,14 +57,20 @@ public class Pilot : Agent
         srauv = gameObject.transform;
         startPos = gameObject.transform.parent.gameObject.transform.Find("startPos").gameObject.transform;
         goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
-
+        
         rb = srauv.GetComponent<Rigidbody>();
+        massUpper = gameObject.transform.Find("massUpper").gameObject.transform.GetComponent<Rigidbody>();
+        massLower = gameObject.transform.Find("massLower").gameObject.transform.GetComponent<Rigidbody>();
+        indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
+        indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
+
         collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
 
         //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
         
+        statsRecorder = Academy.Instance.StatsRecorder;
         //resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
@@ -82,18 +94,14 @@ public class Pilot : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        AddReward(-1f / MaxStep);
+        AddReward(-0.0005f);
 
-        foreach (float dist in distancesFloat)
+        if (Math.Abs(goal.x - srauv.position.x) <= 0.5f &&
+            Math.Abs(goal.y - srauv.position.y) <= 0.5f &&
+            Math.Abs(goal.z - srauv.position.z) <= 0.5f)
         {
-            if (dist < 0.5f)
-                AddReward(-(0.5f - dist));
-        }
-
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.25f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.25f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.25f)
-        {
+            statsRecorder.Add("Targets Reached", successes++);
+            TargetReachedSwapGroundMaterial(indGreen, 0.5f);
             AddReward(1.0f);
             EndEpisode();
         }
@@ -176,6 +184,18 @@ public class Pilot : Agent
         // reset all current velocties
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        massUpper.velocity = Vector3.zero;
+        massUpper.angularVelocity = Vector3.zero;
+        massLower.velocity = Vector3.zero;
+        massLower.angularVelocity = Vector3.zero;
+    }
+
+    IEnumerator TargetReachedSwapGroundMaterial(Transform ind, float time)
+    {
+        Debug.Log("test");
+        ind.position = new Vector3(tank.position.x + 6.0f, 0.0f, tank.position.z + 6.0f);
+        yield return new WaitForSeconds(time); // Wait for 2 sec
+        ind.position = new Vector3(tank.position.x + 6.0f, -1.0f, tank.position.z + 6.0f);
     }
 
     private Vector3 GetRandomLocation()
@@ -185,9 +205,9 @@ public class Pilot : Agent
 
         do
         {
-            x = Random.Range(-tankBounds.extents.x * 0.9f, tankBounds.extents.x * 0.9f) + tank.position.x + 6.0f;
+            x = Random.Range(-tankBounds.extents.x * 0.75f, tankBounds.extents.x * 0.75f) + tank.position.x + 6.0f;
             y = Random.Range(TankMins.y, TankMaxs.y);
-            z = Random.Range(-tankBounds.extents.z * 0.9f, tankBounds.extents.z * 0.9f) + tank.position.z + 6.0f;
+            z = Random.Range(-tankBounds.extents.z * 0.75f, tankBounds.extents.z * 0.75f) + tank.position.z + 6.0f;
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
@@ -208,8 +228,9 @@ public class Pilot : Agent
         return (val - min)/(max - min);
     }
 
-    private void OnCollisionEnter(Collision collisionInfo)
+    private void OnCollisionEnter(Collision collisionInfo)  
     {
+        TargetReachedSwapGroundMaterial(indRed, 0.5f);
         SetReward(-1.0f);
         EndEpisode();
     }
