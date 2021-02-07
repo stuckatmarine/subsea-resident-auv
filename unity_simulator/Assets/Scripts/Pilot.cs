@@ -36,10 +36,10 @@ public class Pilot : Agent
     public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     public float[] distancesFloat;
 
-    public float LongitudinalSpd = 20.0f;
-    public float LaterialSpd = 20.0f;
-    public float VerticalSpd = 20.0f;
-    public float YawSpd = 20.0f;
+    public float LongitudinalSpd = 5.0f;
+    public float LaterialSpd = 5.0f;
+    public float VerticalSpd = 5.0f;
+    public float YawSpd = 5.0f;
 
     private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 TankMaxs = new Vector3(12.0f, 6.0f, 12.0f);
@@ -96,9 +96,9 @@ public class Pilot : Agent
     {
         AddReward(-0.0005f);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.5f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.5f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.5f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 1.0f &&
+            Math.Abs(goal.y - srauv.position.y) <= 1.0f &&
+            Math.Abs(goal.z - srauv.position.z) <= 1.0f)
         {
             statsRecorder.Add("Targets Reached", successes++);
             TargetReachedSwapGroundMaterial(indGreen, 0.5f);
@@ -164,7 +164,35 @@ public class Pilot : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        // ThrusterController should take care of this
+        var discreteActionsOut = actionsOut.DiscreteActions;
+        discreteActionsOut.Clear();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            EndEpisode();
+
+        discreteActionsOut[0] = 0;
+        if (Input.GetKey(KeyCode.W))
+            discreteActionsOut[0] = 1;
+        else if (Input.GetKey(KeyCode.S))
+            discreteActionsOut[0] = 2;
+
+        discreteActionsOut[1] = 0;
+        if (Input.GetKey(KeyCode.D))
+            discreteActionsOut[1] = 1;
+        else if (Input.GetKey(KeyCode.A))
+            discreteActionsOut[1] = 2;
+
+        discreteActionsOut[2] = 0;
+        if (Input.GetKey(KeyCode.UpArrow))
+            discreteActionsOut[2] = 1;
+        else if (Input.GetKey(KeyCode.DownArrow))
+            discreteActionsOut[2] = 2;
+
+        discreteActionsOut[3] = 0;
+        if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
+            discreteActionsOut[3] = 1;
+        else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
+            discreteActionsOut[3] = 2;
     }
 
     public void SetResetParameters()
