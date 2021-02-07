@@ -101,9 +101,9 @@ public class Pilot : Agent
             Math.Abs(goal.z - srauv.position.z) <= 1.0f)
         {
             statsRecorder.Add("Targets Reached", successes++);
-            TargetReachedSwapGroundMaterial(indGreen, 0.5f);
             AddReward(1.0f);
             EndEpisode();
+            StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
         }
 
         MoveAgent(actionBuffers.DiscreteActions);
@@ -220,7 +220,7 @@ public class Pilot : Agent
 
     IEnumerator TargetReachedSwapGroundMaterial(Transform ind, float time)
     {
-        Debug.Log("test");
+
         ind.position = new Vector3(tank.position.x + 6.0f, 0.0f, tank.position.z + 6.0f);
         yield return new WaitForSeconds(time); // Wait for 2 sec
         ind.position = new Vector3(tank.position.x + 6.0f, -1.0f, tank.position.z + 6.0f);
@@ -258,9 +258,9 @@ public class Pilot : Agent
 
     private void OnCollisionEnter(Collision collisionInfo)  
     {
-        TargetReachedSwapGroundMaterial(indRed, 0.5f);
         SetReward(-1.0f);
         EndEpisode();
+        StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
     }
 
     private void OnTriggerEnter(Collider c)
