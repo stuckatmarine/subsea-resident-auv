@@ -44,7 +44,6 @@ class GetSrauvResponse(WebSocket):
             # Get response from srauv_main. Log it
             data, addr = srauv_socket.recvfrom(4096)
             srauv_response = data.decode("utf-8")
-            logger.info(f"recv {srauv_response} from {addr}")
 
             # Forward response back over external network
             self.sendMessage(srauv_response)

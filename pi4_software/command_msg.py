@@ -20,10 +20,10 @@ def make(source, dest = ''):
             0.0,            # VL
         ],
         "dir_thrust":[      # maintain size of 4
-            "fwd",          # fwd , rev or ""
-            "lat_right",    # lat_right , lat_left or ""
-            "rot_left"      # rot_right , rot_left or ""
-            "up",           # up , down or ""
+            "_",          # fwd , rev or "_"
+            "_",    # lat_right , lat_left or "_"
+            "_"      # rot_right , rot_left or "_"
+            "_",           # up , down or "_"
         ]
     }
 
