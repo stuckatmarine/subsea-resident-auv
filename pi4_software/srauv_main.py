@@ -63,8 +63,8 @@ cmd = command_msg.make(source, "sim")
 tel = telemetry_msg.make(source, "dflt")
 cmd_recv = command_msg.make("na", "an")
 tel_recv = telemetry_msg.make("na", "an")
-cmd_recv_num = -1
-tel_recv_num = -1
+cmd_recv_num = 0
+tel_recv_num = 0
 waypoint_path = []
 waypoint_idx = 0
 manual_deadman_timestamp = timestamp.now_int_ms()
@@ -96,6 +96,7 @@ def go_to_idle():
     can_thrust = False
     logger.info("--- State -> IDLE ---")
 
+
 def over_test_count():
     global test_state_count
     test_state_count += 1
@@ -124,24 +125,33 @@ def parse_received_telemetry():
 
 
 def parse_received_command():
+    
     # check kill condition first for safety
     if cmd_recv["force_state"] == "kill" or internal_socket_threads[0].cmd_with_kill_recvd == True:
         close_gracefully()
 
     global can_thrust, cmd_recv_num, fly_sim, manual_deadman_timestamp
+
+    print(f"--- cmd_recv --- {cmd_recv}")
+    print(f"--- cmd_recv_num --- {cmd_recv_num}")
+
     #  only use new msgs/ not same msg twice
     if cmd_recv["msg_num"] <= cmd_recv_num:
         return
 
     cmd_recv_num = cmd_recv["msg_num"]
 
-    if cmd_recv["force_state"] != "":      
+    print(f"--- cmd_recv force state: --- {cmd_recv['force_state']}")
+    if cmd_recv["force_state"] != "":  
+        logger.warning(f"--- Forcing state ---> {cmd_recv['force_state']}")
+
         #  TODO: functionize state transitions
         tel["state"] = cmd_recv["force_state"]
         if cmd_recv["force_state"] == "idle":
             go_to_idle()
 
-        if tel["state"] == "manual":
+        if cmd_recv["force_state"] == "manual":
+            tel["state"] == "manual"
             can_thrust = cmd_recv["can_thrust"]
             manual_deadman_timestamp = timestamp.now_int_ms()
 
@@ -163,7 +173,7 @@ def update_telemetry():
     tel["alt"] = dist_sensor_values[4]
     tel["depth"] = 1.1 # TODO depth sensor getter
     tel["raw_thrust"] = thrust_values
-    logger.info(f"tel:{tel}")
+    logger.info(f"update_telemetry(), tel:{tel}")
 
 
 def setup_waypoints(waypoint_idx):
@@ -235,8 +245,8 @@ def evaluate_state():
         # evaluate state
         can_thrust = False
 
-        if over_test_count():
-            tel["state"] = "running" 
+        # if over_test_count():
+        #     tel["state"] = "running" 
 
     elif tel["state"] == "running":
 
@@ -244,8 +254,8 @@ def evaluate_state():
         can_thrust = True
         update_waypoint(waypoint_idx)
 
-        if over_test_count():
-            go_to_idle()
+        # if over_test_count():
+        #     go_to_idle()
 
     elif tel["state"] == "manual":
 
@@ -299,6 +309,7 @@ def calculate_thrust(thrust_values):
                 add_thrust(new_thrust_values, "rot_left")
     
     elif tel["state"] == "manual": # update srauv with cmd'ed values
+        print(f"Updating manual thrust values in calculate_thrust")
         if cmd_recv["thrust_type"] == "raw_thrust":
             thrust_values[0] = cmd_recv["raw_thrust"][0]
             thrust_values[1] = cmd_recv["raw_thrust"][1]
@@ -342,10 +353,10 @@ def setup_thruster_threads(th_config, data_arr):
     threads.extend(th_threads)
 
 
-def setup_socket_thread():
+def setup_socket_thread(data_arr):
     logger.info(f'state:{tel["state"]} MSG:Creating srauv socket threads')
 
-    internal_socket_threads.append(internal_socket_server.LocalSocketThread(main_internal_address, tel, cmd, tel_recv, cmd_recv))
+    internal_socket_threads.append(internal_socket_server.LocalSocketThread(main_internal_address, tel, cmd, tel_recv, data_arr))
     internal_socket_threads[0].start()
     threads.extend(internal_socket_threads)
 
@@ -388,7 +399,7 @@ def has_live_threads(threads):
 
 def start_threads():
     try:
-        setup_socket_thread()
+        setup_socket_thread(cmd_recv)
         setup_distance_sensor_threads(SETTINGS["dist_sensor_config"], dist_sensor_values)
         setup_thruster_threads(SETTINGS["thruster_config"], thrust_values)
     except Exception as e:
@@ -446,9 +457,9 @@ def main():
                 else:
                     update_telemetry()
 
-                estimate_position()
+                # estimate_position()
 
-                evaluate_state()
+                # evaluate_state()
                 
                 calculate_thrust(thrust_values)
 

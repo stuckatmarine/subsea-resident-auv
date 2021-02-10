@@ -28,6 +28,14 @@
         "deadman_timeout_s": 1,
         "thrust_interval_s": 0.5,
         "max_spd_min_range_m": 0.5,
+        "_":[
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "fwd":[
             25,
             25,

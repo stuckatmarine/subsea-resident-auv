@@ -54,6 +54,7 @@ class LocalSocketThread(threading.Thread):
                 data_dict = json.loads(data.decode("utf-8"))
 
                 if data_dict["msg_type"] == "telemetry":
+                    print("--------- telemetry ----")
                     self.tel_recv = data_dict
 
                     # update cmd_bytes if not most current
@@ -65,7 +66,14 @@ class LocalSocketThread(threading.Thread):
                     logger.info(f"> addr:{address} data:{self.cmd_bytes}")
 
                 elif data_dict["msg_type"] == "command":
-                    self.cmd_recv = data_dict
+                    print("-- copying recvd cmd data --")
+                    for k in data_dict:
+                        if k == "msg_num":
+                            continue
+                        self.cmd_recv[k] = data_dict[k]
+                        print(f"keys:{k}")
+                    # update last as trigger of copy completed
+                    self.cmd_recv["msg_num"] = data_dict["msg_num"]
 
                     # update tel_bytes if not most current
                     if self.tel["msg_num"] > self.last_tel_sent:
@@ -79,6 +87,7 @@ class LocalSocketThread(threading.Thread):
                     self.sock.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
                     logger.info(f"> addr:{address} data:{self.tel_bytes}")
+                    print("--------- cmd done ----")
 
                 # respond with srauv's default response
                 else:

@@ -14,6 +14,7 @@ public class ServerCommunication : MonoBehaviour
     public bool send_tel = false;
     public bool disableWebsocketServer = false;
     public bool enableLogging = false;
+    public bool enableManualCmds = false;
     public bool enableVehicleCmds = false;
     public bool sendScreenshots = false;
 
@@ -351,12 +352,21 @@ public class ServerCommunication : MonoBehaviour
         {
             cmd_msg.raw_thrust[i] = srauv.GetComponent<ThrusterController>().raw_thrust[i];
         }
-        if (srauv.GetComponent<ThrusterController>().dir_thrust_used)
-            cmd_msg.thrust_type = "dir_thrust";
-        if (srauv.GetComponent<ThrusterController>().raw_thrust_used)
-            cmd_msg.thrust_type = "raw_thrust";
+
+        Debug.Log("dir_thrust_used: " + srauv.GetComponent<ThrusterController>().dir_thrust_used);
+        Debug.Log("raw_thrust_used: " + srauv.GetComponent<ThrusterController>().raw_thrust_used);
+
+        if (enableManualCmds)
+        {
+            if (srauv.GetComponent<ThrusterController>().dir_thrust_used)
+                cmd_msg.thrust_type = "dir_thrust";
+            else if (srauv.GetComponent<ThrusterController>().raw_thrust_used)
+                cmd_msg.thrust_type = "raw_thrust";
+            else
+                cmd_msg.thrust_type = "";
+        }
         else
-            cmd_msg.thrust_type = "";
+                cmd_msg.thrust_type = "";
         
 
         string msg = JsonUtility.ToJson(cmd_msg);
@@ -393,6 +403,11 @@ public class ServerCommunication : MonoBehaviour
     {
         enableVehicleCmds = true;
         srauv.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    public void toggleKeyboardThrust()
+    {
+        enableManualCmds = !enableManualCmds;
     }
 
     private void updateValues(int i, float min, float max)
