@@ -59,7 +59,7 @@ class GetSrauvResponse(WebSocket):
     def handleClose(self):
         logger.info(f'closed {self.address}')
 
-logger.info(f"starting external server process")
+logger.info(f"starting external server process, {SETTINGS['external_ip']}:{SETTINGS['external_port']}")
 server = SimpleWebSocketServer(SETTINGS["external_ip"], SETTINGS["external_port"], GetSrauvResponse)
 server.serveforever()
 logger.info(f"stopping external server process")

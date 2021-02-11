@@ -27,7 +27,7 @@ import can
 # send arm 0x01
 # send motor_onoff 0x01
 # send set_RPM 0x01 3000
-        
+
 class ThrusterThread(threading.Thread):
     def __init__(self, config, id, data_arr):
         threading.Thread.__init__(self)
@@ -39,33 +39,45 @@ class ThrusterThread(threading.Thread):
         self.deadman_timeout_s = config["deadman_timeout_s"]
         self.last_heartbeat = 0
         self.thrust_enabled = False
+        self.can_up = False
 
         print(f"creating canbus")
         # bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=250000)
         # bus = can.interface.Bus(bustype='pcan', channel='PCAN_USBBUS1', bitrate=250000)
         # bus = can.interface.Bus(bustype='ixxat', channel=0, bitrate=250000)
         # bus = can.interface.Bus(bustype='vector', app_name='CANalyzer', channel=0, bitrate=250000)
-        self.bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
+        
         self.tx_cmds = config["CAN_tx_ids"]
         self.rx_cmds = config["CAN_rx_ids"]
         self.board_id = (id + config["board_id_base"]) << config["board_id_shift"]
         self.is_armed = False
         self.is_motor_on = False
         self.motor_rpm = 0
-        print(f"done creating canbus")
+
+        # try:
+        #     self.bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
+        #     self.can_up = True
+        # except exception as e:
+        #     print(f"Can Bus creation err:{e}")
+
+        # notifier = can.Notifier(bus, [can.Printer()])
     
 
     def send_msg(self, cmd_str, d):
         can_id = self.board_id + self.tx_cmds[cmd_str]
         msg = can.Message(arbitration_id=can_id, data=d)
-        self.bus.send(msg)
-        print(f"thruster sending CAN_id:{can_id} data:{d}")
+        if self.can_up:
+            self.bus.send(msg)
+            print(f"thruster sending CAN_id:{can_id} data:{d}")
+        else:
+            print(f"Can not up to send, thruster id:{self.id} thrust_enabled:{self.thrust_enabled} motor_on:{self.is_motor_on}")
 
     def apply_thrust(self):
         if self.thrust_enabled == False:
             #  TODO stop thrusters if first cycle afer stopping
             if self.is_motor_on:
                 self.send_msg("motor_onoff_id", 0x00)
+                #  TODO check for motor off msg
             return
 
         # check if deadman has timedout

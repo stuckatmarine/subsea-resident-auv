@@ -3,8 +3,9 @@
 #   Parse json file with SRAUV config and settings.
 
 import json
+import os
 
-filename = "SRAUV_settings.json"
+filename = "srauv_settings.json"
 SETTINGS = {}
 
 try:

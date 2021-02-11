@@ -37,7 +37,7 @@ public class ServerCommunication : MonoBehaviour
 
     // Flag to use localhost
     [SerializeField]
-    private bool useLocalhost = true;
+    private bool useLocalhost = false;
     [SerializeField]
     private int txNum = 0;
     [SerializeField]
@@ -122,6 +122,7 @@ public class ServerCommunication : MonoBehaviour
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
         server = "ws://" + host + ":" + port;
+        Debug.Log("using websocket setver " + server);
         client = new WsClient(server);
         ConnectToServer(); 
     }
