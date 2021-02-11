@@ -132,16 +132,12 @@ def parse_received_command():
 
     global can_thrust, cmd_recv_num, fly_sim, manual_deadman_timestamp
 
-    print(f"--- cmd_recv --- {cmd_recv}")
-    print(f"--- cmd_recv_num --- {cmd_recv_num}")
-
     #  only use new msgs/ not same msg twice
     if cmd_recv["msg_num"] <= cmd_recv_num:
         return
 
     cmd_recv_num = cmd_recv["msg_num"]
 
-    print(f"--- cmd_recv force state: --- {cmd_recv['force_state']}")
     if cmd_recv["force_state"] != "":  
         logger.warning(f"--- Forcing state ---> {cmd_recv['force_state']}")
 
@@ -212,7 +208,7 @@ def update_waypoint(waypoint_idx):
         elif t_heading_off < 180.0:
             t_heading_off += 180.0
         
-        print(f"target vector x,y,z,h:({t_dist_x}, {t_dist_y}, {t_dist_z}, {t_heading_off})")
+        # print(f"target vector x,y,z,h:({t_dist_x}, {t_dist_y}, {t_dist_z}, {t_heading_off})")
         
         if (abs(t_dist_x) < tol and
             abs(t_dist_y) < tol and
@@ -239,16 +235,16 @@ def estimate_position():
 
 
 def evaluate_state():
-    global can_thrust
+    global can_thrust, manual_deadman_timestamp
     if tel["state"] == "idle":
 
         # evaluate state
         can_thrust = False
 
         # if over_test_count():
-        #     tel["state"] = "running" 
+        #     tel["state"] = "autonomous" 
 
-    elif tel["state"] == "running":
+    elif tel["state"] == "autonomous":
 
         # evaluate state
         can_thrust = True
@@ -261,9 +257,9 @@ def evaluate_state():
 
         # evaluate state
         can_thrust = True
-        if manual_deadman_timestamp - timestamp.now_int_ms >= MANUAL_DEADMAN_TIMEOUT_MS:
-            go_to_idle()
-            logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{manual_deadman_timestamp - timestamp.now_int_ms}")
+        if manual_deadman_timestamp - timestamp.now_int_ms() >= MANUAL_DEADMAN_TIMEOUT_MS:
+    #         go_to_idle()
+            logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{manual_deadman_timestamp - timestamp.now_int_ms()}")
 
 
 def add_thrust(val_arr, direction):
@@ -280,10 +276,10 @@ def calculate_thrust(thrust_values):
     global t_dist_x, t_dist_y, t_dist_z, t_heading_off, can_thrust
     new_thrust_values = [0, 0, 0, 0, 0, 0]
     
-    print(f"targets x,y,z,h:({t_dist_x}, {t_dist_y}, {t_dist_z}, {t_heading_off})")
-    print(f"min range to thrust {thurster_config['max_spd_min_range_m']})")
+    # print(f"targets x,y,z,h:({t_dist_x}, {t_dist_y}, {t_dist_z}, {t_heading_off})")
+    # print(f"min range to thrust {thurster_config['max_spd_min_range_m']})")
     
-    if tel["state"] == "running":
+    if tel["state"] == "autonomous":
         if abs(t_dist_x) > thurster_config["max_spd_min_range_m"]:
             if t_dist_x > 0:
                 add_thrust(new_thrust_values, "fwd")
@@ -309,7 +305,7 @@ def calculate_thrust(thrust_values):
                 add_thrust(new_thrust_values, "rot_left")
     
     elif tel["state"] == "manual": # update srauv with cmd'ed values
-        print(f"Updating manual thrust values in calculate_thrust")
+        
         if cmd_recv["thrust_type"] == "raw_thrust":
             thrust_values[0] = cmd_recv["raw_thrust"][0]
             thrust_values[1] = cmd_recv["raw_thrust"][1]
@@ -317,16 +313,19 @@ def calculate_thrust(thrust_values):
             thrust_values[3] = cmd_recv["raw_thrust"][3]
             thrust_values[4] = cmd_recv["raw_thrust"][4]
             thrust_values[5] = cmd_recv["raw_thrust"][5]
+            logger.info(f"Setting raw_thrust:{cmd_recv['raw_thrust']}")
 
         elif cmd_recv["thrust_type"] == "dir_thrust":
+            print(f"Updating manual thrust values in calculate_thrust")
             add_thrust(new_thrust_values, cmd_recv["dir_thrust"][0])
             add_thrust(new_thrust_values, cmd_recv["dir_thrust"][1])
             add_thrust(new_thrust_values, cmd_recv["dir_thrust"][2])
             add_thrust(new_thrust_values, cmd_recv["dir_thrust"][3])
+            logger.info(f"Adding dir_thrust:{cmd_recv['dir_thrust']}")
 
     for i in range(6):
         thrust_values[i] = new_thrust_values[i]
-    print(f"Thrust valuse {thrust_values}")
+    # print(f"Thrust valuse {thrust_values}")
 
 
 def setup_distance_sensor_threads(ds_config, data_arr):
@@ -379,7 +378,7 @@ def update_sim_cmd():
     cmd["thrust_v_left"] = thrust_values[5]
     cmd["can_thrust"] = can_thrust
 
-    print(f"cmd:{cmd}")
+    logger.info(f"cmd:{cmd}")
     cmd["msg_num"] += 1
 
 def apply_thrust():
@@ -457,9 +456,9 @@ def main():
                 else:
                     update_telemetry()
 
-                # estimate_position()
+                estimate_position()
 
-                # evaluate_state()
+                evaluate_state()
                 
                 calculate_thrust(thrust_values)
 

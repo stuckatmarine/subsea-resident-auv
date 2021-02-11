@@ -61166,7 +61166,7 @@ PrefabInstance:
     - target: {fileID: 3008853562055805979, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 9
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3008853562055805979, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
@@ -61191,7 +61191,7 @@ PrefabInstance:
     - target: {fileID: 3008853562055805979, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_text
-      value: 'Auto
+      value: 'Autonomous
 
         State'
       objectReference: {fileID: 0}
