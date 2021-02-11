@@ -41,12 +41,7 @@ class ThrusterThread(threading.Thread):
         self.thrust_enabled = False
         self.can_up = False
 
-        print(f"creating canbus")
-        # bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=250000)
-        # bus = can.interface.Bus(bustype='pcan', channel='PCAN_USBBUS1', bitrate=250000)
-        # bus = can.interface.Bus(bustype='ixxat', channel=0, bitrate=250000)
-        # bus = can.interface.Bus(bustype='vector', app_name='CANalyzer', channel=0, bitrate=250000)
-        
+        print(f"Creating canbus objects")
         self.tx_cmds = config["CAN_tx_ids"]
         self.rx_cmds = config["CAN_rx_ids"]
         self.board_id = (id + config["board_id_base"]) << config["board_id_shift"]
@@ -60,6 +55,11 @@ class ThrusterThread(threading.Thread):
         # except exception as e:
         #     print(f"Can Bus creation err:{e}")
 
+        #  other examples
+        # bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=250000)
+        # bus = can.interface.Bus(bustype='pcan', channel='PCAN_USBBUS1', bitrate=250000)
+        # bus = can.interface.Bus(bustype='ixxat', channel=0, bitrate=250000)
+        # bus = can.interface.Bus(bustype='vector', app_name='CANalyzer', channel=0, bitrate=250000)
         # notifier = can.Notifier(bus, [can.Printer()])
     
 
@@ -70,7 +70,7 @@ class ThrusterThread(threading.Thread):
             self.bus.send(msg)
             print(f"thruster sending CAN_id:{can_id} data:{d}")
         else:
-            print(f"Can not up to send, thruster id:{self.id} thrust_enabled:{self.thrust_enabled} motor_on:{self.is_motor_on}")
+            print(f"CANBUS not up, thruster id:{self.id} thrust_enabled:{self.thrust_enabled} motor_on:{self.is_motor_on}")
 
     def apply_thrust(self):
         if self.thrust_enabled == False:
@@ -86,6 +86,10 @@ class ThrusterThread(threading.Thread):
             self.send_msg("motor_onoff_id", 0x00)
             print(f"Deadman expired, Thruster_id:{self.id} thrust_enabled:{self.thrust_enabled}")
         else:
+            if not self.is_motor_on:
+                self.send_msg("motor_onoff_id", 0x00)
+                #  TODO check for motor off msg
+
             print(f"Applying Thrust, Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
             
             thrust_dir = 0x01
@@ -104,6 +108,7 @@ class ThrusterThread(threading.Thread):
     def do_thrust(self, enable):
         if enable and not self.is_motor_on:
             self.send_msg("motor_onoff_id", [0x01])
+            # notifier = can.Notifier(bus, [can.Printer()]) #listener alternative?
 
         self.thrust_enabled = enable
         self.last_heartbeat = time.time()
