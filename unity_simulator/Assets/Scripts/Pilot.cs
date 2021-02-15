@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 public class Pilot : Agent
 {
     public bool enablePilot = true;
+    public bool lean_training = true;
 
     public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform tank;
@@ -18,6 +19,11 @@ public class Pilot : Agent
 
     public Transform srauv;
     public Transform startPos;
+    public Transform goalBox;
+    public Rigidbody massUpper;
+    public Rigidbody massLower;
+    public Transform indGreen;
+    public Transform indRed;
 
     public int trigger = 0;
     
@@ -29,18 +35,20 @@ public class Pilot : Agent
     private Texture2D frontCamTexture;
 
     private GameObject thrusterController;
-    private float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    private float[] distancesFloat;
+    public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    public float[] distancesFloat;
 
-    private float LongitudinalSpd = 3.0f;
-    private float LaterialSpd = 3.0f;
-    private float VerticalSpd = 3.0f;
-    private float YawSpd = 3.0f;
+    public float LongitudinalSpd = 5.0f;
+    public float LaterialSpd = 5.0f;
+    public float VerticalSpd = 5.0f;
+    public float YawSpd = 5.0f;
 
-    private Vector3 TankMins = new Vector3(1.0f, 1.0f, 1.0f);
-    private Vector3 TankMaxs = new Vector3(11.0f, 6.0f, 11.0f);
+    private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 TankMaxs = new Vector3(12.0f, 6.0f, 12.0f);
 
     private EnvironmentParameters resetParams;
+    private StatsRecorder statsRecorder;
+    private int successes = 1;
 
     public override void Initialize()
     {
@@ -50,14 +58,21 @@ public class Pilot : Agent
         
         srauv = gameObject.transform;
         startPos = gameObject.transform.parent.gameObject.transform.Find("startPos").gameObject.transform;
-
+        goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
+        
         rb = srauv.GetComponent<Rigidbody>();
+        massUpper = gameObject.transform.Find("massUpper").gameObject.transform.GetComponent<Rigidbody>();
+        massLower = gameObject.transform.Find("massLower").gameObject.transform.GetComponent<Rigidbody>();
+        indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
+        indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
+
         collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
 
         //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
         
+        statsRecorder = Academy.Instance.StatsRecorder;
         //resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
@@ -65,35 +80,32 @@ public class Pilot : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // dist sensors
-        foreach (float dist in distancesFloat) 
-            sensor.AddObservation(Normalize(dist, 0.0f, 10.0f));
+        foreach (float dist in distancesFloat) {
+            sensor.AddObservation(Normalize(dist, 0.0f, 12.0f));
+        }
 
         // srauv info
-        sensor.AddObservation(Normalize(srauv.position, TankMins, TankMaxs));
-        sensor.AddObservation(srauv.rotation);
+        sensor.AddObservation(Normalize(srauv.position - tank.position, TankMins, TankMaxs));
         sensor.AddObservation(rb.velocity);
-        sensor.AddObservation(rb.angularVelocity);
+        sensor.AddObservation(Normalize(srauv.rotation.y, 0.0f, 360.0f));
+        sensor.AddObservation(rb.angularVelocity.y); //change this to just the one
 
         // goal position
-        sensor.AddObservation(Normalize(goal, TankMins, TankMaxs));
+        sensor.AddObservation(Normalize(goal - tank.position, TankMins, TankMaxs));
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         AddReward(-0.0005f);
 
-        foreach (float dist in distancesFloat)
+        if (Math.Abs(goal.x - srauv.position.x) <= 1.0f &&
+            Math.Abs(goal.y - srauv.position.y) <= 1.0f &&
+            Math.Abs(goal.z - srauv.position.z) <= 1.0f)
         {
-            if (dist < 0.5f)
-                AddReward(-(0.5f - dist));
-        }
-
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.25f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.25f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.25f)
-        {
-            SetReward(1.0f);
+            statsRecorder.Add("Targets Reached", successes++);
+            AddReward(1.0f);
             EndEpisode();
+            StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
         }
 
         MoveAgent(actionBuffers.DiscreteActions);
@@ -154,7 +166,35 @@ public class Pilot : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        // ThrusterController should take care of this
+        var discreteActionsOut = actionsOut.DiscreteActions;
+        discreteActionsOut.Clear();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            EndEpisode();
+
+        discreteActionsOut[0] = 0;
+        if (Input.GetKey(KeyCode.W))
+            discreteActionsOut[0] = 1;
+        else if (Input.GetKey(KeyCode.S))
+            discreteActionsOut[0] = 2;
+
+        discreteActionsOut[1] = 0;
+        if (Input.GetKey(KeyCode.D))
+            discreteActionsOut[1] = 1;
+        else if (Input.GetKey(KeyCode.A))
+            discreteActionsOut[1] = 2;
+
+        discreteActionsOut[2] = 0;
+        if (Input.GetKey(KeyCode.UpArrow))
+            discreteActionsOut[2] = 1;
+        else if (Input.GetKey(KeyCode.DownArrow))
+            discreteActionsOut[2] = 2;
+
+        discreteActionsOut[3] = 0;
+        if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
+            discreteActionsOut[3] = 1;
+        else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
+            discreteActionsOut[3] = 2;
     }
 
     public void SetResetParameters()
@@ -165,16 +205,30 @@ public class Pilot : Agent
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
         goal = GetRandomLocation(); // maybe check its not to close already
+        goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
-
-        // reset all current velocties
-        rb.isKinematic = true;
-        rb.isKinematic = false;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
+        
         // reset current rotation
         srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
+
+        // rb.isKinematic = true;
+        // rb.isKinematic = false;
+        
+        // reset all current velocties
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        massUpper.velocity = Vector3.zero;
+        massUpper.angularVelocity = Vector3.zero;
+        massLower.velocity = Vector3.zero;
+        massLower.angularVelocity = Vector3.zero;
+    }
+
+    IEnumerator TargetReachedSwapGroundMaterial(Transform ind, float time)
+    {
+
+        ind.position = new Vector3(tank.position.x + 6.0f, 0.0f, tank.position.z + 6.0f);
+        yield return new WaitForSeconds(time); // Wait for 2 sec
+        ind.position = new Vector3(tank.position.x + 6.0f, -1.0f, tank.position.z + 6.0f);
     }
 
     private Vector3 GetRandomLocation()
@@ -184,9 +238,9 @@ public class Pilot : Agent
 
         do
         {
-            x = Random.Range(-tankBounds.extents.x * 0.9f, tankBounds.extents.x * 0.9f) + tank.position.x + 6.0f;
+            x = Random.Range(-tankBounds.extents.x * 0.75f, tankBounds.extents.x * 0.75f) + tank.position.x + 6.0f;
             y = Random.Range(TankMins.y, TankMaxs.y);
-            z = Random.Range(-tankBounds.extents.z * 0.9f, tankBounds.extents.z * 0.9f) + tank.position.z + 6.0f;
+            z = Random.Range(-tankBounds.extents.z * 0.75f, tankBounds.extents.z * 0.75f) + tank.position.z + 6.0f;
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
@@ -207,12 +261,13 @@ public class Pilot : Agent
         return (val - min)/(max - min);
     }
 
-    private void OnCollisionEnter(Collision collisionInfo)
+    private void OnCollisionEnter(Collision collisionInfo)  
     {
         if (enablePilot)
         {
-            SetReward(-1.0f);
-            EndEpisode();
+          SetReward(-1.0f);
+          EndEpisode();
+          StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
         }
     }
 
