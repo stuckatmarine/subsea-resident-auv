@@ -16,18 +16,53 @@
         "num_sensors": 5,
         "min_cm": 10,
         "max_cm": 200,
-        "poll_interval_s": 0.5
+        "poll_interval_s": 0.2,
+        "socket_send_interval_s": 0.5
     },
     "imu_sensor_config":{
-        "poll_interval_s": 0.5
+        "poll_interval_s": 0.5,
+        "imu_values":{
+            "heading" : 0.0,
+            "pos_x" : 0.0,
+            "pos_y" : 0.0,
+            "pos_z" : 0.0, 
+            "vel_x" : 0.0, 
+            "vel_y" : 0.0, 
+            "vel_z" : 0.0
+        }
     },
     "thruster_config":{
         "num_thrusters": 6,
-        "min_thrust": -100,
-        "max_thrust": 100,
+        "max_thrust": 75,
         "deadman_timeout_s": 1,
         "thrust_interval_s": 0.5,
         "max_spd_min_range_m": 0.5,
+        "board_id_base": 8,
+        "board_id_shift": 6,
+        "rpm_max": 3000,
+        "CAN_tx_ids":{
+            "arm_id": 0,            
+            "abort_id": 1,
+            "motor_onoff_id": 2,
+            "set_RPM_id": 3,
+            "set_accel_id": 4
+        },
+        "CAN_rx_ids":{
+            "measured_RPM_id": 5,
+            "measured_voltage_id": 6,
+            "measured_torque_id": 7,
+            "board_state_id": 8,
+            "fault_state_id": 9
+        },
+        
+        "_":[
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "fwd":[
             25,
             25,

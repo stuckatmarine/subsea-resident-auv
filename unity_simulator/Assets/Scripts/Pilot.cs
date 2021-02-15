@@ -10,7 +10,9 @@ using Random = UnityEngine.Random;
 
 public class Pilot : Agent
 {
+    public bool enablePilot = true;
     public bool lean_training = true;
+
     public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform tank;
     public Bounds tankBounds;
@@ -197,6 +199,9 @@ public class Pilot : Agent
 
     public void SetResetParameters()
     {
+        if (!enablePilot)
+            return;
+            
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
         goal = GetRandomLocation(); // maybe check its not to close already
@@ -258,9 +263,12 @@ public class Pilot : Agent
 
     private void OnCollisionEnter(Collision collisionInfo)  
     {
-        SetReward(-1.0f);
-        EndEpisode();
-        StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
+        if (enablePilot)
+        {
+          SetReward(-1.0f);
+          EndEpisode();
+          StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
+        }
     }
 
     private void OnTriggerEnter(Collider c)

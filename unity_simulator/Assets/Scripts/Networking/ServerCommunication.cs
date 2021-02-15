@@ -10,12 +10,22 @@ using UnityEngine.UI;
 /// </summary>
 public class ServerCommunication : MonoBehaviour
 {
+    public enum State
+    {
+        Idle,
+        Manual,
+        Auto
+    }
+
     public bool send_cmds = false;
     public bool send_tel = false;
     public bool disableWebsocketServer = false;
     public bool enableLogging = false;
     public bool enableVehicleCmds = false;
     public bool sendScreenshots = false;
+
+    
+    public State controlState = State.Idle;
 
     // Server IP address
     [SerializeField]
@@ -27,7 +37,7 @@ public class ServerCommunication : MonoBehaviour
 
     // Flag to use localhost
     [SerializeField]
-    private bool useLocalhost = true;
+    private bool useLocalhost = false;
     [SerializeField]
     private int txNum = 0;
     [SerializeField]
@@ -112,6 +122,7 @@ public class ServerCommunication : MonoBehaviour
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
         server = "ws://" + host + ":" + port;
+        Debug.Log("using websocket setver " + server);
         client = new WsClient(server);
         ConnectToServer(); 
     }
@@ -343,8 +354,7 @@ public class ServerCommunication : MonoBehaviour
         DateTime timestamp = DateTime.Now;
         cmd_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
         
-        cmd_msg.force_state = "manual";
-        cmd_msg.can_thrust = true;
+        
         for (int i = 0; i < 4; i++)
         {
             string dt = srauv.GetComponent<ThrusterController>().dir_thrust[i];
@@ -354,12 +364,33 @@ public class ServerCommunication : MonoBehaviour
         {
             cmd_msg.raw_thrust[i] = srauv.GetComponent<ThrusterController>().raw_thrust[i];
         }
-        if (srauv.GetComponent<ThrusterController>().dir_thrust_used)
-            cmd_msg.thrust_type = "dir_thrust";
-        if (srauv.GetComponent<ThrusterController>().raw_thrust_used)
-            cmd_msg.thrust_type = "raw_thrust";
+
+        Debug.Log("dir_thrust_used: " + srauv.GetComponent<ThrusterController>().dir_thrust_used);
+        Debug.Log("raw_thrust_used: " + srauv.GetComponent<ThrusterController>().raw_thrust_used);
+
+        if (controlState == State.Manual)
+        {
+            cmd_msg.force_state = "manual";
+            cmd_msg.can_thrust = true;
+
+            if (srauv.GetComponent<ThrusterController>().dir_thrust_used)
+                cmd_msg.thrust_type = "dir_thrust";
+            else if (srauv.GetComponent<ThrusterController>().raw_thrust_used)
+                cmd_msg.thrust_type = "raw_thrust";
+            else
+                cmd_msg.thrust_type = "";
+        }
+        else if (controlState == State.Auto)
+        {
+            cmd_msg.force_state = "autonomous";
+        }
         else
+        {
             cmd_msg.thrust_type = "";
+            cmd_msg.can_thrust = false;
+
+            cmd_msg.force_state = "idle";
+        }
         
 
         string msg = JsonUtility.ToJson(cmd_msg);
@@ -396,6 +427,21 @@ public class ServerCommunication : MonoBehaviour
     {
         enableVehicleCmds = true;
         srauv.GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    public void setStateIdle()
+    {
+        controlState = State.Idle;
+    }
+
+    public void setStateManual()
+    {
+        controlState = State.Manual;
+    }
+
+    public void setStateAuto()
+    {
+        controlState = State.Auto;
     }
 
     private void updateValues(int i, float min, float max)

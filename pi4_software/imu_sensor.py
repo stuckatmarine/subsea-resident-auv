@@ -8,29 +8,29 @@ import time
 
 # remove these test vals when actual sensors available
 TEST_TOF_DURATION_S = 0.010
-TEST_MAX = 300
 
 class IMU_Thread(threading.Thread):
     def __init__(self, config, data_arr):
         threading.Thread.__init__(self)
         self.config = config
-        self.value_arr = data_arr
+        self.values = data_arr
         self.kill_received = False
         self.poll_interval = config["poll_interval_s"]
+        print(f"IMU thread up")
 
     # update with sensor reading code
     def read_sensor(self):
         time.sleep(TEST_TOF_DURATION_S)
-        self.value_arr[0] = 0.0 # heading
-        self.value_arr[1] = 0.1 # x vel
-        self.value_arr[2] = 0.2 # y vel
-        self.value_arr[3] = 0.3 # z vel
-        self.value_arr[4] = 0.4 # x acc
-        self.value_arr[5] = 0.5 # y acc
-        self.value_arr[6] = 0.6 # z acc
-        self.value_arr[7] = 0.7 # x rot vel
-        self.value_arr[8] = 0.8 # y rot vel
-        self.value_arr[9] = 0.9 # z rot vel
+
+        ## see srauv_settings.json for "imu_values" that map to self.values
+        #  u can add as needed
+        self.values["heading"] += 0.02
+        self.values["pos_x"] += 0.01
+        self.values["pos_y"] = 0.01
+        self.values["pos_z"] = 0.01
+        self.values["vel_x"] = 0.01
+
+        # print(f"IMU test val heading:{self.values['heading']}")
 
     def run(self):
         while not self.kill_received:
