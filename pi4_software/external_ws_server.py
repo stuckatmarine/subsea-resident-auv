@@ -18,48 +18,52 @@ import timestamp
 import logger
 from srauv_settings import SETTINGS
 
-source = "external_ws_server"
-srauv_address = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
+class SrauvExternalWSS(WebSocket):
+    # Setup
+    log_filename = str(f'Logs/{datetime.now().strftime("ES--%m-%d-%Y_%H-%M-%S")}.log')
+    logger = logger.setup_logger("external_ws_logger", log_filename)
 
-log_filename = str(f'Logs/{datetime.now().strftime("ES--%m-%d-%Y_%H-%M-%S")}.log')
-logger = logger.setup_logger("external_ws_logger", log_filename)
+    srauv_address = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
+    srauv_address = srauv_address
+    try:
+        srauv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet, udp
+        print(f"SrauvExternalWSS forwarding to internal socket {SETTINGS['internal_ip']}:{SETTINGS['main_msg_port']}")
+    except socket.error:
+        logger("Failed To Create main_msg_socket in external_ws_server")
+        sys.exit()
 
-try:
-    srauv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet, udp
-except socket.error:
-    logger.info("Failed To Create main_msg_socket in external_ws_server")
-    sys.exit()
 
-
-class GetSrauvResponse(WebSocket):
     def handleMessage(self):
         try:
             # Received ws msg from external network. Log it
-            logger.info(f"sending to {srauv_address}  data:{self.data}")
-            print(f"sending to {srauv_address}  data:{self.data}")
+            self.logger.info(f"sending to {self.srauv_address}  data:{self.data}")
 
             # Forward msg to srauv_main's local socket
-            srauv_socket.sendto(self.data.encode("utf-8"), srauv_address)
+            self.srauv_socket.sendto(self.data.encode("utf-8"), self.srauv_address)
 
             # Get response from srauv_main. Log it
-            data, addr = srauv_socket.recvfrom(4096)
+            data, addr = self.srauv_socket.recvfrom(4096)
             srauv_response = data.decode("utf-8")
 
             # Forward response back over external network
             self.sendMessage(srauv_response)
-            logger.info(f"> responding to topsides, msg:{srauv_response}")
+            self.logger.info(f"> responding to topsides, msg:{srauv_response}")
 
         except socket.error:
-            logger.info(f"Failed to send over socket, address:{srauv_address}")
+            self.logger.info(f"Failed to send over socket, address:{self.srauv_address}")
 
 
     def handleConnected(self):
-        logger.info(f'connected {self.address}')
+        self.logger.info(f'connected {self.address}')
 
     def handleClose(self):
-        logger.info(f'closed {self.address}')
+        self.logger.info(f'closed {self.address}')
 
-logger.info(f"starting external server process, {SETTINGS['external_ip']}:{SETTINGS['external_port']}")
-server = SimpleWebSocketServer(SETTINGS["external_ip"], SETTINGS["external_port"], GetSrauvResponse)
-server.serveforever()
-logger.info(f"stopping external server process")
+def SrauvExternalWSS_start():
+    print(f"SrauvExternalWSS_start at {SETTINGS['external_ip']}:{SETTINGS['external_port']}")
+    server = SimpleWebSocketServer(SETTINGS["external_ip"], SETTINGS["external_port"], SrauvExternalWSS)
+    try:
+        server.serveforever()
+    except KeyboardInterrupt:
+        print("Keyboad Interrup caught, closing external server")
+        sys.exit()

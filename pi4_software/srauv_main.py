@@ -21,10 +21,10 @@ import sys
 import socket
 import time
 import threading
-import multiprocessing
 import math  
 from datetime import datetime
 from time import perf_counter
+from multiprocessing import Process
 
 # Custome imports
 import distance_sensor
@@ -37,6 +37,7 @@ import internal_socket_server
 import logger
 from srauv_settings import SETTINGS
 from waypoint_parser import WAYPOINT_INFO
+from external_ws_server import SrauvExternalWSS_start
 
 ###################  Globals  ###################
 
@@ -48,16 +49,18 @@ source = "srauv_main"
 starting_state = "idle"
 can_thrust = False
 fly_sim = False
+
 threads = [] # contains all threads
 dist_sensor_values = [0.0, 0.0, 0.0, 0.0, 0.0]
 ds_threads = []
-## imu_values = (heading, vel x, y, z, acc x, y, z, rot vel x, y, z)
-imu_values = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] 
+imu_values = SETTINGS["imu_sensor_config"]["imu_values"]
 imu_threads = []
 thrust_values = [0, 0, 0, 0, 0, 0] # int, -100 to 100 as percent max thrust
 th_threads = []
 thurster_config = SETTINGS["thruster_config"]
 internal_socket_threads = []
+
+ext_proc = []
 
 cmd = command_msg.make(source, "sim")
 tel = telemetry_msg.make(source, "dflt")
@@ -169,6 +172,7 @@ def update_telemetry():
     tel["alt"] = dist_sensor_values[4]
     tel["depth"] = 1.1 # TODO depth sensor getter
     tel["raw_thrust"] = thrust_values
+    tel["pos_x"] = imu_values["pos_x"]
     logger.info(f"update_telemetry(), tel:{tel}")
 
 
@@ -352,10 +356,10 @@ def setup_thruster_threads(th_config, data_arr):
     threads.extend(th_threads)
 
 
-def setup_socket_thread(data_arr):
+def setup_socket_thread(data_arr, dist_arr):
     logger.info(f'state:{tel["state"]} MSG:Creating srauv socket threads')
 
-    internal_socket_threads.append(internal_socket_server.LocalSocketThread(main_internal_address, tel, cmd, tel_recv, data_arr))
+    internal_socket_threads.append(internal_socket_server.LocalSocketThread(main_internal_address, tel, cmd, tel_recv, data_arr, dist_arr))
     internal_socket_threads[0].start()
     threads.extend(internal_socket_threads)
 
@@ -398,9 +402,14 @@ def has_live_threads(threads):
 
 def start_threads():
     try:
-        setup_socket_thread(cmd_recv)
-        setup_distance_sensor_threads(SETTINGS["dist_sensor_config"], dist_sensor_values)
+        setup_socket_thread(cmd_recv, dist_sensor_values)
+        setup_imu_thread(SETTINGS["imu_sensor_config"], imu_values)
         setup_thruster_threads(SETTINGS["thruster_config"], thrust_values)
+
+        process = Process(target=SrauvExternalWSS_start, args=())
+        ext_proc.append(process)
+        process.start()
+
     except Exception as e:
         logger.error(f"Thread creation err:{e}")
     logger.info(f'state:{tel["state"]} MSG:All threads should be started. num threads:{len(threads)}')
@@ -429,6 +438,7 @@ def stop_threads():
             logger.error(f"Thread stopping err:{e}")
             
     logger.info("Stopped threads")
+    print("Stopped threads")
 
 
 ########  Main  ########

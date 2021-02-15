@@ -1,5 +1,5 @@
 {
-    "external_ip": "",
+    "external_ip": "localhost",
     "external_port": 8001,
     "internal_ip": "localhost",
     "main_msg_port": 7001,
@@ -16,10 +16,20 @@
         "num_sensors": 5,
         "min_cm": 10,
         "max_cm": 200,
-        "poll_interval_s": 0.5
+        "poll_interval_s": 0.2,
+        "socket_send_interval_s": 0.5
     },
     "imu_sensor_config":{
-        "poll_interval_s": 0.5
+        "poll_interval_s": 0.5,
+        "imu_values":{
+            "heading" : 0.0,
+            "pos_x" : 0.0,
+            "pos_y" : 0.0,
+            "pos_z" : 0.0, 
+            "vel_x" : 0.0, 
+            "vel_y" : 0.0, 
+            "vel_z" : 0.0
+        }
     },
     "thruster_config":{
         "num_thrusters": 6,
