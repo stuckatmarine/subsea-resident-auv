@@ -81,29 +81,29 @@ public class Pilot : Agent
     {
         // dist sensors
         foreach (float dist in distancesFloat) {
-            sensor.AddObservation(Normalize(dist, 0.0f, 12.0f));
+            sensor.AddObservation(dist);
         }
 
         // srauv info
-        sensor.AddObservation(Normalize(srauv.position - tank.position, TankMins, TankMaxs));
+        sensor.AddObservation(srauv.position - tank.position);
         sensor.AddObservation(rb.velocity);
-        sensor.AddObservation(Normalize(srauv.rotation.y, 0.0f, 360.0f));
+        sensor.AddObservation(srauv.rotation.y);
         sensor.AddObservation(rb.angularVelocity.y); //change this to just the one
 
         // goal position
-        sensor.AddObservation(Normalize(goal - tank.position, TankMins, TankMaxs));
+        sensor.AddObservation(goal - tank.position);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        AddReward(-0.0005f);
+        AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 1.0f &&
-            Math.Abs(goal.y - srauv.position.y) <= 1.0f &&
-            Math.Abs(goal.z - srauv.position.z) <= 1.0f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 1.5f &&
+            Math.Abs(goal.y - srauv.position.y) <= 1.5f &&
+            Math.Abs(goal.z - srauv.position.z) <= 1.5f)
         {
             statsRecorder.Add("Targets Reached", successes++);
-            AddReward(1.0f);
+            AddReward(2.0f);
             EndEpisode();
             StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
         }
@@ -127,7 +127,6 @@ public class Pilot : Agent
                 thrustCtrl.moveReverse(LongitudinalSpd);
                 break;
         }
-
         switch (laterial)
         {
             case 1:
@@ -209,10 +208,7 @@ public class Pilot : Agent
         startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
         
         // reset current rotation
-        srauv.rotation = new Quaternion(0f, Random.Range(-10f, 10f)/10, 0f, Random.Range(-10f, 10f)/10);
-
-        // rb.isKinematic = true;
-        // rb.isKinematic = false;
+        srauv.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
         
         // reset all current velocties
         rb.velocity = Vector3.zero;
