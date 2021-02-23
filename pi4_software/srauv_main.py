@@ -479,7 +479,7 @@ def main():
                 logger.info(f'state:{tel["state"]} ul_perf_s:{ul_perf_timer_end-ul_perf_timer_start}')
                 last_update_ms = time_now
 
-                time.sleep(0.001)
+            time.sleep(0.001)
 
         except KeyboardInterrupt:
             logger.info("Keyboad Interrup caught, closing gracefully")

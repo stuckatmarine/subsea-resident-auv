@@ -32,14 +32,14 @@
         }
     },
     "thruster_config":{
-        "num_thrusters": 6,
+        "num_thrusters": 1,
         "max_thrust": 75,
         "deadman_timeout_s": 1,
         "thrust_interval_s": 0.5,
         "max_spd_min_range_m": 0.5,
         "board_id_base": 8,
         "board_id_shift": 6,
-        "rpm_max": 3000,
+        "rpm_max": 2000,
         "CAN_tx_ids":{
             "arm_id": 0,            
             "abort_id": 1,
