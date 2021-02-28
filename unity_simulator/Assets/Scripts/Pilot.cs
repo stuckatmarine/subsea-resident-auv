@@ -104,8 +104,8 @@ public class Pilot : Agent
         {
             statsRecorder.Add("Targets Reached", successes++);
             AddReward(2.0f);
-            EndEpisode();
             StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
+            EndEpisode();
         }
 
         MoveAgent(actionBuffers.DiscreteActions);
@@ -262,8 +262,8 @@ public class Pilot : Agent
         if (enablePilot)
         {
           SetReward(-1.0f);
-          EndEpisode();
           StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
+          EndEpisode();
         }
     }
 
