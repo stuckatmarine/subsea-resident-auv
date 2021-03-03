@@ -5,36 +5,38 @@
 
 import threading
 import time
+import copy
 
-# remove these test vals when actual sensors available
-TEST_TOF_DURATION_S = 0.010
+import timestamp
 
 class IMU_Thread(threading.Thread):
-    def __init__(self, config, data_arr):
+    def __init__(self, config:dict, tel:dict):
         threading.Thread.__init__(self)
-        self.config = config
-        self.values = data_arr
-        self.kill_received = False
-        self.poll_interval = config["poll_interval_s"]
+        self.config             = config
+        self.poll_interval_s    = config["poll_interval_s"]
+        self.values             = tel["imu_dict"]
+        self.kill_received      = False
         print(f"IMU thread up")
 
     # update with sensor reading code
     def read_sensor(self):
-        time.sleep(TEST_TOF_DURATION_S)
+        time.sleep(0.010) # TODO: replace with actual sensor read code
 
         ## see srauv_settings.json for "imu_values" that map to self.values
-        #  u can add as needed
         self.values["heading"] += 0.02
         self.values["pos_x"] += 0.01
         self.values["pos_y"] = 0.01
         self.values["pos_z"] = 0.01
         self.values["vel_x"] = 0.01
 
-        # print(f"IMU test val heading:{self.values['heading']}")
-
     def run(self):
         while not self.kill_received:
-            start_time = time.time()
-            self.read_sensor()
-            time.sleep(self.poll_interval - ((time.time() - start_time) % self.poll_interval))
+            try:
+                start_time = time.time()
+                self.read_sensor()
+                time.sleep(self.poll_interval_s -
+                    ((time.time() - start_time) % self.poll_interval_s))
+                    
+            except Exception as e:
+                print(f"IMU err:{e}")
     

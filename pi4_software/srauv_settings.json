@@ -5,22 +5,21 @@
     "main_msg_port": 7001,
     "main_cam_port": 7002,
     "update_interval_ms": 200,
-    "tel_tx_interval_ms": 500,
-    "cmd_tx_interval_ms": 500,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
     "fly_sim": true,
     "manual_deadman_timeout_ms": 2000,
     "log_to_stdout": false,
     "dist_sensor_config":{
-        "num_sensors": 5,
+        "total_sensors": 5,
+        "main_sensors": 2,
         "min_cm": 10,
         "max_cm": 200,
-        "poll_interval_s": 0.2,
-        "socket_send_interval_s": 0.5
+        "poll_interval_s": 0.200,
+        "socket_send_interval_s": 0.500
     },
     "imu_sensor_config":{
-        "poll_interval_s": 0.5,
+        "poll_interval_s": 0.500,
         "imu_values":{
             "heading" : 0.0,
             "pos_x" : 0.0,

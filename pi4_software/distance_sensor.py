@@ -6,43 +6,33 @@
 import threading
 import time
 
-
-# remove these test vals when actual sensors available
-TEST_TOF_DURATION_S = 0.010
-TEST_MAX = 300
+import timestamp
 
 class DSThread(threading.Thread):
-    def __init__(self, config, id, data_arr):
+    def __init__(self, config: dict, tel: dict, id: int):
         threading.Thread.__init__(self)
-        self.config = config
-        self.id = id
-        self.value_arr = data_arr
-        self.kill_received = False
-        self.poll_interval = config["poll_interval_s"]
+        self.config             = config
+        self.poll_interval_ms   = config["poll_interval_ms"]
+        self.value_arr          = tel["dist_values"]
+        self.kill_received      = tel["kill_received"]
+        self.id                 = id
 
-    # update with sensor reading code
     def read_sensor(self):
-        time.sleep(TEST_TOF_DURATION_S)
-
-        # fake sensor tests, cycels to man and repeats
+        # TODO: replace with sensor reading code
+        time.sleep(0.010)
         self.value_arr[self.id] += 1
-        if self.value_arr[self.id] > TEST_MAX:
+        if self.value_arr[self.id] > 300:
             self.value_arr[self.id] = 0
 
     def run(self):
-        if self.id < 0 or self.id >= self.config["num_sensors"]:
+        if self.id < 0 or self.id >= self.config["total_sensors"]:
             print(f"Sensor id not valid, id:{self.id}")
             return
         try:
             while not self.kill_received:
-                start_time = time.time()
+                start_time = timestamp.now_int_ms()
                 self.read_sensor()
-                time.sleep(self.poll_interval - ((time.time() - start_time) % self.poll_interval))
-       
-        except KeyboardInterrupt:
-            print("Keyboad Interrup caught, closing gracefully")
-            return
+                time.sleep(self.poll_interval_ms - ((timestamp.now_int_ms() - start_time) % self.poll_interval_ms))
 
         except Exception as e:
-            print(f"Exception in update loop, e:{e}")
-            return
+            print(f"Exception in distance sensor loop, e:{e}")

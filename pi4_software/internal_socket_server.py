@@ -23,7 +23,7 @@ from datetime import datetime
 import logger
 
 class LocalSocketThread(threading.Thread):
-    def __init__(self, address, tel, cmd, tel_recv, cmd_recv, dist_arr):
+    def __init__(self, address, tel, cmd, tel_recv, cmd_recv):
         threading.Thread.__init__(self)
         self.kill_received = False
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -38,7 +38,7 @@ class LocalSocketThread(threading.Thread):
         self.last_cmd_sent = -1
         self.cmd_with_kill_recvd = False
         self.default_response = str('dflt response').encode('utf-8') # for testing, '' also acceptable
-        self.dist_values = dist_arr
+        self.dist_values = tel["dist_values"]
 
         log_filename = str(f'Logs/{datetime.now().strftime("IS--%m-%d-%Y_%H-%M-%S")}.log')
         self.logger = logger.setup_logger("internal_socket_server", log_filename)
