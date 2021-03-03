@@ -42,23 +42,24 @@ from external_ws_server import SrauvExternalWSS_start
 ###################  Globals  ###################
 
 G_MAIN_INTERNAL_ADDR    = (SETTINGS["internal_ip"],SETTINGS["main_msg_port"])
-G_SOURCE                = "srauv_main"
 
 g_fly_sim               = False # False -> thrust self, True -> send cmds to sim to fly
 
 g_threads  = []
 g_sub_processes = []
 
-cmd = command_msg.make(G_SOURCE, "sim")
-tel = telemetry_msg.make(G_SOURCE, "dflt")
+g_cmd_msg = command_msg.make("srauv_main", "sim") # if g_fly_sim
+g_tel_msg = telemetry_msg.make("srauv_main", "sim") # telemetry response packets go to sim gui
+
 cmd_recv = command_msg.make("na", "an")
 tel_recv = telemetry_msg.make("na", "an")
 cmd_recv_num = 0
 tel_recv_num = 0
 waypoint_path = []
 waypoint_idx = 0
-manual_deadman_timestamp = timestamp.now_int_ms()
-MANUAL_DEADMAN_TIMEOUT_MS = SETTINGS["manual_deadman_timeout_ms"]
+
+g_last_manual_cmd = timestamp.now_int_ms()
+
 
 vel_rot = 0.0
 t_dist_x = 0.0
@@ -77,8 +78,8 @@ def close_gracefully():
 
 
 def go_to_idle():
-    tel["state"] = "idle"
-    tel["thrust_enabled"][0] = False
+    g_tel_msg["state"] = "idle"
+    g_tel_msg["thrust_enabled"][0] = False
     logger.info("--- State -> IDLE ---")
 
 
@@ -95,7 +96,7 @@ def parse_received_telemetry():
         if k == "source" or k == "dest" or k == "state":
             continue
 
-        tel[k] = tel_recv[k]
+        g_tel_msg[k] = tel_recv[k]
 
 
 def parse_received_command():
@@ -116,16 +117,16 @@ def parse_received_command():
         logger.warning(f"--- Forcing state ---> {cmd_recv['force_state']}")
 
         #  TODO: functionize state transitions
-        tel["state"] = cmd_recv["force_state"]
+        g_tel_msg["state"] = cmd_recv["force_state"]
         if cmd_recv["force_state"] == "idle":
             go_to_idle()
 
         if cmd_recv["force_state"] == "manual":
-            tel["state"] == "manual"
-            tel["thrust_enabled"][0] = cmd_recv["g_thrust_enabled"]
+            g_tel_msg["state"] == "manual"
+            g_tel_msg["thrust_enabled"][0] = cmd_recv["g_thrust_enabled"]
             manual_deadman_timestamp = timestamp.now_int_ms()
 
-        logger.info(f"Forcing state to {tel['state']}, g_thrust_enabled:{tel['thrust_enabled']}")
+        logger.info(f"Forcing state to {g_tel_msg['state']}, g_thrust_enabled:{g_tel_msg['thrust_enabled']}")
 
     if cmd_recv["action"] == "fly_sim_true":
         g_fly_sim = True
@@ -134,11 +135,11 @@ def parse_received_command():
 
 
 def update_telemetry():
-    tel["msg_num"] += 1
-    tel["timestamp"] = timestamp.now_string()
-    tel["alt"] = tel["dist_values"][4]
-    tel["depth"] = 1.111111111 # TODO depth sensor getter
-    logger.info(f"update_telemetry(), tel:{tel}")
+    g_tel_msg["msg_num"] += 1
+    g_tel_msg["timestamp"] = timestamp.now_string()
+    g_tel_msg["alt"] = g_tel_msg["dist_values"][4]
+    g_tel_msg["depth"] = 1.111111111 # TODO depth sensor getter
+    logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
 
 def setup_waypoints(waypoint_idx):
@@ -164,14 +165,14 @@ def update_waypoint(waypoint_idx):
 
         # update target pos so sim can update visually
         if g_fly_sim == True:
-            tel["imu_dict"]["target_pos_x"] = target["pos_x"]
-            tel["imu_dict"]["target_pos_y"]  = target["pos_y"]
-            tel["imu_dict"]["target_pos_z"]  = target["pos_z"]
+            g_tel_msg["imu_dict"]["target_pos_x"] = target["pos_x"]
+            g_tel_msg["imu_dict"]["target_pos_y"]  = target["pos_y"]
+            g_tel_msg["imu_dict"]["target_pos_z"]  = target["pos_z"]
         
-        t_dist_x = tel["imu_dict"]["pos_x"] - target["pos_x"]
-        t_dist_y = tel["imu_dict"]["pos_y"] - target["pos_y"]
-        t_dist_z = tel["imu_dict"]["pos_z"] - target["pos_z"]
-        t_heading_off = tel["imu_dict"]["heading"] - math.degrees(math.atan2(t_dist_z, t_dist_x))
+        t_dist_x = g_tel_msg["imu_dict"]["pos_x"] - target["pos_x"]
+        t_dist_y = g_tel_msg["imu_dict"]["pos_y"] - target["pos_y"]
+        t_dist_z = g_tel_msg["imu_dict"]["pos_z"] - target["pos_z"]
+        t_heading_off = g_tel_msg["imu_dict"]["heading"] - math.degrees(math.atan2(t_dist_z, t_dist_x))
         if t_heading_off > 180.0:
             t_heading_off -= 180.0
         elif t_heading_off < 180.0:
@@ -199,30 +200,29 @@ def estimate_position():
     # TODO calculate position from distance values
     # TODO update distance to targer t_dist_xyz
 
-    if tel["imu_dict"]["heading"] >= 360:
-        tel["imu_dict"]["heading"] -= 360
+    if g_tel_msg["imu_dict"]["heading"] >= 360:
+        g_tel_msg["imu_dict"]["heading"] -= 360
 
 
 def evaluate_state():
-    global g_thrust_enabled, manual_deadman_timestamp
-    if tel["state"] == "idle":
-        i = 0
+    global manual_deadman_timestamp
+    if g_tel_msg["state"] == "idle":
         # evaluate state
-        tel["thrust_enabled"][0] = False
+        g_tel_msg["thrust_enabled"][0] = False
 
-    elif tel["state"] == "autonomous":
+    elif g_tel_msg["state"] == "autonomous":
 
         # evaluate state
-        tel["thrust_enabled"][0] = True
+        g_tel_msg["thrust_enabled"][0] = True
         update_waypoint(waypoint_idx)
 
-    elif tel["state"] == "manual":
+    elif g_tel_msg["state"] == "manual":
 
         # evaluate state
-        tel["thrust_enabled"][0] = True
-        if manual_deadman_timestamp - timestamp.now_int_ms() >= MANUAL_DEADMAN_TIMEOUT_MS:
+        g_tel_msg["thrust_enabled"][0] = True
+        if g_last_manual_cmd - timestamp.now_int_ms() >= SETTINGS["manual_deadman_timeout_ms"]:
     #         go_to_idle()
-            logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{manual_deadman_timestamp - timestamp.now_int_ms()}")
+            logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{g_last_manual_cmd - timestamp.now_int_ms()}")
 
 
 def add_thrust(val_arr, amt):
@@ -236,7 +236,7 @@ def calculate_thrust():
     new_thrust_values = [0, 0, 0, 0, 0, 0]
     thurster_config = SETTINGS["thruster_config"]
     
-    if tel["state"] == "autonomous":
+    if g_tel_msg["state"] == "autonomous":
         if abs(t_dist_x) > thurster_config["max_spd_min_range_m"]:
             if t_dist_x > 0:
                 add_thrust(new_thrust_values, thurster_config["fwd"])
@@ -263,7 +263,7 @@ def calculate_thrust():
 
         g_thrust_values = new_thrust_values.copy()
     
-    elif tel["state"] == "manual":
+    elif g_tel_msg["state"] == "manual":
         
         if cmd_recv["thrust_type"] == "raw_thrust":
             g_thrust_values = cmd_recv["raw_thrust"].copy()
@@ -277,46 +277,43 @@ def calculate_thrust():
 
 
 def update_sim_cmd():
-    cmd["timestamp"] = timestamp.now_string()
-    cmd["thrust_fwd"] = g_thrust_values[0]
-    cmd["thrust_right"] = g_thrust_values[1]
-    cmd["thrust_rear"] = g_thrust_values[2]
-    cmd["thrust_left"] = g_thrust_values[3]
-    cmd["thrust_v_right"] = g_thrust_values[4]
-    cmd["thrust_v_left"] = g_thrust_values[5]
-    cmd["thrust_enabled"] = tel["thrust_enabled"][0]
+    g_cmd_msg["timestamp"] = timestamp.now_string()
+    g_cmd_msg["thrust_fwd"] = g_thrust_values[0]
+    g_cmd_msg["thrust_right"] = g_thrust_values[1]
+    g_cmd_msg["thrust_rear"] = g_thrust_values[2]
+    g_cmd_msg["thrust_left"] = g_thrust_values[3]
+    g_cmd_msg["thrust_v_right"] = g_thrust_values[4]
+    g_cmd_msg["thrust_v_left"] = g_thrust_values[5]
+    g_cmd_msg["thrust_enabled"] = g_tel_msg["thrust_enabled"][0]
 
-    logger.info(f"cmd:{cmd}")
-    cmd["msg_num"] += 1
+    logger.info(f"g_cmd_msg:{g_cmd_msg}")
+    g_cmd_msg["msg_num"] += 1
 
 def apply_thrust():
     if g_fly_sim == True:
         update_sim_cmd()
 
-def has_live_threads(threads):
-    return True in [t.is_alive() for t in threads]
-
 
 def start_threads():
     try:
         g_threads.append(imu_sensor.IMU_Thread(SETTINGS["imu_sensor_config"],
-                                               tel))
+                                               g_tel_msg))
         # g_threads.append(internal_socket_server.LocalSocketThread(G_MAIN_INTERNAL_ADDR,
-        #                                                           tel,
-        #                                                           cmd,
+        #                                                           g_tel_msg,
+        #                                                           g_cmd_msg,
         #                                                           tel_recv,
         #                                                           cmd_recv))
 
         for idx in range(SETTINGS["thruster_config"]["num_thrusters"]):
             g_threads.append(thruster_controller.ThrusterThread(SETTINGS["thruster_config"],
-                                                                tel,
+                                                                g_tel_msg,
                                                                 idx,
                                                                 logger))
 
-        # for idx in range(SETTINGS["dist_sensor_config"]["main_sensors"]):
-        #     g_threads.append(distance_sensor.DSThread(SETTINGS["dist_sensor_config"],
-        #                                               tel,
-        #                                               idx))
+        for idx in range(SETTINGS["dist_sensor_config"]["main_sensors"]):
+            g_threads.append(distance_sensor.DSThread(SETTINGS["dist_sensor_config"],
+                                                      g_tel_msg,
+                                                      idx))
 
         for t in g_threads:
             t.start()
@@ -329,17 +326,15 @@ def start_threads():
     except Exception as e:
         logger.error(f"Thread creation err:{e}")
 
-    logger.info(f'state:{tel["state"]} MSG:All threads should be started. num threads:{len(g_threads)}')
+    logger.info(f'state:{g_tel_msg["state"]} MSG:All threads should be started. num threads:{len(g_threads)}')
 
 
 def stop_threads():
     logger.info("Trying to stop threads...")
-    try:
-        while has_live_threads(g_threads):
-                        
-                for t in g_threads:
-                    t.kill_received = True
-                    t.join()
+    try:              
+        for t in g_threads:
+            t.kill_received = True
+            t.join()
 
         # Terminate multi processes if any
         for p in g_sub_processes:
@@ -363,14 +358,14 @@ def stop_threads():
 ########  Main  ########
 
 def main():
-    logger.info(f'state:{tel["state"]} MSG:SRAUV main() starting')
+    logger.info(f'state:{g_tel_msg["state"]} MSG:SRAUV main() starting')
     last_update_ms = 0
-    tel["state"] = "idle"
+    g_tel_msg["state"] = "idle"
     setup_waypoints(waypoint_idx)
 
     start_threads()
 
-    logger.info(f'state:{tel["state"]} MSG:Starting update loop')
+    logger.info(f'state:{g_tel_msg["state"]} MSG:Starting update loop')
     while True:
         try:
             time_now = timestamp.now_int_ms()
@@ -393,12 +388,13 @@ def main():
 
                 apply_thrust()
 
-                print(f"imu heading : {tel['imu_dict']['heading']}")
-                print(f"thrust enabled1:{tel['thrust_enabled']}")
+                print(f"imu heading   :{g_tel_msg['imu_dict']['heading']}")
+                print(f"thrust enabled:{g_tel_msg['thrust_enabled']}")
+                print(f"dist 0        :{g_tel_msg['dist_values'][0]}")
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-                logger.info(f'state:{tel["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
+                logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
 
             time.sleep(0.001)    

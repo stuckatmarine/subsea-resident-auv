@@ -14,8 +14,9 @@ class DSThread(threading.Thread):
         self.config             = config
         self.poll_interval_ms   = config["poll_interval_ms"]
         self.value_arr          = tel["dist_values"]
-        self.kill_received      = tel["kill_received"]
+        self.kill_received      = False
         self.id                 = id
+        self.last_update_ms     = 0
 
     def read_sensor(self):
         # TODO: replace with sensor reading code
@@ -30,9 +31,11 @@ class DSThread(threading.Thread):
             return
         try:
             while not self.kill_received:
-                start_time = timestamp.now_int_ms()
-                self.read_sensor()
-                time.sleep(self.poll_interval_ms - ((timestamp.now_int_ms() - start_time) % self.poll_interval_ms))
+                time_now = timestamp.now_int_ms()
+                if (time_now - self.last_update_ms >= self.poll_interval_ms):
+                    self.read_sensor()
+                    self.last_update_ms = time_now
+                time.sleep(0.001)
 
         except Exception as e:
             print(f"Exception in distance sensor loop, e:{e}")
