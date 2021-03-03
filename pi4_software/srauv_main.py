@@ -348,7 +348,7 @@ def setup_thruster_threads(th_config, data_arr):
     logger.info(f'state:{tel["state"]} MSG:Creating thruster threads')
 
     for id in range(th_config["num_thrusters"]):
-        th_threads.append(thruster_controller.ThrusterThread(th_config, id, data_arr))
+        th_threads.append(thruster_controller.ThrusterThread(th_config, id, data_arr, logger))
 
     for t in th_threads:
         t.start()
@@ -392,7 +392,7 @@ def apply_thrust():
         update_sim_cmd()
     else:
         for t in th_threads:
-            t.do_thrust(can_thrust)
+            t.enable_thrust(can_thrust)
     logger.info(f"enable:{can_thrust}, t[]thrust_enabled:{th_threads[0].thrust_enabled} thrust_values:{thrust_values}")
 
 
@@ -476,7 +476,7 @@ def main():
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-                logger.info(f'state:{tel["state"]} ul_perf_s:{ul_perf_timer_end-ul_perf_timer_start}')
+                logger.info(f'state:{tel["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now
 
             time.sleep(0.001)

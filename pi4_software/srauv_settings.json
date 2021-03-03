@@ -34,27 +34,26 @@
     "thruster_config":{
         "num_thrusters": 1,
         "max_thrust": 75,
-        "deadman_timeout_s": 1,
-        "thrust_interval_s": 0.5,
+        "deadman_timeout_ms": 2000,
+        "thrust_interval_ms": 500,
         "max_spd_min_range_m": 0.5,
         "board_id_base": 8,
         "board_id_shift": 6,
         "rpm_max": 2000,
         "CAN_tx_ids":{
-            "arm_id": 0,            
-            "abort_id": 1,
-            "motor_onoff_id": 2,
-            "set_RPM_id": 3,
-            "set_accel_id": 4
+            "arm": 0,            
+            "abort": 1,
+            "motor_onoff": 2,
+            "set_rpm": 3,
+            "set_accel": 4
         },
         "CAN_rx_ids":{
-            "measured_RPM_id": 5,
-            "measured_voltage_id": 6,
-            "measured_torque_id": 7,
-            "board_state_id": 8,
-            "fault_state_id": 9
+            "measured_rpm": 5,
+            "measured_voltage": 6,
+            "measured_torque": 7,
+            "board_state": 8,
+            "fault_state": 9
         },
-        
         "_":[
             0,
             0,
