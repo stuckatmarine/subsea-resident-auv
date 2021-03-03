@@ -319,9 +319,9 @@ def start_threads():
             t.start()
 
         # websocket server for external comms as a sub-process
-        # process = Process(target=SrauvExternalWSS_start, args=())
-        # g_sub_processes.append(process)
-        # process.start()
+        process = Process(target=SrauvExternalWSS_start, args=())
+        g_sub_processes.append(process)
+        process.start()
 
     except Exception as e:
         logger.error(f"Thread creation err:{e}")
@@ -388,14 +388,17 @@ def main():
 
                 apply_thrust()
 
-                print(f"imu heading   :{g_tel_msg['imu_dict']['heading']}")
-                print(f"thrust enabled:{g_tel_msg['thrust_enabled']}")
-                print(f"dist 0        :{g_tel_msg['dist_values'][0]}")
-
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
                 logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
+
+                # debug msgs to comfirm thread operation
+                print(f"state         : {g_tel_msg['state']}")
+                print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
+                print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
+                print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
+                print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 
             time.sleep(0.001)    
 

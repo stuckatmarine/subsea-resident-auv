@@ -14,9 +14,9 @@ class DSThread(threading.Thread):
         self.config             = config
         self.poll_interval_ms   = config["poll_interval_ms"]
         self.value_arr          = tel["dist_values"]
-        self.kill_received      = False
         self.id                 = id
         self.last_update_ms     = 0
+        self.kill_received      = False
 
     def read_sensor(self):
         # TODO: replace with sensor reading code

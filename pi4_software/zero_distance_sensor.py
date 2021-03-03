@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #  zero_distance_sensor.py
 #  Read distance sensor value in thread and send over internal socket
+#  Usage: ./zero_distance_sensor.py -i 0 -a x.x.x.x:port
 
 import asyncio
 import websockets
@@ -9,6 +10,7 @@ import json
 import time
 import argparse
 
+import timestamp
 import distance_sensor
 from srauv_settings import SETTINGS
 
@@ -32,16 +34,17 @@ async def send_sensor_values():
     async with websockets.connect(uri) as websocket:
         msg = json.dumps(obj)
         await websocket.send(msg)
-        print(f"tx: {msg}")
+        print(f"tx -->: {msg}")
 
         resp = await websocket.recv()
-        print(f"rx: {resp}")
+        print(f"rx <--: {resp}")
 
 
 def close_gracefully():
     try:
         for t in ds_threads:
             t.kill_received = True
+            t.join()
     except Exception as e:
         print(f"Thread stopping err:{e}")
 

@@ -27,9 +27,10 @@ class SrauvExternalWSS(WebSocket):
     srauv_address = srauv_address
     try:
         srauv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet, udp
-        print(f"SrauvExternalWSS forwarding to internal socket {SETTINGS['internal_ip']}:{SETTINGS['main_msg_port']}")
+        print(f"SrauvExternalWSS forwarding to internal socket {srauv_address}")
+        logger.info(f"SrauvExternalWSS forwarding to internal socket {srauv_address}")
     except socket.error:
-        logger("Failed To Create main_msg_socket in external_ws_server")
+        logger.info("Failed To Create main_msg_socket in external_ws_server")
         sys.exit()
 
 
