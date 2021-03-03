@@ -78,7 +78,7 @@ def close_gracefully():
 
 def go_to_idle():
     tel["state"] = "idle"
-    tel["thrust_enabled"] = False
+    tel["thrust_enabled"][0] = False
     logger.info("--- State -> IDLE ---")
 
 
@@ -122,7 +122,7 @@ def parse_received_command():
 
         if cmd_recv["force_state"] == "manual":
             tel["state"] == "manual"
-            tel["thrust_enabled"] = cmd_recv["g_thrust_enabled"]
+            tel["thrust_enabled"][0] = cmd_recv["g_thrust_enabled"]
             manual_deadman_timestamp = timestamp.now_int_ms()
 
         logger.info(f"Forcing state to {tel['state']}, g_thrust_enabled:{tel['thrust_enabled']}")
@@ -206,20 +206,20 @@ def estimate_position():
 def evaluate_state():
     global g_thrust_enabled, manual_deadman_timestamp
     if tel["state"] == "idle":
-
+        i = 0
         # evaluate state
-        tel["thrust_enabled"] = False
+        tel["thrust_enabled"][0] = False
 
     elif tel["state"] == "autonomous":
 
         # evaluate state
-        tel["thrust_enabled"] = True
+        tel["thrust_enabled"][0] = True
         update_waypoint(waypoint_idx)
 
     elif tel["state"] == "manual":
 
         # evaluate state
-        tel["thrust_enabled"] = True
+        tel["thrust_enabled"][0] = True
         if manual_deadman_timestamp - timestamp.now_int_ms() >= MANUAL_DEADMAN_TIMEOUT_MS:
     #         go_to_idle()
             logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{manual_deadman_timestamp - timestamp.now_int_ms()}")
@@ -284,7 +284,7 @@ def update_sim_cmd():
     cmd["thrust_left"] = g_thrust_values[3]
     cmd["thrust_v_right"] = g_thrust_values[4]
     cmd["thrust_v_left"] = g_thrust_values[5]
-    cmd["thrust_enabled"] = tel["thrust_enabled"]
+    cmd["thrust_enabled"] = tel["thrust_enabled"][0]
 
     logger.info(f"cmd:{cmd}")
     cmd["msg_num"] += 1
@@ -307,11 +307,11 @@ def start_threads():
         #                                                           tel_recv,
         #                                                           cmd_recv))
 
-        # for idx in range(SETTINGS["thruster_config"]["num_thrusters"]):
-        #     g_threads.append(thruster_controller.ThrusterThread(SETTINGS["thruster_config"],
-        #                                                         tel,
-        #                                                         idx,
-        #                                                         logger))
+        for idx in range(SETTINGS["thruster_config"]["num_thrusters"]):
+            g_threads.append(thruster_controller.ThrusterThread(SETTINGS["thruster_config"],
+                                                                tel,
+                                                                idx,
+                                                                logger))
 
         # for idx in range(SETTINGS["dist_sensor_config"]["main_sensors"]):
         #     g_threads.append(distance_sensor.DSThread(SETTINGS["dist_sensor_config"],
@@ -334,26 +334,27 @@ def start_threads():
 
 def stop_threads():
     logger.info("Trying to stop threads...")
-    while has_live_threads(g_threads):
-        try:            
-            for t in g_threads:
-                t.kill_received = True
-                t.join()
+    try:
+        while has_live_threads(g_threads):
+                        
+                for t in g_threads:
+                    t.kill_received = True
+                    t.join()
 
-            # Terminate multi processes if any
-            for p in g_sub_processes:
-                p.terminate()  # sends a SIGTERM
+        # Terminate multi processes if any
+        for p in g_sub_processes:
+            p.terminate()  # sends a SIGTERM
 
-            # msg sock thread to close it
-            # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            # sock.sendto(str("stop").encode("utf-8"), G_MAIN_INTERNAL_ADDR)
+        # msg sock thread to close it
+        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # sock.sendto(str("stop").encode("utf-8"), G_MAIN_INTERNAL_ADDR)
 
-        except socket.error as se:
-            logger.error(f"Failed To Close Socket, err:{se}")
-            sys.exit()
+    except socket.error as se:
+        logger.error(f"Failed To Close Socket, err:{se}")
+        sys.exit()
 
-        except Exception as e:
-            logger.error(f"Thread stopping err:{e}")
+    except Exception as e:
+        logger.error(f"Thread stopping err:{e}")
             
     logger.info("Stopped threads")
     print("Stopped threads")
@@ -392,7 +393,8 @@ def main():
 
                 apply_thrust()
 
-                print(f"v {tel['imu_dict']['heading']}")
+                print(f"imu heading : {tel['imu_dict']['heading']}")
+                print(f"thrust enabled1:{tel['thrust_enabled']}")
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 

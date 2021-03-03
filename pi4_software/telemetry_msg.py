@@ -8,7 +8,7 @@ def make(source, dest = ''):
         "dest" : dest,
         "msg_num" : -1,
         "state" : "none",
-        "thrust_enabled" : False,
+        "thrust_enabled" : [False],
         "depth" : 0.0,             # sensor val
         "alt" : 0.0,               # sensor val
         "imu_dict":{

@@ -27,7 +27,7 @@ from sys import platform
 # }
 
 class ThrusterThread(threading.Thread):
-    def __init__(self, config: dict, tel: dict, id: int, logger):
+    def __init__(self, config: dict, tel: dict, id: int, logger: classmethod):
         threading.Thread.__init__(self)
         self.config             = config
         self.thrust_interval_ms = config["thrust_interval_ms"]
@@ -35,10 +35,10 @@ class ThrusterThread(threading.Thread):
         self.tx_cmds            = config["CAN_tx_ids"]
         self.rx_cmds            = config["CAN_rx_ids"]
         self.thrust_arr         = tel["thrust_values"]
-        self.kill_received      = tel["kill_received"]
         self.thrust_enabled     = tel["thrust_enabled"]
         self.id                 = id
         self.logger             = logger
+        self.kill_received      = False
 
         self.board_id = (id + config["board_id_base"]) << config["board_id_shift"]
         self.bus                = None
@@ -65,68 +65,67 @@ class ThrusterThread(threading.Thread):
         # bus = can.interface.Bus(bustype='vector', app_name='CANalyzer', channel=0, bitrate=250000)
         # notifier = can.Notifier(bus, [can.self.logger.infoer()])
     
-    def send_msg(self, cmd_str, d):
-        can_id = self.board_id | self.tx_cmds[cmd_str]
-        msg = can.Message(arbitration_id=can_id, data=d, is_extended_id=False)
-        if self.can_up :
+    def send_msg(self, cmd_str: str, d: list):
+        if self.can_up == True:
+            can_id = self.board_id | self.tx_cmds[cmd_str]
+            msg = can.Message(arbitration_id=can_id, data=d, is_extended_id=False)
             self.bus.send(msg)
             self.logger.info(f"Thruster sending CAN_id:{can_id} data:{d}")
         else:
-            self.logger.info(f"CANBUS not up, thruster id:{self.id} thrust_enabled:{self.thrust_enabled} motor_on:{self.is_motor_on}")
+            self.logger.warning(f"CANBUS not up, thruster id:{self.id} thrust_enabled:{self.thrust_enabled[0]} motor_on:{self.is_motor_on}")
 
     def read_msg(self):
         pass
 
     def apply_thrust(self):
         # Do nothing if not in a thrust enabled state
-        if self.thrust_enabled == False:
-            if self.is_motor_on:
+        if self.thrust_enabled[0] == False:
+            if self.is_motor_on == True:
                 self.send_msg("motor_onoff", [0x00])
-                time.sleep(2)
+                time.sleep(1)
                 #  TODO check for motor off msg
                 self.is_motor_on = False
-            return
-
-        # check if deadman has timedout # need to update heartbeat value somewhere if using
-        # if timestamp.now_int_ms() - self.last_heartbeat_ms >= self.deadman_timeout_ms:
-        #     self.thrust_enabled = False
-        #     self.send_msg("motor_onoff", [0x00])
-        #     self.logger.info(f"Deadman expired, Thruster_id:{self.id} thrust_enabled:{self.thrust_enabled}")
-        #     time.sleep(2)
-        # else:
-
-        if not self.is_motor_on:
-            self.send_msg("motor_onoff", 0x01)
-            time.sleep(2)
-            #  TODO check for motor on msg
-            self.is_motor_on = True
-
-        self.logger.info(f"Applying Thrust, Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
-        
-        # Calculate thrust msg params based on thrust values in tel
-        thrust_dir = 0x01
-        thrust_RPM = self.thrust_arr[self.id]
-        if thrust_RPM < 0:
-            thrust_dir = 0x00
-            thrust_RPM = -thrust_RPM
-
-        if thrust_RPM >= self.config["max_thrust"]:
-            thrust_RPM = self.config["rpm_max"]
         else:
-            thrust_RPM = thrust_RPM / self.config["max_thrust"] * self.config["rpm_max"]
-        
-        self.send_msg("set_RPM", [thrust_dir, (thrust_RPM & 0xff00) >> 16, thrust_RPM & 0xff])
-        # self.send_msg("set_RPM", [0x00,0x00,0xFF]) # low test value
+
+            # check if deadman has timedout # need to update heartbeat value somewhere if using
+            # if timestamp.now_int_ms() - self.last_heartbeat_ms >= self.deadman_timeout_ms:
+            #     self.thrust_enabled[0] = False
+            #     self.send_msg("motor_onoff", [0x00])
+            #     self.logger.info(f"Deadman expired, Thruster_id:{self.id} thrust_enabled[0]:{self.thrust_enabled[0]}")
+            #     time.sleep(2)
+            # else:
+
+            if not self.is_motor_on == False:
+                self.send_msg("motor_onoff", 0x01)
+                time.sleep(1)
+                #  TODO check for motor on msg
+                self.is_motor_on = True
+
+            self.logger.info(f"Applying Thrust, Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
+            
+            # Calculate thrust msg params based on thrust values in tel
+            thrust_dir = 0x01
+            thrust_RPM = self.thrust_arr[self.id]
+            if thrust_RPM < 0:
+                thrust_dir = 0x00
+                thrust_RPM = -thrust_RPM
+
+            if thrust_RPM >= self.config["max_thrust"]:
+                thrust_RPM = self.config["rpm_max"]
+            else:
+                thrust_RPM = thrust_RPM / self.config["max_thrust"] * self.config["rpm_max"]
+            
+            self.send_msg("set_RPM", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
+            # self.send_msg("set_RPM", [0x00,0x00,0xFF]) # low test value
 
     def run(self):
         self.send_msg("arm", [0x01])
-        time.sleep(2)
+        time.sleep(1)
         # TODO: check for armed msg, handle failure conditions
         self.is_armed = True
 
         while not self.kill_received:
             time_now = timestamp.now_int_ms()
-
             try:
                 if (time_now - self.last_update_ms >= self.thrust_interval_ms):
                     self.apply_thrust()
