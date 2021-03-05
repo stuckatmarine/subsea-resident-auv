@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 /// <summary>
@@ -45,9 +47,13 @@ public class ServerCommunication : MonoBehaviour
 
     public int txIntervalMs = 1000;
     private int lastTxTime = 0;
-    public TelemetryModel tel_msg = new TelemetryModel();
     public CommandModel cmd_msg = new CommandModel();
     public CamPicModel cam_msg = new CamPicModel();
+    public TelemetryModel tel_msg = new TelemetryModel();
+    // tel_msg.thrust_enabled = new bool[1];
+    // tel_msg.thrust_values = new float[6]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    // tel_msg.dist_values = new float[1]{0.0, 0.0, 0.0, 0.0, 0.0};
+    // tel_msg.imu_dict = new Dictionary<string, float>();
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
@@ -210,13 +216,16 @@ public class ServerCommunication : MonoBehaviour
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
-                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
-                    telDistanceFloats[0] = tel.fwd_dist;
-                    telDistanceFloats[1] = tel.right_dist;
-                    telDistanceFloats[2] = tel.rear_dist;
-                    telDistanceFloats[3] = tel.left_dist;
-                    telDistanceFloats[4] = tel.depth;
-                    telDistanceFloats[5] = tel.alt;
+                    // Debug.Log("heading" + tel.imu_dict["heading"]);
+                    // telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict["heading"].ToString("#.0");
+                    
+                    forces = tel.thrust_values;
+                    // telDistanceFloats = tel.dist_values;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        telDistanceFloats[i] = tel.dist_values[i];
+                        Debug.Log("distf" + telDistanceFloats[i]);
+                    }
                     
                     // colorize/"max" limits
                     for (int i = 0; i < 4; i++)
@@ -228,8 +237,8 @@ public class ServerCommunication : MonoBehaviour
                         updateValues(i, vertMin, vertMax);
                     }
 
-                    for (int i = 0; i < 6; i++)
-                        forces[i] = message.raw_thrust[i];
+                    // for (int i = 0; i < 6; i++)
+                    //     forces[i] = message.raw_thrust[i];
                 }
                 break;
             case "reset":
@@ -261,23 +270,16 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.msg_type = "telemetry";
         DateTime timestamp = DateTime.Now;
         tel_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
-        tel_msg.fwd_dist = distancesFloat[0];
-        tel_msg.right_dist = distancesFloat[1];
-        tel_msg.rear_dist = distancesFloat[2];
-        tel_msg.left_dist = distancesFloat[3];
-        tel_msg.depth = distancesFloat[4];
-        tel_msg.alt = distancesFloat[5];
         tel_msg.pos_x = srauv.position.x;
         tel_msg.pos_y = srauv.position.y;
         tel_msg.pos_z = srauv.position.z;
-        tel_msg.vel_x = rb.velocity.x;
-        tel_msg.vel_y = rb.velocity.y;
-        tel_msg.vel_z = rb.velocity.z;
-        tel_msg.heading = srauv.rotation.y * 360.0f;
-
-        tel_msg.target_pos_x = goalPos.x;
-        tel_msg.target_pos_y = goalPos.y;
-        tel_msg.target_pos_z = goalPos.z;
+        tel_msg.depth = distancesFloat[4];
+        tel_msg.alt = distancesFloat[5];
+        tel_msg.imu_dict["heading"] = srauv.rotation.y * 360.0f;
+        tel_msg.imu_dict["vel_x"] = rb.velocity.x;
+        tel_msg.imu_dict["vel_y"] = rb.velocity.y;
+        tel_msg.imu_dict["vel_z"] = rb.velocity.z;
+        tel_msg.dist_values = distancesFloat;
 
         // tel_msg.roll = srauv.rotation.x * 360.0f;
         // tel_msg.pitch = srauv.rotation.z * 360.0f;
