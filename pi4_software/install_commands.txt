@@ -38,3 +38,12 @@ raspivid -t 0 -n -h 480 -w 640 -fps 30 -rot 90 -b 2000000 -o - | gst-launch-1.0 
 
 RaspAP --> Manual Installation
 https://docs.raspap.com/manual/
+
+Port Forwarding camera stream from Pi Zero -> Pi 4 -> Pi 4 AP
+
+Add port forwarding on Pi 4
+sudo iptables -t nat -A PREROUTING -p udp --dport 5011 -j DNAT --to-destination 10.3.141.114:5001
+
+Send video to Pi4 on Pi Zero
+raspivid -cs 0 -t 0 -n -rot 90 -h 480 -w 640 -fps 30 -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay ! udpsink host=192.168.137.2 port=5011
+
