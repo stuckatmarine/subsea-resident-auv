@@ -21,8 +21,8 @@ class DSThread(threading.Thread):
     def read_sensor(self):
         # TODO: replace with sensor reading code
         time.sleep(0.010)
-        self.value_arr[self.id] += 1
-        if self.value_arr[self.id] > 300:
+        self.value_arr[self.id] += 0.01
+        if self.value_arr[self.id] > 10.0:
             self.value_arr[self.id] = 0
 
     def run(self):

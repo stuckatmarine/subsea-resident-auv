@@ -24,9 +24,6 @@ class IMU_Thread(threading.Thread):
 
         ## see srauv_settings.json for "imu_values" that map to self.values
         self.values["heading"] += 0.02
-        self.values["pos_x"] += 0.01
-        self.values["pos_y"] = 0.01
-        self.values["pos_z"] = 0.01
         self.values["vel_x"] = 0.01
 
     def run(self):
