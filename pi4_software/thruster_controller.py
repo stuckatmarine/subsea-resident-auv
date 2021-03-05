@@ -72,10 +72,9 @@ class ThrusterThread(threading.Thread):
             self.bus.send(msg)
             self.logger.info(f"Thruster sending CAN_id:{can_id} data:{d}")
         else:
-            self.logger.warning(f"CANBUS not up, thruster id:{self.id} thrust_enabled:{self.thrust_enabled[0]} motor_on:{self.is_motor_on}")
+            self.logger.warning(f"CANBUS not up, thruster id: \
+                {self.id} thrust_enabled:{self.thrust_enabled[0]} motor_on:{self.is_motor_on}")
 
-    def read_msg(self):
-        pass
 
     def apply_thrust(self):
         # Do nothing if not in a thrust enabled state
@@ -117,6 +116,9 @@ class ThrusterThread(threading.Thread):
             
             self.send_msg("set_RPM", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
             # self.send_msg("set_RPM", [0x00,0x00,0xFF]) # low test value
+
+    def read_msg(self):
+        pass
 
     def run(self):
         self.send_msg("arm", [0x01])
