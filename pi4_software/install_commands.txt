@@ -1,0 +1,40 @@
+Network IP List
+Pi4 = 192.168.137.2
+FrontCam = 192.168.137.50
+BackCam = 192.168.137.51
+BottomCam = 192.168.137.52
+Surface Laptop = 192.168.137.1
+Wifi AP = 10.3.141.1
+
+Wifi ssid = raspi-srauv
+
+RaspAP, Manual Installation
+1. sudo apt-get install gamin
+2. sudo apt-get install lighttpd
+3. Reboot
+3. Follow -> https://docs.raspap.com/manual/
+
+Set static IP
+1. sudo nano /etc/dhcpcd.conf
+2. Add Lines:
+# Static IP Eth0
+interface eth0
+static ip_address=192.168.137.2/24
+static routers=192.168.137.1
+static domain_name_server=8.8.8.8
+
+Fix DNS Issues
+1. sudo nano /etc/resolv.conf
+2. add "nameserver 8.8.8.8"
+
+Add i2c dtparam according to adafruit BNO055 tutorial
+
+Gstreamer commands
+Run on Windows Laptop (Do this first)
+gst-launch-1.0 udpsrc port=5001 ! application/x-rtp, payload=96 ! rtph264depay ! avdec_h264 ! fpsdisplaysink sync=false
+
+Run on Pi Zero
+raspivid -t 0 -n -h 480 -w 640 -fps 30 -rot 90 -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay ! udpsink host=192.168.137.1 port=5001
+
+RaspAP --> Manual Installation
+https://docs.raspap.com/manual/
