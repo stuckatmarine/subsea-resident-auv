@@ -7,6 +7,14 @@ import threading
 import time
 import copy
 
+# Import Adafruit stuff
+import board
+import busio
+import adafruit_bno055
+
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = adafruit_bno055.BNO055_I2C(i2c, 0x29)
+
 import timestamp
 
 class IMU_Thread(threading.Thread):
@@ -22,8 +30,10 @@ class IMU_Thread(threading.Thread):
     def read_sensor(self):
         time.sleep(0.010) # TODO: replace with actual sensor read code
 
+        #print(sensor.euler)
+
         ## see srauv_settings.json for "imu_values" that map to self.values
-        self.values["heading"] += 0.02
+        self.values["heading"] = sensor.euler[0]
         self.values["vel_x"] = 0.01
 
     def run(self):
