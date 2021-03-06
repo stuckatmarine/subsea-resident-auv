@@ -10,6 +10,7 @@ import can
 import timestamp
 import logger
 from sys import platform
+from srauv_settings import SETTINGS
 
 # "CAN_tx_ids":{
 #     "arm": 0,              # 0x01 to arm
@@ -49,11 +50,12 @@ class ThrusterThread(threading.Thread):
         self.last_update_ms     = 0
         self.motor_rpm          = 0
         
-        if platform == "linux": # Only run on PI, crashes on Windows/Mac
+        if SETTINGS["hardware"]["can"] == True:
             self.bus = can.interface.Bus(channel='can0', bustype='socketcan')
             self.can_up = True
         else:
-            self.logger.warn("Not linux, not trying to start CANBUS")
+            self.logger.warn(f"can not enabled in srauv_settings.json")
+            print(f"can not enabled in srauv_settings.json")
 
         print(f"Thruster thread {self.id} up, can_up:{self.can_up}")
         logger.info(f"Thruster thread {self.id} up, can_up:{self.can_up}")
