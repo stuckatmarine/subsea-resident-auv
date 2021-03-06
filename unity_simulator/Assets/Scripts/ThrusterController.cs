@@ -239,10 +239,12 @@ public class ThrusterController : MonoBehaviour
     public void applyThrust(Transform t, float spd = 1.0f)
     {
         if (enableManualCmds)
+        {
             rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-
-        if (drawLinesManual)
-            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+            if (drawLinesManual)
+                ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        }
+   
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
@@ -258,11 +260,9 @@ public class ThrusterController : MonoBehaviour
 
         // UI thrust
         Transform uiT = UiLatThrusters[tNum];
-        uiT.GetChild(0).gameObject.SetActive(spd < 0);
-        uiT.GetChild(1).gameObject.SetActive(spd > 0);
-    
-        if (drawLinesCmd)
-            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        uiT.GetChild(0).gameObject.SetActive(spd > 0);
+        uiT.GetChild(1).gameObject.SetActive(spd < 0);
+        ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
@@ -270,7 +270,7 @@ public class ThrusterController : MonoBehaviour
     {
         if (tNum >= vertThrusters.Length)
         {
-            Debug.Log("invali thruster num, vert");
+            Debug.Log("invalid thruster num, vert");
             return;
         }
         Transform t = vertThrusters[tNum];
@@ -278,11 +278,9 @@ public class ThrusterController : MonoBehaviour
 
         // UI thrust
         Transform uiT = UiVertThrusters[tNum];
-        uiT.GetChild(0).gameObject.SetActive(spd < 0);
-        uiT.GetChild(1).gameObject.SetActive(spd > 0);
-
-        if (drawLinesCmd)
-            ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
+        uiT.GetChild(0).gameObject.SetActive(spd > 0);
+        uiT.GetChild(1).gameObject.SetActive(spd < 0);
+        ld.DrawLine(t.transform.position, t.transform.position + (-spd * 0.3f * t.transform.up * Time.deltaTime), Color.green, 0.1f);
         // // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 

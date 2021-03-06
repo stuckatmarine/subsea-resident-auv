@@ -216,16 +216,15 @@ public class ServerCommunication : MonoBehaviour
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
-                    // Debug.Log("heading" + tel.imu_dict["heading"]);
-                    // telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict["heading"].ToString("#.0");
+                    // Debug.Log("imu dict" + tel.imu_dict.heading);
+                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
                     
                     forces = tel.thrust_values;
-                    // telDistanceFloats = tel.dist_values;
-                    for (int i = 0; i < 6; i++)
-                    {
-                        telDistanceFloats[i] = tel.dist_values[i];
-                        Debug.Log("distf" + telDistanceFloats[i]);
-                    }
+                    telDistanceFloats = tel.dist_values;
+                    // for (int i = 0; i < 6; i++)
+                    // {
+                    //     telDistanceFloats[i] = tel.dist_values[i];
+                    // }
                     
                     // colorize/"max" limits
                     for (int i = 0; i < 4; i++)
@@ -275,10 +274,10 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.pos_z = srauv.position.z;
         tel_msg.depth = distancesFloat[4];
         tel_msg.alt = distancesFloat[5];
-        tel_msg.imu_dict["heading"] = srauv.rotation.y * 360.0f;
-        tel_msg.imu_dict["vel_x"] = rb.velocity.x;
-        tel_msg.imu_dict["vel_y"] = rb.velocity.y;
-        tel_msg.imu_dict["vel_z"] = rb.velocity.z;
+        // tel_msg.imu_dict["heading"] = srauv.rotation.y * 360.0f;
+        // tel_msg.imu_dict["vel_x"] = rb.velocity.x;
+        // tel_msg.imu_dict["vel_y"] = rb.velocity.y;
+        // tel_msg.imu_dict["vel_z"] = rb.velocity.z;
         tel_msg.dist_values = distancesFloat;
 
         // tel_msg.roll = srauv.rotation.x * 360.0f;
