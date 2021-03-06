@@ -19,16 +19,7 @@
         "socket_send_interval_s": 0.500
     },
     "imu_sensor_config":{
-        "poll_interval_s": 0.1,
-        "imu_values":{
-            "heading" : 0.0,
-            "pos_x" : 0.0,
-            "pos_y" : 0.0,
-            "pos_z" : 0.0, 
-            "vel_x" : 0.0, 
-            "vel_y" : 0.0, 
-            "vel_z" : 0.0
-        }
+        "poll_interval_s": 0.1
     },
     "thruster_config":{
         "num_thrusters": 1,

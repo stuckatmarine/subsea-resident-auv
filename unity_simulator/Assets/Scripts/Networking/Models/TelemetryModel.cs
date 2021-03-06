@@ -18,7 +18,7 @@ public class TelemetryModel
     public float pos_z;
     public float depth;
     public float alt;
-    public Dictionary<string, float> imu_dict;
+    public ImuModel imu_dict;
     public float[] thrust_values;
     public float[] dist_values;
 
