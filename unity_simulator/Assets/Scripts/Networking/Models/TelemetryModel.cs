@@ -13,6 +13,7 @@ public class TelemetryModel
     public int msg_num;
     public string state;
     public bool[] thrust_enabled;
+    public string headlight_setting;
     public float pos_x;
     public float pos_y;
     public float pos_z;
