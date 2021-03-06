@@ -1,4 +1,10 @@
 {
+    "hardware":{
+        "can": false,
+        "i2c": false,
+        "headlights": false,
+        "leds": false
+    },
     "external_ip": "10.3.141.1",
     "external_port": 8001,
     "internal_ip": "localhost",
@@ -7,7 +13,7 @@
     "update_interval_ms": 200,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
-    "fly_sim": true,
+    "fly_sim": false,
     "manual_deadman_timeout_ms": 2000,
     "log_to_stdout": false,
     "dist_sensor_config":{

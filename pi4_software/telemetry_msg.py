@@ -9,6 +9,7 @@ def make(source, dest = ''):
         "msg_num" : -1,
         "state" : "none",
         "thrust_enabled" : [False],
+        "headlight_setting" : "low",
         "pos_x" : 0.1,              # navigation est
         "pos_y" : 2.1,              # navigation est
         "pos_z" : 1.1,              # navigation est 
