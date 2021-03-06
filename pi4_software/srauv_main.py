@@ -286,7 +286,7 @@ def main():
                 # print(f"state         : {g_tel_msg['state']}")
                 print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
-                #print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 # print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 
