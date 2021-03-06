@@ -37,6 +37,7 @@ import telemetry_msg
 import internal_socket_server
 import logger
 import srauv_fly_sim
+import headlight_controls
 from srauv_settings import SETTINGS
 from external_ws_server import SrauvExternalWSS_start
 
@@ -120,6 +121,10 @@ def parse_received_command():
             g_last_topside_cmd_time_ms = timestamp.now_int_ms()
 
         g_logger.info(f"Forcing state to {g_tel_msg['state']}, g_thrust_enabled:{g_tel_msg['thrust_enabled']}")
+
+    if g_incoming_cmd["headlight_setting"] != "":
+        g_tel_msg["headlights_setting"] = g_incoming_cmd["headlight_setting"]
+        headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
     if g_incoming_cmd["action"] == "fly_sim_true":
         g_srauv_fly_sim = True
@@ -252,6 +257,7 @@ def main():
     g_logger.info(f'state:{g_tel_msg["state"]} MSG:SRAUV starting')
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
+    headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
     srauv_navigation.setup_waypoints(logger)
 
     start_threads()

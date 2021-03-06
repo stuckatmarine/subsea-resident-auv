@@ -1,7 +1,9 @@
 {
     "hardware":{
         "can": false,
-        "i2c": false
+        "i2c": false,
+        "headlights": false,
+        "leds": false
     },
     "external_ip": "10.3.141.1",
     "external_port": 8001,
