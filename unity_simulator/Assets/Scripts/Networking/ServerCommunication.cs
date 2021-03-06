@@ -25,7 +25,7 @@ public class ServerCommunication : MonoBehaviour
     public bool enableLogging = false;
     public bool enableVehicleCmds = false;
     public bool sendScreenshots = false;
-
+    public string headlightSetting = "low";
     
     public State controlState = State.Idle;
 
@@ -71,6 +71,7 @@ public class ServerCommunication : MonoBehaviour
     public Transform tree3;
     public Camera frontCam;
     private Texture2D frontCamTexture;
+    private GameObject[] spotlights;
 
     //  UI
     public Transform simHeading;
@@ -112,8 +113,10 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.raw_thrust = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
         
         cmd_msg.dir_thrust = new string[]{"", "", "", ""};
+        cmd_msg.headlight_setting = headlightSetting;
         rb = srauv.GetComponent<Rigidbody>();
 
+        spotlights =  GameObject.FindGameObjectsWithTag("spotlight");
 
         dock = GameObject.Find("Dock").GetComponent<Transform>();
 
@@ -130,7 +133,8 @@ public class ServerCommunication : MonoBehaviour
         server = "ws://" + host + ":" + port;
         Debug.Log("using websocket setver " + server);
         client = new WsClient(server);
-        ConnectToServer(); 
+        ConnectToServer();
+        setSpotlights();
     }
 
 
@@ -352,6 +356,7 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.source = "sim";
         cmd_msg.dest = "vehicle";
         cmd_msg.msg_num++;
+        cmd_msg.headlight_setting = headlightSetting;
         DateTime timestamp = DateTime.Now;
         cmd_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
         
@@ -464,5 +469,26 @@ public class ServerCommunication : MonoBehaviour
     public void toggleSendCmds()
     {
         send_cmds =  !send_cmds;
+    }
+
+    public void setSpotlights()
+    {
+        foreach(GameObject s in spotlights)
+        {
+            if (headlightSetting == "low")
+                s.SetActive(false);
+            else
+                s.SetActive(true);
+        }
+    } 
+
+    public void toggleHeadlights()
+    {
+        if (headlightSetting == "low")
+            headlightSetting = "high";
+        else
+            headlightSetting = "low";
+
+        setSpotlights();
     } 
 }

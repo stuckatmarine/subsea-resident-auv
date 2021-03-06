@@ -4147,6 +4147,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 130565811}
+    - target: {fileID: 1350317507617495673, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
+        type: 3}
+      propertyPath: m_TagString
+      value: spotlight
+      objectReference: {fileID: 0}
     - target: {fileID: 1367178290464703402, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
         type: 3}
       propertyPath: m_Intensity
@@ -4232,6 +4237,16 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 858450645}
+    - target: {fileID: 2674365351861272036, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
+        type: 3}
+      propertyPath: m_TagString
+      value: spotlight
+      objectReference: {fileID: 0}
+    - target: {fileID: 2711605265668382295, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
+        type: 3}
+      propertyPath: m_TagString
+      value: spotlight
+      objectReference: {fileID: 0}
     - target: {fileID: 2730858577763780484, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
         type: 3}
       propertyPath: m_Intensity
@@ -4597,6 +4612,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1195456929}
+    - target: {fileID: 6611454059516772321, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
+        type: 3}
+      propertyPath: m_TagString
+      value: spotlight
+      objectReference: {fileID: 0}
     - target: {fileID: 6759636142188229057, guid: 7e8799dc8e5cda34c92cdf989cd5db81,
         type: 3}
       propertyPath: m_Mesh
@@ -8819,6 +8839,7 @@ MonoBehaviour:
   enableLogging: 1
   enableVehicleCmds: 0
   sendScreenshots: 0
+  headlightSetting: low
   controlState: 0
   hostIP: 10.3.141.1
   port: 8001
@@ -8835,6 +8856,7 @@ MonoBehaviour:
     force_state: 
     action: 
     can_thrust: 0
+    headlight_setting: low
     thrust_type: 
     raw_thrust: []
     dir_thrust: []
@@ -8852,6 +8874,7 @@ MonoBehaviour:
     msg_num: 0
     state: 
     thrust_enabled: 
+    headlight_setting: 
     pos_x: 0
     pos_y: 0
     pos_z: 0
@@ -62565,6 +62588,36 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 24.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 408007282}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: toggleHeadlights
+      objectReference: {fileID: 0}
+    - target: {fileID: 4679922864627812342, guid: c1bd7bb934032ab4dbe228184406a6cd,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4694748916781199796, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -63938,22 +63991,22 @@ PrefabInstance:
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 2
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
@@ -63963,7 +64016,9 @@ PrefabInstance:
     - target: {fileID: 8574131953170383084, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
       propertyPath: m_text
-      value: --
+      value: 'Headlights
+
+        Toggle'
       objectReference: {fileID: 0}
     - target: {fileID: 8582560955002735964, guid: c1bd7bb934032ab4dbe228184406a6cd,
         type: 3}
