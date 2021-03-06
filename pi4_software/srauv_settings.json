@@ -11,7 +11,7 @@
     "update_interval_ms": 200,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
-    "fly_sim": true,
+    "fly_sim": false,
     "manual_deadman_timeout_ms": 2000,
     "log_to_stdout": false,
     "dist_sensor_config":{
