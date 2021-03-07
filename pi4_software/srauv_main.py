@@ -37,6 +37,7 @@ import telemetry_msg
 import internal_socket_server
 import logger
 import srauv_fly_sim
+import headlight_controls
 from srauv_settings import SETTINGS
 from external_ws_server import SrauvExternalWSS_start
 
@@ -106,7 +107,7 @@ def parse_received_command():
 
     g_incoming_cmd_num = g_incoming_cmd["msg_num"]
 
-    if g_incoming_cmd["force_state"] != "":  
+    if g_incoming_cmd["force_state"] != g_tel_msg["state"] and g_incoming_cmd["force_state"] != "":  
         g_logger.warning(f"--- Forcing state ---> {g_incoming_cmd['force_state']}")
 
         #  TODO: functionize state transitions
@@ -120,6 +121,10 @@ def parse_received_command():
             g_last_topside_cmd_time_ms = timestamp.now_int_ms()
 
         g_logger.info(f"Forcing state to {g_tel_msg['state']}, g_thrust_enabled:{g_tel_msg['thrust_enabled']}")
+
+    if g_incoming_cmd["headlight_setting"] != "":
+        g_tel_msg["headlights_setting"] = g_incoming_cmd["headlight_setting"]
+        headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
     if g_incoming_cmd["action"] == "fly_sim_true":
         g_srauv_fly_sim = True
@@ -178,14 +183,14 @@ def calculate_thrust():
             g_logger.info(f"Setting thrust_values:{g_incoming_cmd['raw_thrust']}")
 
         elif g_incoming_cmd["thrust_type"] == "dir_thrust":
-            print(f"Updating manual thrust values in calculate_thrust")
+            # print(f"Updating manual thrust values in calculate_thrust")
             for dir in g_incoming_cmd["dir_thrust"]:
-                print(f"dir:{dir}")
+                # print(f"dir:{dir}")
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
             for i in range(len(new_thrust_values)):
                 g_tel_msg["thrust_values"][i] = new_thrust_values[i]
             g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
-            print(f"g_tel_msg['thrust_values']:{g_tel_msg['thrust_values']}")
+            # print(f"g_tel_msg['thrust_values']:{g_tel_msg['thrust_values']}")
 
 ########  Process Helper Functions  ########
 def start_threads():
@@ -252,6 +257,7 @@ def main():
     g_logger.info(f'state:{g_tel_msg["state"]} MSG:SRAUV starting')
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
+    headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
     srauv_navigation.setup_waypoints(logger)
 
     start_threads()
@@ -283,10 +289,10 @@ def main():
                 last_update_ms = time_now   
 
                 # debug msgs to comfirm thread operation
-                # print(f"state         : {g_tel_msg['state']}")
+                # print(f"\nstate         : {g_tel_msg['state']}")
                 # print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
-                print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
-                print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
+                # print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 # print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 

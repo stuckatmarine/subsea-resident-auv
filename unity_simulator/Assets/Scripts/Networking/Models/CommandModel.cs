@@ -12,6 +12,7 @@ public class CommandModel
     public string force_state = "";
     public string action = "";
     public bool can_thrust = false;
+    public string headlight_setting = "low";
     public string thrust_type = "";
     public float[] raw_thrust; // 6
             // 0.0,            # FR: -100 to 100

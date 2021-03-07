@@ -1,13 +1,19 @@
 {
-    "external_ip": "localhost",
+    "hardware":{
+        "can": false,
+        "i2c": false,
+        "headlights": false,
+        "leds": false
+    },
+    "external_ip": "10.3.141.1",
     "external_port": 8001,
     "internal_ip": "localhost",
     "main_msg_port": 7001,
     "main_cam_port": 7002,
-    "update_interval_ms": 200,
+    "update_interval_ms": 16.67,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
-    "fly_sim": true,
+    "fly_sim": false,
     "manual_deadman_timeout_ms": 2000,
     "log_to_stdout": false,
     "dist_sensor_config":{
@@ -15,26 +21,17 @@
         "main_sensors": 2,
         "min_cm": 10,
         "max_cm": 200,
-        "poll_interval_ms": 200,
+        "poll_interval_ms": 100,
         "socket_send_interval_s": 0.500
     },
     "imu_sensor_config":{
-        "poll_interval_s": 0.500,
-        "imu_values":{
-            "heading" : 0.0,
-            "pos_x" : 0.0,
-            "pos_y" : 0.0,
-            "pos_z" : 0.0, 
-            "vel_x" : 0.0, 
-            "vel_y" : 0.0, 
-            "vel_z" : 0.0
-        }
+        "poll_interval_s": 0.1
     },
     "thruster_config":{
         "num_thrusters": 1,
         "max_thrust": 75,
         "deadman_timeout_ms": 2000,
-        "thrust_interval_ms": 500,
+        "thrust_interval_ms": 100,
         "max_spd_min_range_m": 0.5,
         "board_id_base": 8,
         "board_id_shift": 6,

@@ -70,7 +70,7 @@ class LocalSocketThread(threading.Thread):
                         if k == "msg_num":
                             continue
                         self.cmd_recv[k] = data_dict[k]
-                        print(f"keys:{k} val:{data_dict[k]}")
+                    # print(f"self.cmd_recv::{self.cmd_recv}")
                     # update last as trigger of copy completed
                     self.cmd_recv["msg_num"] = data_dict["msg_num"]
 
