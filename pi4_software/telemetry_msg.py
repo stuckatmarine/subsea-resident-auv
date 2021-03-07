@@ -13,13 +13,27 @@ def make(source, dest = ''):
         "pos_x" : 0.1,              # navigation est
         "pos_y" : 2.1,              # navigation est
         "pos_z" : 1.1,              # navigation est 
-        "depth" : 0.0,             # sensor val
-        "alt" : 0.0,               # sensor val
+        "depth" : 0.0,              # sensor val
+        "alt" : 0.0,                # sensor val
         "imu_dict":{
-            "heading" : 315.1,          # sensor val
-            "vel_x" : 11.1,              # sensor val
-            "vel_y" : 12.1,              # sensor val
-            "vel_z" : 11.1,              # sensor val  
+            "heading" : 315.1,       # deg
+            "roll" : 315.2,          
+            "pitch" : 315.3,
+            "gyro_x" : 11.1,         # deg / s
+            "gyro_y" : 11.1,
+            "gyro_z" : 11.1,
+            "vel_x" : 11.1,          # m / s , interpolated
+            "vel_y" : 12.1,
+            "vel_z" : 11.1,
+            "linear_accel_x" : 11.1, # m/ s^2
+            "linear_accel_y" : 11.1,     
+            "linear_accel_z" : 11.1,     
+            "accel_x" : 11.1,     
+            "accel_x" : 11.1,     
+            "accel_x" : 11.1,     
+            "magnetic_x" : 11.1,     # uTesla
+            "magnetic_y" : 11.1,     
+            "magnetic_z" : 11.1,     
         },
         "thrust_values":[      # clockwise from front of vehicle, lats then verts
             0.0,            # FR: -100 to 100

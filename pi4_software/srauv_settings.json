@@ -5,7 +5,7 @@
         "headlights": false,
         "leds": false
     },
-    "external_ip": "10.3.141.1",
+    "external_ip": "",
     "external_port": 8001,
     "internal_ip": "localhost",
     "main_msg_port": 7001,

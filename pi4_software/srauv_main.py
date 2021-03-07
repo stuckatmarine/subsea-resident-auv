@@ -285,7 +285,7 @@ def main():
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-                g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
+                # g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
 
                 # debug msgs to comfirm thread operation

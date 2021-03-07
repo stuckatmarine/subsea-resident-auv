@@ -27,6 +27,8 @@ Fix DNS Issues
 1. sudo nano /etc/resolv.conf
 2. add "nameserver 8.8.8.8"
 
+Check open ports: netstat -t -l -n
+
 Add i2c dtparam according to adafruit BNO055 tutorial
 
 Gstreamer commands

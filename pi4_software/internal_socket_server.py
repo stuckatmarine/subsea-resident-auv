@@ -63,7 +63,7 @@ class LocalSocketThread(threading.Thread):
                     
                     self.sock.sendto(self.cmd_bytes, address)
                     self.last_cmd_sent = self.cmd["msg_num"]
-                    self.logger.info(f"> addr:{address} data:{self.cmd_bytes}")
+                    # self.logger.info(f"> addr:{address} data:{self.cmd_bytes}")
 
                 elif data_dict["msg_type"] == "command":
                     for k in data_dict:
@@ -85,7 +85,7 @@ class LocalSocketThread(threading.Thread):
                     
                     self.sock.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
-                    self.logger.info(f"> addr:{address} data:{self.tel_bytes}")
+                    # self.logger.info(f"> addr:{address} data:{self.tel_bytes}")
 
                 elif data_dict["msg_type"] == "distance":
                     # update cmd_bytes if not most current

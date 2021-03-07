@@ -25,6 +25,7 @@ class SrauvExternalWSS(WebSocket):
 
     srauv_address = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
     srauv_address = srauv_address
+    logger.info(f"SrauvExternalWSS_start at {SETTINGS['external_ip']}:{SETTINGS['external_port']}")
     try:
         srauv_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # internet, udp
         print(f"SrauvExternalWSS forwarding to internal socket {srauv_address}")
@@ -37,7 +38,7 @@ class SrauvExternalWSS(WebSocket):
     def handleMessage(self):
         try:
             # Received ws msg from external network. Log it
-            self.logger.info(f"sending to {self.srauv_address}  data:{self.data}")
+            # self.logger.info(f"sending to {self.srauv_address}  data:{self.data}")
 
             # Forward msg to srauv_main's local socket
             self.srauv_socket.sendto(self.data.encode("utf-8"), self.srauv_address)
@@ -48,7 +49,7 @@ class SrauvExternalWSS(WebSocket):
 
             # Forward response back over external network
             self.sendMessage(srauv_response)
-            self.logger.info(f"> responding to topsides, msg:{srauv_response}")
+            # self.logger.info(f"> responding to topsides, msg:{srauv_response}")
 
         except socket.error:
             self.logger.info(f"Failed to send over socket, address:{self.srauv_address}")
