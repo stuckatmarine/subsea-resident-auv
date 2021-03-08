@@ -33,7 +33,6 @@ class SrauvExternalWSS(WebSocket):
         logger.info("Failed To Create main_msg_socket in external_ws_server")
         sys.exit()
 
-
     def handleMessage(self):
         try:
             # Received ws msg from external network. Log it
