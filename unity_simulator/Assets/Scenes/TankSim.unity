@@ -8956,9 +8956,23 @@ MonoBehaviour:
     alt: 0
     imu_dict:
       heading: 0
+      roll: 0
+      pitch: 0
+      gyro_x: 0
+      gyro_y: 0
+      gyro_z: 0
       vel_x: 0
       vel_y: 0
       vel_z: 0
+      linear_accel_x: 0
+      linear_accel_y: 0
+      linear_accel_z: 0
+      accel_x: 0
+      accel_y: 0
+      accel_z: 0
+      magnetic_x: 0
+      magnetic_y: 0
+      magnetic_z: 0
     thrust_values: []
     dist_values: []
   distancesFloat: []
