@@ -79,6 +79,7 @@ public class ServerCommunication : MonoBehaviour
     public Transform simY;
     public Transform simZ;
 
+    public Transform telState;
     public Transform telHeading;
     public Transform telX;
     public Transform telY;
@@ -222,6 +223,7 @@ public class ServerCommunication : MonoBehaviour
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
                     // Debug.Log("imu dict" + tel.imu_dict.heading);
                     telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
+                    telState.GetComponent<TMPro.TextMeshProUGUI>().text = tel.state;
                     
                     forces = tel.thrust_values;
                     telDistanceFloats = tel.dist_values;

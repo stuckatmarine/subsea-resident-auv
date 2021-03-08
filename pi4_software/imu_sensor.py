@@ -6,14 +6,15 @@
 import threading
 import time
 import copy
-import board
-import busio
-import adafruit_bno055
+
 
 import timestamp
 from srauv_settings import SETTINGS
 
 if SETTINGS["hardware"]["i2c"] == True:
+    import board
+    import busio
+    import adafruit_bno055
     i2c = busio.I2C(board.SCL, board.SDA)
     sensor = adafruit_bno055.BNO055_I2C(i2c, 0x29)
     # sensor.setMode(OPERATION_MODE_IMUPLUS)

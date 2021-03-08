@@ -1,13 +1,13 @@
 # Test script that turns the headlights On/Off at a fixed rate
 
 import time
-import RPi.GPIO as GPIO
 
 from srauv_settings import SETTINGS
 
 current_lvl = ""
 
 if SETTINGS["hardware"]["headlights"] == True:
+	import RPi.GPIO as GPIO
 	GPIO.setwarnings(False)
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(12, GPIO.OUT)
