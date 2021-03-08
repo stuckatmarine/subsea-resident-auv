@@ -60,6 +60,8 @@ class IMU_Thread(threading.Thread):
                         
                 except Exception as e:
                     print(f"IMU err:{e}")
+
+                time.sleep(0.001)
         else:
             print(f"I2C not enabled in srauv_settings.json")
             

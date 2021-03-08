@@ -10,7 +10,7 @@
     "internal_ip": "",
     "main_msg_port": 7001,
     "main_cam_port": 7002,
-    "update_interval_ms": 200,
+    "update_interval_ms": 50,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
     "fly_sim": false,
