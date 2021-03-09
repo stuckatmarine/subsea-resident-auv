@@ -70,15 +70,16 @@ gAUVz = 0.0
 gAUVheading = 0.0
 
 # Output video parameters
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-video_out = cv2.VideoWriter('Video/out.avi',fourcc, 20, (640,480))
+fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+video_out = cv2.VideoWriter('output_vid.avi',fourcc, 20, (640,480))
 
 print("Camera sink open, Waiting for camera feed...")
 
-cap_receive = cv2.VideoCapture('udpsrc port=5001 ! application/x-rtp,payload=96 ! rtph264depay ! avdec_h264 ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
+cap_receive = cv2.VideoCapture('udpsrc port=5001 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! v4l2h264dec ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
 
 print("Camera feed detected, press 'q' to quit and 'c' to capture")
 
+t0 = time.time()
 
 if not cap_receive.isOpened():
     print('VideoCapture not opened')
@@ -143,6 +144,8 @@ while True:
         gAUVz = Tank_T_AUV[2, 3]
         gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
 
+        print("TAG!!")
+
     # Add Pose details to frame view if Tag detected
     if(gTID is not None):
         cv2.putText(frame, "CAM_X: " + f'{gCam_pose_t[0,0]:.3f}' + "m", (50,400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
@@ -163,10 +166,11 @@ while True:
     video_out.write(frame)
 
     # Show the output frame after AprilTag detection
-    cv2.imshow('receive', frame)
+    #cv2.imshow('receive', frame)
 
     # Check for 'q' press in order to quit program
-    if cv2.waitKey(1)&0xFF == ord('q'):
+    if cv2.waitKey(1)&0xFF == ord('q') or (time.time()-t0 > 10.0):
+        #cv2.imwrite("Frames/capture005.jpg", frame)
         break
 
     # Check for 'c' press to capture a single frame
@@ -176,6 +180,7 @@ while True:
         cap_count = cap_count + 1
 
 # Once finished, release / destroy windows
+print("Cleaning up...")
 video_out.release()
 cap_receive.release()
 cv2.destroyAllWindows()
