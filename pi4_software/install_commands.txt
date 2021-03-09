@@ -47,3 +47,33 @@ sudo iptables -t nat -A PREROUTING -p udp --dport 5011 -j DNAT --to-destination 
 Send video to Pi4 on Pi Zero
 raspivid -cs 0 -t 0 -n -rot 90 -h 480 -w 640 -fps 30 -b 2000000 -o - | gst-launch-1.0 -v fdsrc ! h264parse ! rtph264pay ! udpsink host=192.168.137.2 port=5011
 
+# OpenCV and Gstreamer
+Using:
+   - Python 3.7.3
+   - OpenCV 4.1.0
+   - Gstreamer 1.14.4
+   - Cmake 3.5.1
+
+sudo apt-get install gstreamer1.0-tools
+sudo apt-get install gstreamer1.0*
+sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+pip install numpy
+"sudo apt-get install python3.7-dev" instead of python3-dev
+
+use this cmake config
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+-D CMAKE_INSTALL_PREFIX=/usr/local \
+-D INSTALL_PYTHON_EXAMPLES=OFF \
+-D OPENCV_ENABLE_NONFREE=ON \
+-D BUILD_opencv_python2=OFF \
+-D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+-D ENABLE_NEON=ON \
+-D ENABLE_VFPV3=ON \
+-D BUILD_TESTS=OFF \
+-D WITH_GSTREAMER=ON \
+-D CMAKE_SHARED_LINKER_FLAGS=-latomic \
+-D BUILD_EXAMPLES=OFF ..
+
+Following https://www.pyimagesearch.com/2019/09/16/install-opencv-4-on-raspberry-pi-4-and-raspbian-buster/
+to build opencv from scratch

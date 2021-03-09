@@ -1,5 +1,5 @@
 {
-    "external_ip": "localhost",
+    "external_ip": "10.3.141.1",
     "external_port": 8001,
     "internal_ip": "localhost",
     "main_msg_port": 7001,
