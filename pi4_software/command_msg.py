@@ -9,6 +9,7 @@ def make(source, dest = ''):
         "timestamp" : timestamp.now_string(),
         "force_state": "",
         "action": "",
+        "headlight_setting": "",
         "can_thrust" : False,
         "thrust_type": "",  # raw_thrust or dir_thrust
         "raw_thrust":[      # clockwise from front of vehicle, lats then verts

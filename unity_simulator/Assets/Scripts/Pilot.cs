@@ -52,19 +52,24 @@ public class Pilot : Agent
 
     public override void Initialize()
     {
+        
         tank = gameObject.transform.parent.gameObject.transform;
         tankBounds = tank.GetComponent<Collider>().bounds;
         tank.GetComponent<Collider>().enabled = false;
         
         srauv = gameObject.transform;
         startPos = gameObject.transform.parent.gameObject.transform.Find("startPos").gameObject.transform;
-        goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
-        
+        if (enablePilot)
+        {
+            goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
+            indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
+            indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
+            statsRecorder = Academy.Instance.StatsRecorder;
+        }
+
         rb = srauv.GetComponent<Rigidbody>();
         massUpper = gameObject.transform.Find("massUpper").gameObject.transform.GetComponent<Rigidbody>();
         massLower = gameObject.transform.Find("massLower").gameObject.transform.GetComponent<Rigidbody>();
-        indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
-        indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
 
         collider = srauv.GetComponent<Collider>();
         thrustCtrl = srauv.GetComponent<ThrusterController>();
@@ -72,7 +77,7 @@ public class Pilot : Agent
         //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
         
-        statsRecorder = Academy.Instance.StatsRecorder;
+        
         //resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }

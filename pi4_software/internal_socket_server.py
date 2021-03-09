@@ -26,8 +26,10 @@ class LocalSocketThread(threading.Thread):
     def __init__(self, address, tel, cmd, tel_recv, cmd_recv):
         threading.Thread.__init__(self)
         self.kill_received = False
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(address)
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind(address)
+        self.socket.listen(5)
         self.tel = tel
         self.tel_recv = tel_recv
         self.tel_bytes = json.dumps(self.tel).encode("utf-8")
@@ -49,10 +51,12 @@ class LocalSocketThread(threading.Thread):
     def run(self):
         while not self.kill_received:
             try:
-                # blocks until data recieved
-                data, address = self.sock.recvfrom(4096)
-                self.logger.info(f"< addr:{address} data:{data}")
-                data_dict = json.loads(data.decode("utf-8"))
+                # blocks until data recieved, send 'stop' to break
+                client, address = self.socket.accept()
+                self.logger.info(f"< addr:{address} client:{client}")
+                data = client.recvfrom(4096)[0].decode("utf-8")
+                self.logger.info(f"< data:{data}")
+                data_dict = json.loads(data)
 
                 if data_dict["msg_type"] == "telemetry":
                     self.tel_recv = data_dict
@@ -61,16 +65,16 @@ class LocalSocketThread(threading.Thread):
                     if self.cmd["msg_num"] > self.last_cmd_sent:
                         self.cmd_bytes = json.dumps(self.cmd).encode("utf-8")
                     
-                    self.sock.sendto(self.cmd_bytes, address)
+                    client.sendto(self.cmd_bytes, address)
                     self.last_cmd_sent = self.cmd["msg_num"]
-                    self.logger.info(f"> addr:{address} data:{self.cmd_bytes}")
+                    # self.logger.info(f"> addr:{address} data:{self.cmd_bytes}")
 
                 elif data_dict["msg_type"] == "command":
                     for k in data_dict:
                         if k == "msg_num":
                             continue
                         self.cmd_recv[k] = data_dict[k]
-                        print(f"keys:{k} val:{data_dict[k]}")
+                    # print(f"self.cmd_recv::{self.cmd_recv}")
                     # update last as trigger of copy completed
                     self.cmd_recv["msg_num"] = data_dict["msg_num"]
 
@@ -83,22 +87,22 @@ class LocalSocketThread(threading.Thread):
                         self.cmd_with_kill_recvd = True
                         self.logger.warining(f"Kill cmd received")
                     
-                    self.sock.sendto(self.tel_bytes, address)
+                    client.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
-                    self.logger.info(f"> addr:{address} data:{self.tel_bytes}")
+                    # self.logger.info(f"> addr:{address} data:{self.tel_bytes}")
 
                 elif data_dict["msg_type"] == "distance":
                     # update cmd_bytes if not most current
                     sensor_idx = data_dict["sensor_idx"]
                     self.dist_values[sensor_idx] = data_dict["sensor_value"]
                     
-                    self.sock.sendto(self.default_response, address)
+                    client.sendto(self.default_response, address)
                     print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
 
                 # respond with srauv's default response
                 else:
-                    self.sock.sendto(self.default_response, address)
                     self.logger.warning(f"< unknonw msg_type received by internal socket, {data_dict['msg_type']}")
+                    client.sendto(self.default_response, address)
                     
             except KeyboardInterrupt:
                 self.logger.warning("Exiting via interrupt")

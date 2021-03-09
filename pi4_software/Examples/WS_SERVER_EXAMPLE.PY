@@ -60,11 +60,9 @@ class SrauvExternalWSS(WebSocket):
     def handleClose(self):
         self.logger.info(f'closed {self.address}')
 
-def SrauvExternalWSS_start():
-    print(f"SrauvExternalWSS_start at {SETTINGS['external_ip']}:{SETTINGS['external_port']}")
-    server = SimpleWebSocketServer(SETTINGS["external_ip"], SETTINGS["external_port"], SrauvExternalWSS)
-    try:
-        server.serveforever()
-    except KeyboardInterrupt:
-        print("Keyboad Interrup caught, closing external server")
-        sys.exit()
+server = SimpleWebSocketServer("", 8001, SrauvExternalWSS)
+try:
+    server.serveforever()
+except KeyboardInterrupt:
+    print("Keyboad Interrup caught, closing external server")
+    sys.exit()

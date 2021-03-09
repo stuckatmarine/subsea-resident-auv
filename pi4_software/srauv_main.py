@@ -37,8 +37,8 @@ import telemetry_msg
 import internal_socket_server
 import logger
 import srauv_fly_sim
+import headlight_controls
 from srauv_settings import SETTINGS
-from external_ws_server import SrauvExternalWSS_start
 
 ###################  Globals  ###################
 G_MAIN_INTERNAL_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
@@ -89,7 +89,7 @@ def evaluate_state():
     elif g_tel_msg["state"] == "manual":
         if timestamp.now_int_ms() - g_last_topside_cmd_time_ms > SETTINGS["manual_deadman_timeout_ms"]:
             go_to_idle()
-            g_logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{g_last_topside_cmd_time_ms - timestamp.now_int_ms()}")
+            g_logger.warning(f"Manual deadman triggered, going to idle, delta_ms:{timestamp.now_int_ms() - g_last_topside_cmd_time_ms}")
         else:
             g_tel_msg["thrust_enabled"][0] = True
 
@@ -105,8 +105,9 @@ def parse_received_command():
         return
 
     g_incoming_cmd_num = g_incoming_cmd["msg_num"]
+    g_last_topside_cmd_time_ms = timestamp.now_int_ms()
 
-    if g_incoming_cmd["force_state"] != "":  
+    if g_incoming_cmd["force_state"] != g_tel_msg["state"] and g_incoming_cmd["force_state"] != "":  
         g_logger.warning(f"--- Forcing state ---> {g_incoming_cmd['force_state']}")
 
         #  TODO: functionize state transitions
@@ -117,9 +118,12 @@ def parse_received_command():
         if g_incoming_cmd["force_state"] == "manual":
             g_tel_msg["state"] == "manual"
             g_tel_msg["thrust_enabled"][0] = g_incoming_cmd["can_thrust"]
-            g_last_topside_cmd_time_ms = timestamp.now_int_ms()
 
         g_logger.info(f"Forcing state to {g_tel_msg['state']}, g_thrust_enabled:{g_tel_msg['thrust_enabled']}")
+
+    if g_incoming_cmd["headlight_setting"] != "":
+        g_tel_msg["headlights_setting"] = g_incoming_cmd["headlight_setting"]
+        headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
     if g_incoming_cmd["action"] == "fly_sim_true":
         g_srauv_fly_sim = True
@@ -178,14 +182,18 @@ def calculate_thrust():
             g_logger.info(f"Setting thrust_values:{g_incoming_cmd['raw_thrust']}")
 
         elif g_incoming_cmd["thrust_type"] == "dir_thrust":
-            print(f"Updating manual thrust values in calculate_thrust")
+            # print(f"Updating manual thrust values in calculate_thrust")
             for dir in g_incoming_cmd["dir_thrust"]:
-                print(f"dir:{dir}")
+                # print(f"dir:{dir}")
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
             for i in range(len(new_thrust_values)):
                 g_tel_msg["thrust_values"][i] = new_thrust_values[i]
             g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
-            print(f"g_tel_msg['thrust_values']:{g_tel_msg['thrust_values']}")
+            # print(f"g_tel_msg['thrust_values']:{g_tel_msg['thrust_values']}")
+        
+        else:
+            for i in range(len(new_thrust_values)):
+                g_tel_msg["thrust_values"][i] = new_thrust_values[i]
 
 ########  Process Helper Functions  ########
 def start_threads():
@@ -209,10 +217,10 @@ def start_threads():
         for t in g_threads:
             t.start()
 
-        # websocket server for external comms as a sub-process
-        process = Process(target=SrauvExternalWSS_start, args=())
-        g_sub_processes.append(process)
-        process.start()
+        # for external comms as a sub-process
+        # process = Process(target=SrauvExternalWSS_start, args=())
+        # g_sub_processes.append(process)
+        # process.start()
 
     except Exception as e:
         g_logger.error(f"Thread creation err:{e}")
@@ -223,16 +231,19 @@ def close_gracefully():
     g_logger.info("Trying to stop threads...")
     try:      
          # msg socket thread to close it, its blocking on recv
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(str("stop").encode("utf-8"), G_MAIN_INTERNAL_ADDR)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(("localhost", 7001))
+        sock.send(str("stop").encode("utf-8"))
+        print(f"breaking internal socket loop {sock.recvfrom(4096)[0]}")
+        sock.close()
 
         for t in g_threads:
             t.kill_received = True
             t.join()
 
         # Terminate sub processes if any
-        for p in g_sub_processes:
-            p.terminate()  # sends a SIGTERM
+        # for p in g_sub_processes:
+        #     p.terminate()  # sends a SIGTERM
 
     except socket.error as se:
         g_logger.error(f"Failed To Close Socket, err:{se}")
@@ -252,6 +263,7 @@ def main():
     g_logger.info(f'state:{g_tel_msg["state"]} MSG:SRAUV starting')
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
+    headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
     srauv_navigation.setup_waypoints(logger)
 
     start_threads()
@@ -279,14 +291,14 @@ def main():
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-                g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
+                # g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
 
                 # debug msgs to comfirm thread operation
-                # print(f"state         : {g_tel_msg['state']}")
-                print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
+                # print(f"\nstate         : {g_tel_msg['state']}")
+                # print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
-                #print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                # print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 # print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 

@@ -10,6 +10,7 @@ import can
 import timestamp
 import logger
 from sys import platform
+from srauv_settings import SETTINGS
 
 # "CAN_tx_ids":{
 #     "arm": 0,              # 0x01 to arm
@@ -45,15 +46,15 @@ class ThrusterThread(threading.Thread):
         self.can_up             = False
         self.is_armed           = False
         self.is_motor_on        = False
-        self.last_heartbeat_ms  = 0
         self.last_update_ms     = 0
         self.motor_rpm          = 0
         
-        if platform == "linux": # Only run on PI, crashes on Windows/Mac
+        if SETTINGS["hardware"]["can"] == True:
             self.bus = can.interface.Bus(channel='can0', bustype='socketcan')
             self.can_up = True
         else:
-            self.logger.warn("Not linux, not trying to start CANBUS")
+            self.logger.warn(f"can not enabled in srauv_settings.json")
+            print(f"can not enabled in srauv_settings.json")
 
         print(f"Thruster thread {self.id} up, can_up:{self.can_up}")
         logger.info(f"Thruster thread {self.id} up, can_up:{self.can_up}")
@@ -85,15 +86,6 @@ class ThrusterThread(threading.Thread):
                 #  TODO check for motor off msg
                 self.is_motor_on = False
         else:
-
-            # check if deadman has timedout # need to update heartbeat value somewhere if using
-            # if timestamp.now_int_ms() - self.last_heartbeat_ms >= self.deadman_timeout_ms:
-            #     self.thrust_enabled[0] = False
-            #     self.send_msg("motor_onoff", [0x00])
-            #     self.logger.info(f"Deadman expired, Thruster_id:{self.id} thrust_enabled[0]:{self.thrust_enabled[0]}")
-            #     time.sleep(2)
-            # else:
-
             if not self.is_motor_on == False:
                 self.send_msg("motor_onoff", 0x01)
                 time.sleep(1)
