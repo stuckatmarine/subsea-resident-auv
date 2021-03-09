@@ -5,8 +5,8 @@
 public class CamPicModel
 {
     public string source;
-    public int msgNum;
-    public string msgType;
+    public int msg_num;
+    public string msg_type;
     public string timestamp;
-    public string imgStr;
+    public string img_str;
 }

@@ -330,19 +330,19 @@ public class ServerCommunication : MonoBehaviour
         if (sendScreenshots && txNum % 2 == 0)
         {
             cam_msg.source = "sim";
-            cam_msg.msgNum = txNum++;
-            cam_msg.msgType = "cam";
+            cam_msg.msg_num = txNum;
+            cam_msg.msg_type = "cam";
             cam_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
 
             frontCamTexture = getScreenshot(frontCam);
             // frontCamTexSture = frontCam;
             byte[] bytes;
             bytes = frontCamTexture.EncodeToJPG();
-            cam_msg.imgStr = Convert.ToBase64String(bytes);
+            cam_msg.img_str = Convert.ToBase64String(bytes);
 
             msg = JsonUtility.ToJson(cam_msg);
             if (enableLogging)
-                Debug.Log("Sending Img: " + msg);
+                Debug.Log("Sending Img of size: " + bytes.Length);
 
             client.Send(msg);
         }
