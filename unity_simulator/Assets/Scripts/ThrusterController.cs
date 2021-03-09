@@ -231,6 +231,10 @@ public class ThrusterController : MonoBehaviour
             raw_thrust[1] = -raw_thrust_spd;
             raw_thrust_used = true;
         }
+
+
+        // if (!dir_thrust_used && !raw_thrust_used)
+        //     dir_thrust_used = true;
     }
 
     // apply force at position of thruster transform 't'

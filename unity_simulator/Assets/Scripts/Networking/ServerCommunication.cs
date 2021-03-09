@@ -21,13 +21,19 @@ public class ServerCommunication : MonoBehaviour
 
     public bool send_cmds = false;
     public bool send_tel = false;
-    public bool disableWebsocketServer = false;
+    public bool disableWebsocketServer = false; // disables all socket stuff for training
+    public bool useWebsocket = false; // uses tcp raw socket instead of websocket
+    public bool useTcpSocket = false; // uses tcp raw socket instead of websocket
     public bool enableLogging = false;
-    public bool enableVehicleCmds = false;
-    public bool sendScreenshots = false;
-    public string headlightSetting = "low";
+    public bool enableVehicleCmds = false; // pi_fly_sim, vehicle sends commands up (do not use)
+    public bool sendScreenshots = false; // sends fron cam img as string
     
+    public string headlightSetting = "low";
     public State controlState = State.Idle;
+
+    public TcpSocket sock; // tcpSocket ip and port set in other script
+    public byte[] tcpTxBytes = new byte[65000];
+    public byte[] tcpRxBytes = new byte[65000];
 
     // Server IP address
     [SerializeField]
@@ -50,17 +56,12 @@ public class ServerCommunication : MonoBehaviour
     public CommandModel cmd_msg = new CommandModel();
     public CamPicModel cam_msg = new CamPicModel();
     public TelemetryModel tel_msg = new TelemetryModel();
-    // tel_msg.thrust_enabled = new bool[1];
-    // tel_msg.thrust_values = new float[6]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    // tel_msg.dist_values = new float[1]{0.0, 0.0, 0.0, 0.0, 0.0};
-    // tel_msg.imu_dict = new Dictionary<string, float>();
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
     // Final server address
     private string server;
     
-    // public Transform[] distSensorVals;
     public float[] distancesFloat;
     public Transform srauv;
     private Rigidbody rb;
@@ -96,17 +97,17 @@ public class ServerCommunication : MonoBehaviour
 
     // WebSocket Client
     private WsClient client;
-    private GameObject thrusterController;
-    private float[] forces = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 
-    // Class with messages for "lobby"
-    // public LobbyMessaging Lobby { private set; get; }
+    private GameObject thrusterController;
+    private float[] forces = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f}; // applied to sim
+
 
     /// <summary>
     /// Unity method called on initialization
     /// </summary>
     private void Awake()
     {
+        sock = GetComponent<TcpSocket>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         distancesFloat = srauv.GetComponent<DistanceSensors>().distancesFloat;
         goalPos = srauv.GetComponent<Pilot>().goal;
@@ -131,10 +132,13 @@ public class ServerCommunication : MonoBehaviour
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
-        server = "ws://" + host + ":" + port;
-        Debug.Log("using websocket setver " + server);
-        client = new WsClient(server);
-        ConnectToServer();
+        if (!useTcpSocket)
+        {
+            server = "ws://" + host + ":" + port;
+            Debug.Log("using websocket setver " + server);
+            client = new WsClient(server);
+            ConnectToServer();
+        }
         setSpotlights();
     }
 
@@ -144,7 +148,7 @@ public class ServerCommunication : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (disableWebsocketServer) // extra blocker
+        if (disableWebsocketServer)
             return;
 
         //  Update UI
@@ -153,19 +157,18 @@ public class ServerCommunication : MonoBehaviour
         simY.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.y.ToString("#.00");
         simZ.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.z.ToString("#.00");
 
-        if (disableWebsocketServer)
-            return;
-
-        // Check if server send new messages
-        var cqueue = client.receiveQueue;
-        string msg;
-        while (cqueue.TryPeek(out msg))
+        if (!useTcpSocket)
         {
-            // Parse newly received messages
-            cqueue.TryDequeue(out msg);
-            HandleMessage(msg);
+            // Check if server send new messages
+            var cqueue = client.receiveQueue;
+            string msg;
+            while (cqueue.TryPeek(out msg))
+            {
+                // Parse newly received messages
+                cqueue.TryDequeue(out msg);
+                HandleMessage(msg);
+            }
         }
-
 
         if (Time.time * 1000 > lastTxTime + txIntervalMs)
         {
@@ -318,13 +321,28 @@ public class ServerCommunication : MonoBehaviour
         // }
         
         string msg = JsonUtility.ToJson(tel_msg);
+        
 
         if (enableLogging)
             Debug.Log("Sending: " + msg);
 
-        client.Send(msg);
-
+        if (useTcpSocket)
+        {
+            if (sock.connectTcpSocket())
+            {
+                tcpTxBytes = System.Text.Encoding.UTF8.GetBytes(msg);
+                tcpRxBytes = sock.SendAndReceive(tcpTxBytes);
+                
+                HandleMessage(System.Text.Encoding.UTF8.GetString(tcpRxBytes));
+            }
+            else
+            {
+                useTcpSocket = false;
+            }
+        }
         
+        if (useWebsocket)
+            client.Send(msg);
 
         // send screenshot too after every x msgs
         if (sendScreenshots && txNum % 2 == 0)
@@ -406,7 +424,23 @@ public class ServerCommunication : MonoBehaviour
         if (enableLogging)
             Debug.Log("Sending: " + msg);
 
-        client.Send(msg);
+        if (useTcpSocket)
+        {
+            if (sock.connectTcpSocket())
+            {
+                tcpTxBytes = System.Text.Encoding.UTF8.GetBytes(msg);
+                tcpRxBytes = sock.SendAndReceive(tcpTxBytes);
+                
+                HandleMessage(System.Text.Encoding.UTF8.GetString(tcpRxBytes));
+            }
+            else
+            {
+                useTcpSocket = false;
+            }
+        }
+        
+        if (useWebsocket)
+            client.Send(msg);
     }
 
 
@@ -471,6 +505,11 @@ public class ServerCommunication : MonoBehaviour
     public void toggleSendCmds()
     {
         send_cmds =  !send_cmds;
+    }
+
+    public void sendTcp()
+    {
+        sock.SendAndReceive( System.Text.Encoding.UTF8.GetBytes("testtt"));
     }
 
     public void setSpotlights()
