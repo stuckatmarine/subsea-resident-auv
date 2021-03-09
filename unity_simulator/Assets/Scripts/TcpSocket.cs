@@ -2,6 +2,7 @@
 //using System.Net;
 using System.Net.Sockets;
 using System;
+using System.Threading;
 
 public class TcpSocket : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class TcpSocket : MonoBehaviour
             Debug.Log(ex.Message);
             return false;
             // Try to reconnect ??  TODO
-            // Thread.Sleep(1000);
+            Thread.Sleep(10000);
         }
 
         if (!client.Connected) {

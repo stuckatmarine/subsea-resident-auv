@@ -283,10 +283,10 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.pos_z = srauv.position.z;
         tel_msg.depth = distancesFloat[4];
         tel_msg.alt = distancesFloat[5];
-        // tel_msg.imu_dict["heading"] = srauv.rotation.y * 360.0f;
-        // tel_msg.imu_dict["vel_x"] = rb.velocity.x;
-        // tel_msg.imu_dict["vel_y"] = rb.velocity.y;
-        // tel_msg.imu_dict["vel_z"] = rb.velocity.z;
+        tel_msg.imu_dict.heading = srauv.rotation.y * 360.0f;
+        tel_msg.imu_dict.vel_x = rb.velocity.x;
+        tel_msg.imu_dict.vel_y = rb.velocity.y;
+        tel_msg.imu_dict.vel_z = rb.velocity.z;
         tel_msg.dist_values = distancesFloat;
 
         // tel_msg.roll = srauv.rotation.x * 360.0f;
@@ -320,16 +320,22 @@ public class ServerCommunication : MonoBehaviour
         //     tel_msg.tree3DistZ = srauv.position.z - tree3.position.z;
         // }
         
-        string msg = JsonUtility.ToJson(tel_msg);
-        
-
-        if (enableLogging)
-            Debug.Log("Sending: " + msg);
+        //string msg = JsonUtility.ToJson(tel_msg);
 
         if (useTcpSocket)
         {
             if (sock.connectTcpSocket())
             {
+                if (sendScreenshots)
+                {
+                    frontCamTexture = getScreenshot(frontCam);
+                    tel_msg.state = Convert.ToBase64String(frontCamTexture.EncodeToJPG());
+                }
+                
+                string msg = JsonUtility.ToJson(tel_msg);
+                if (enableLogging)
+                    Debug.Log("Sending: " + msg);
+
                 tcpTxBytes = System.Text.Encoding.UTF8.GetBytes(msg);
                 tcpRxBytes = sock.SendAndReceive(tcpTxBytes);
                 
@@ -341,8 +347,8 @@ public class ServerCommunication : MonoBehaviour
             }
         }
         
-        if (useWebsocket)
-            client.Send(msg);
+        // if (useWebsocket)
+        //     client.Send(msg);
 
         // send screenshot too after every x msgs
         if (sendScreenshots && txNum % 2 == 0)
@@ -354,15 +360,39 @@ public class ServerCommunication : MonoBehaviour
 
             frontCamTexture = getScreenshot(frontCam);
             // frontCamTexSture = frontCam;
-            byte[] bytes;
-            bytes = frontCamTexture.EncodeToJPG();
-            cam_msg.img_str = Convert.ToBase64String(bytes);
-
-            msg = JsonUtility.ToJson(cam_msg);
             if (enableLogging)
-                Debug.Log("Sending Img of size: " + bytes.Length);
+                Debug.Log("Sending: " + cam_msg);
+            
+            // if (useWebsocket)
+            // {
+            //     byte[] bytes;
+            //     bytes = frontCamTexture.EncodeToJPG();
+            //     cam_msg.img_str = Convert.ToBase64String(bytes);
 
-            client.Send(msg);
+            //     msg = System.Text.Encoding.UTF8.GetBytes(cam_msg);
+            //     if (enableLogging)
+            //         Debug.Log("Sending Img of size: " + bytes.Length);
+
+            //     client.Send(JsonUtility.ToJson(cam_msg));
+            // }
+            if (useTcpSocket)
+            {
+                if (sock.connectTcpSocket())
+                {
+                    tcpTxBytes = frontCamTexture.EncodeToJPG();
+                    tcpRxBytes = sock.SendAndReceive(tcpTxBytes);
+
+                    if (enableLogging)
+                        Debug.Log("Sending Img of size: " + tcpTxBytes.Length);
+
+                    HandleMessage(System.Text.Encoding.UTF8.GetString(tcpRxBytes));
+                }
+                else
+                {
+                    useTcpSocket = false;
+                }
+            }
+
         }
     }
 
