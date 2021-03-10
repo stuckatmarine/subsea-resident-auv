@@ -120,15 +120,15 @@ public class ServerCommunication : MonoBehaviour
 
         spotlights =  GameObject.FindGameObjectsWithTag("spotlight");
 
-        dock = GameObject.Find("Dock").GetComponent<Transform>();
+        //dock = GameObject.Find("Dock").GetComponent<Transform>();
 
         
         if (disableWebsocketServer)
             return;
 
-        tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
-        tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
-        tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
+        //tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
+        //tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
+        //tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
         frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
@@ -284,6 +284,7 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.depth = distancesFloat[4];
         tel_msg.alt = distancesFloat[5];
         tel_msg.imu_dict.heading = srauv.rotation.y * 360.0f;
+        tel_msg.imu_dict.gyro_y = rb.angularVelocity.y;
         tel_msg.imu_dict.vel_x = rb.velocity.x;
         tel_msg.imu_dict.vel_y = rb.velocity.y;
         tel_msg.imu_dict.vel_z = rb.velocity.z;

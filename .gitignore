@@ -2,4 +2,5 @@
 /pi4_software/Logs/*
 MLTraining/results/*
 MLTraining/dopamine/*
-MLTraining/envs/old/*
+MLTraining/envs/old/*MLTraining/DataRecording/*/*.jpg
+MLTraining/DataRecording/*/*.csv
