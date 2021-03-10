@@ -39,6 +39,7 @@ import logger
 import srauv_fly_sim
 import headlight_controls
 from srauv_settings import SETTINGS
+from external_ws_server import SrauvExternalWSS_start
 
 ###################  Globals  ###################
 G_MAIN_INTERNAL_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])

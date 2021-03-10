@@ -1,0 +1,126 @@
+{
+    "hardware":{
+        "can": false,
+        "i2c": false,
+        "headlights": false,
+        "leds": false
+    },
+    "external_ip": "",
+    "external_port": 8001,
+    "internal_ip": "",
+    "main_msg_port": 7001,
+    "main_cam_port": 7002,
+    "update_interval_ms": 50,
+    "default_comms_response_str": "",
+    "waypoint_tolerence_m": 0.1,
+    "fly_sim": false,
+    "manual_deadman_timeout_ms": 5000,
+    "log_to_stdout": false,
+    "dist_sensor_config":{
+        "total_sensors": 5,
+        "main_sensors": 2,
+        "min_cm": 10,
+        "max_cm": 200,
+        "poll_interval_ms": 100,
+        "socket_send_interval_s": 0.500
+    },
+    "imu_sensor_config":{
+        "poll_interval_s": 0.1
+    },
+    "thruster_config":{
+        "num_thrusters": 1,
+        "max_thrust": 75,
+        "deadman_timeout_ms": 2000,
+        "thrust_interval_ms": 100,
+        "max_spd_min_range_m": 0.5,
+        "board_id_base": 8,
+        "board_id_shift": 6,
+        "rpm_max": 2000,
+        "CAN_tx_ids":{
+            "arm": 0,            
+            "abort": 1,
+            "motor_onoff": 2,
+            "set_rpm": 3,
+            "set_accel": 4
+        },
+        "CAN_rx_ids":{
+            "measured_rpm": 5,
+            "measured_voltage": 6,
+            "measured_torque": 7,
+            "board_state": 8,
+            "fault_state": 9
+        },
+        "_":[
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "fwd":[
+            25,
+            25,
+            25,
+            25,
+            0,
+            0
+        ],
+        "rev":[
+            -25,
+            -25,
+            -25,
+            -25,
+            0,
+            0
+        ],
+        "lat_right":[
+            -25,
+            25,
+            -25,
+            25,
+            0,
+            0
+        ],
+        "lat_left":[
+            25,
+            -25,
+            25,
+            -25,
+            0,
+            0
+        ],
+        "rot_right":[
+            -25,
+            -25,
+            25,
+            25,
+            0,
+            0
+        ],
+        "rot_left":[
+            25,
+            25,
+            -25,
+            -25,
+            0,
+            0
+        ],
+        "up":[
+            0,
+            0,
+            0,
+            0,
+            50,
+            50
+        ],
+        "down":[
+            0,
+            0,
+            0,
+            0,
+            -50,
+            -50
+        ]
+    }
+}
