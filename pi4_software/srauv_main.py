@@ -219,9 +219,9 @@ def start_threads():
             t.start()
 
         # for external comms as a sub-process
-        # process = Process(target=SrauvExternalWSS_start, args=())
-        # g_sub_processes.append(process)
-        # process.start()
+        process = Process(target=SrauvExternalWSS_start, args=())
+        g_sub_processes.append(process)
+        process.start()
 
     except Exception as e:
         g_logger.error(f"Thread creation err:{e}")
@@ -232,19 +232,17 @@ def close_gracefully():
     g_logger.info("Trying to stop threads...")
     try:      
          # msg socket thread to close it, its blocking on recv
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(("localhost", 7001))
-        sock.send(str("stop").encode("utf-8"))
-        print(f"breaking internal socket loop {sock.recvfrom(4096)[0]}")
-        sock.close()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(str("stop").encode("utf-8"), G_MAIN_INTERNAL_ADDR)
+
 
         for t in g_threads:
             t.kill_received = True
             t.join()
 
         # Terminate sub processes if any
-        # for p in g_sub_processes:
-        #     p.terminate()  # sends a SIGTERM
+        for p in g_sub_processes:
+            p.terminate()  # sends a SIGTERM
 
     except socket.error as se:
         g_logger.error(f"Failed To Close Socket, err:{se}")
@@ -297,9 +295,9 @@ def main():
 
                 # debug msgs to comfirm thread operation
                 # print(f"\nstate         : {g_tel_msg['state']}")
-                # print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
+                #print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
-                # print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                #print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 # print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 

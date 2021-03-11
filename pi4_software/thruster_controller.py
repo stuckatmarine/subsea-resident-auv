@@ -16,7 +16,7 @@ from srauv_settings import SETTINGS
 #     "arm": 0,              # 0x01 to arm
 #     "abort": 1,            # 0x01 to estop, need pwr cycle to recover
 #     "motor_onoff": 2,      # 0x01 to enable
-#     "set_RPM": 3,          # 3B: 1B-> 1/0 for fwd/rev , 2B -> int @ 3.5k RPM max
+#     "set_rpm": 3,          # 3B: 1B-> 1/0 for fwd/rev , 2B -> int @ 3.5k RPM max
 #     "set_accel": 4         # 2B: int @ 1500hz max
 # },
 # "CAN_rx_ids":{
@@ -80,17 +80,19 @@ class ThrusterThread(threading.Thread):
     def apply_thrust(self):
         # Do nothing if not in a thrust enabled state
         if self.thrust_enabled[0] == False:
+            #print ("thrust not enabled")
             if self.is_motor_on == True:
                 self.send_msg("motor_onoff", [0x00])
                 time.sleep(1)
                 #  TODO check for motor off msg
                 self.is_motor_on = False
         else:
-            if not self.is_motor_on == False:
-                self.send_msg("motor_onoff", 0x01)
+            if self.is_motor_on == False:
+                self.send_msg("motor_onoff", [0x01])
                 time.sleep(1)
                 #  TODO check for motor on msg
                 self.is_motor_on = True
+                print("thruster armed")
 
             self.logger.info(f"Applying Thrust, Thruster_id:{self.id} thrust_value:{self.thrust_arr[self.id]}")
             
@@ -106,27 +108,33 @@ class ThrusterThread(threading.Thread):
             else:
                 thrust_RPM = thrust_RPM / self.config["max_thrust"] * self.config["rpm_max"]
             
-            self.send_msg("set_RPM", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
-            # self.send_msg("set_RPM", [0x00,0x00,0xFF]) # low test value
+            # self.send_msg("set_rpm", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
+            self.send_msg("set_rpm", [0x00,0x05,0xDC]) # low test value
 
     def read_msg(self):
         pass
 
     def run(self):
-        self.send_msg("arm", [0x01])
-        time.sleep(1)
-        # TODO: check for armed msg, handle failure conditions
-        self.is_armed = True
+        if SETTINGS["hardware"]["can"] == True:
+            self.send_msg("arm", [0x01])
+            time.sleep(1)
+            print ("thruster armed")
+            # TODO: check for armed msg, handle failure conditions
+            self.is_armed = True
 
-        while not self.kill_received:
-            time_now = timestamp.now_int_ms()
-            try:
-                if (time_now - self.last_update_ms >= self.thrust_interval_ms):
-                    self.apply_thrust()
-                    self.last_update_ms = time_now
-                time.sleep(0.001)
+            while not self.kill_received:
+                time_now = timestamp.now_int_ms()
+                try:
+                    if (time_now - self.last_update_ms >= self.thrust_interval_ms):
+                        self.apply_thrust()
+                        self.last_update_ms = time_now
+                    time.sleep(0.001)
 
-            except Exception as oof:
-                self.logger.info(oof)
-        
-        self.send_msg("motor_onoff", [0x00])
+                except Exception as oof:
+                    self.logger.info(oof)
+            
+            self.send_msg("motor_onoff", [0x00])
+
+        else:
+            self.logger.warn(f"setting hardware CAN not enabled for thruster id{self.id}")
+            print(f"setting hardware CAN not enabled for thruster id:{self.id}")

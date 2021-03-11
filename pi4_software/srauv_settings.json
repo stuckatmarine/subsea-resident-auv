@@ -2,15 +2,15 @@
     "hardware":{
         "can": false,
         "i2c": false,
-        "headlights": false,
+        "headlights": true,
         "leds": false
     },
     "external_ip": "",
     "external_port": 8001,
-    "internal_ip": "",
+    "internal_ip": "localhost",
     "main_msg_port": 7001,
     "main_cam_port": 7002,
-    "update_interval_ms": 50,
+    "update_interval_ms": 200,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
     "fly_sim": false,
@@ -28,10 +28,10 @@
         "poll_interval_s": 0.1
     },
     "thruster_config":{
-        "num_thrusters": 1,
+        "num_thrusters": 6,
         "max_thrust": 75,
         "deadman_timeout_ms": 2000,
-        "thrust_interval_ms": 100,
+        "thrust_interval_ms": 200,
         "max_spd_min_range_m": 0.5,
         "board_id_base": 8,
         "board_id_shift": 6,
@@ -59,10 +59,10 @@
             0
         ],
         "fwd":[
-            25,
-            25,
-            25,
-            25,
+            75,
+            75,
+            75,
+            75,
             0,
             0
         ],
@@ -111,16 +111,16 @@
             0,
             0,
             0,
-            50,
-            50
+            100,
+            100
         ],
         "down":[
             0,
             0,
             0,
             0,
-            -50,
-            -50
+            -100,
+            -100
         ]
     }
 }
