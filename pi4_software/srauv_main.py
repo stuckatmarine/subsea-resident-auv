@@ -28,7 +28,6 @@ from multiprocessing import Process
 
 # Custome imports
 import srauv_navigation
-import distance_sensor
 import imu_sensor
 import thruster_controller
 import timestamp
@@ -295,11 +294,11 @@ def main():
 
                 # debug msgs to comfirm thread operation
                 # print(f"\nstate         : {g_tel_msg['state']}")
-                #print(f"imu heading   : {g_tel_msg['imu_dict']['heading']}")
+                g_logger.info(f"imu data : {g_tel_msg['imu_dict']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
-                #print(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
-                # print(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
+                g_logger.info(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 
             time.sleep(0.001)    
 
