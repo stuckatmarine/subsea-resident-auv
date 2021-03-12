@@ -50,11 +50,12 @@ class LocalSocketThread(threading.Thread):
         while not self.kill_received:
             try:
                 # blocks until data recieved, send 'stop' to break
-                print("internal socket blocking")
+                # print("internal socket blocking")
                 data, address = self.socket.recvfrom(4096)
                 data_dict = json.loads(data.decode("utf-8"))
                 
-                print(f"internal socket recvd:{data}")
+                # print(f"internal socket recvd:{data}")
+                self.logger.info(f"rx <- {data}")
 
                 if data_dict["msg_type"] == "telemetry":
                     self.tel_recv = data_dict
@@ -65,7 +66,7 @@ class LocalSocketThread(threading.Thread):
                     
                     self.socket.sendto(self.cmd_bytes, address)
                     self.last_cmd_sent = self.cmd["msg_num"]
-                    # self.logger.info(f"> addr:{address} data:{self.cmd_bytes}")
+                    self.logger.info(f"tx -> addr:{address} data:{self.cmd_bytes}")
 
                 elif data_dict["msg_type"] == "command":
                     for k in data_dict:
@@ -78,7 +79,7 @@ class LocalSocketThread(threading.Thread):
 
                     # update tel_bytes if not most current
                     if self.tel["msg_num"] > self.last_tel_sent:
-                        print(f"internal sending tel:{self.tel}")
+                        self.logger.info(f"tx tel -> {self.tel}")
                         self.tel_bytes = json.dumps(self.tel).encode("utf-8")
 
                     # immediatly log kill recvd in case msg is missed
@@ -88,7 +89,7 @@ class LocalSocketThread(threading.Thread):
                     
                     self.socket.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
-                    # self.logger.info(f"> addr:{address} data:{self.tel_bytes}")
+                    self.logger.info(f"tx -> addr:{address} data:{self.tel_bytes}")
 
                 elif data_dict["msg_type"] == "distance":
                     # update cmd_bytes if not most current
@@ -96,7 +97,7 @@ class LocalSocketThread(threading.Thread):
                     self.dist_values[sensor_idx] = data_dict["sensor_value"]
                     
                     self.socket.sendto(self.default_response, address)
-                    print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
+                    # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
 
                 # respond with srauv's default response
                 else:

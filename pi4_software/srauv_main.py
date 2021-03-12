@@ -211,10 +211,10 @@ def start_threads():
                                                                 g_tel_msg,
                                                                 idx,
                                                                 g_logger))
-        for idx in range(SETTINGS["dist_sensor_config"]["main_sensors"]):
-            g_threads.append(distance_sensor.DSThread(SETTINGS["dist_sensor_config"],
-                                                      g_tel_msg,
-                                                      idx))
+        # for idx in range(SETTINGS["dist_sensor_config"]["main_sensors"]):
+        #     g_threads.append(distance_sensor.DSThread(SETTINGS["dist_sensor_config"],
+        #                                               g_tel_msg,
+        #                                               idx))
         for t in g_threads:
             t.start()
 
