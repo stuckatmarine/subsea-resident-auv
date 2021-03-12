@@ -5,3 +5,6 @@ MLTraining/dopamine/*
 MLTraining/envs/old/*
 MLTraining/DataRecording/*/*.jpg
 MLTraining/DataRecording/*/*.csv
+apriltags/Frames/*
+apriltags/Videos/*
+apriltags/output_vid.avi
