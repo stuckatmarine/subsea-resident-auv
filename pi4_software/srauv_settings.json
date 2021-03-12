@@ -7,10 +7,10 @@
     },
     "external_ip": "",
     "external_port": 8001,
-    "internal_ip": "",
+    "internal_ip": "localhost",
     "main_msg_port": 7001,
     "main_cam_port": 7002,
-    "update_interval_ms": 50,
+    "update_interval_ms": 200,
     "default_comms_response_str": "",
     "waypoint_tolerence_m": 0.1,
     "fly_sim": false,
@@ -18,7 +18,6 @@
     "log_to_stdout": false,
     "dist_sensor_config":{
         "total_sensors": 5,
-        "main_sensors": 2,
         "min_cm": 10,
         "max_cm": 200,
         "poll_interval_ms": 100,
@@ -28,14 +27,22 @@
         "poll_interval_s": 0.1
     },
     "thruster_config":{
-        "num_thrusters": 1,
-        "max_thrust": 75,
+        "num_thrusters": 6,
+        "max_thrust": 25,
         "deadman_timeout_ms": 2000,
-        "thrust_interval_ms": 100,
+        "thrust_interval_ms": 200,
         "max_spd_min_range_m": 0.5,
         "board_id_base": 8,
         "board_id_shift": 6,
         "rpm_max": 2000,
+        "direction_arr":[
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
         "CAN_tx_ids":{
             "arm": 0,            
             "abort": 1,
@@ -60,31 +67,31 @@
         ],
         "fwd":[
             25,
-            25,
-            25,
+            0,
+            0,
             25,
             0,
             0
         ],
         "rev":[
+            -0,
             -25,
             -25,
-            -25,
-            -25,
+            -0,
             0,
             0
         ],
         "lat_right":[
             -25,
             25,
-            -25,
-            25,
+            -0,
+            0,
             0,
             0
         ],
         "lat_left":[
-            25,
-            -25,
+            0,
+            -0,
             25,
             -25,
             0,

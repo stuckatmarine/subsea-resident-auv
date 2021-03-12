@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #  zero_distance_sensor.py
 #  Read distance sensor value in thread and send over internal socket
-#  Usage: ./zero_distance_sensor.py -i 0 -a x.x.x.x:port
+#  Usage: ./zero_distance_sensor.py -i 0 -a 192.168.137.2:8001
 
 import asyncio
 import websockets
@@ -17,7 +17,7 @@ from srauv_settings import SETTINGS
 parser = argparse.ArgumentParser()
 
 parser.add_argument('-i','--sensor_idx', help='is to use in sensor array', required=True)
-parser.add_argument('-a','--addr', help='server websocket to connect to, ip:port', required=False)
+parser.add_argument('-a','--addr', help='server websocket to connect to, ip:port', required=True)
 args = parser.parse_args()
 
 uri = "ws://" + str(SETTINGS["external_ip"]) + ":" + str(SETTINGS["external_port"])
@@ -65,7 +65,7 @@ def main():
     }
 
     try:
-        ds_threads.append(distance_sensor.DSThread(config, sensor_idx, ds_data))
+        ds_threads.append(distance_sensor.DSThread(config, ds_data, sensor_idx))
         for t in ds_threads:
             t.start()
 
@@ -80,13 +80,13 @@ def main():
         close_gracefully()
 
     except Exception as e:
-        print(f"Exception in update loop, e:{e}")
+        print(f"Exception in loop, e:{e}")
         close_gracefully()
 
 if __name__ == "__main__":
     if args.sensor_idx != '':
         sensor_idx = int(args.sensor_idx)
-        if sensor_idx < 0 or sensor_idx >= config["num_sensors"]:
+        if sensor_idx < 0 or sensor_idx >= config["total_sensors"]:
             print(f"sensor_idx not valid, sensor_idx:{sensor_idx}")
             sys.exit()
 

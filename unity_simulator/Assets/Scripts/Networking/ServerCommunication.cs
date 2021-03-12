@@ -548,9 +548,9 @@ public class ServerCommunication : MonoBehaviour
         foreach(GameObject s in spotlights)
         {
             if (headlightSetting == "low")
-                s.SetActive(false);
-            else
                 s.SetActive(true);
+            else
+                s.SetActive(false);
         }
     } 
 

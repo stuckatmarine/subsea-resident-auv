@@ -6,6 +6,7 @@
 import threading
 import time
 import copy
+import ms5837
 
 import timestamp
 from srauv_settings import SETTINGS
@@ -15,20 +16,29 @@ if SETTINGS["hardware"]["i2c"] == True:
     import busio
     import adafruit_bno055
     i2c = busio.I2C(board.SCL, board.SDA)
-    sensor = adafruit_bno055.BNO055_I2C(i2c, 0x29)
+    sensor = ms5837.MS5837_02BA() # Default I2C bus is 1 (Raspberry Pi 3)
 
 class IMU_Thread(threading.Thread):
     def __init__(self, config:dict, tel:dict):
         threading.Thread.__init__(self)
         self.config             = config
         self.poll_interval_s    = config["poll_interval_s"]
-        self.values             = tel["imu_dict"]
+        self.values             = tel["depth"]
         self.kill_received      = False
         self.values["vel_x"]    = 0
         self.values["vel_y"]    = 0
         self.values["vel_z"]    = 0
 
     def read_sensor(self):
+        if sensor.read():
+            print("P: %0.1f mbar  %0.3f psi\tT: %0.2f C  %0.2f F") % (
+            sensor.pressure(), # Default is mbar (no arguments)
+            sensor.pressure(ms5837.UNITS_psi), # Request psi
+            sensor.temperature(), # Default is degrees C (no arguments)
+            sensor.temperature(ms5837.UNITS_Farenheit)) # Request Farenheit
+        else:
+            print("dist sensor read failed!")
+            exit(1)
         ## see telemetry_msg.py for "imu_values" that map to self.values
         self.values["heading"] = sensor.euler[0] # deg
         self.values["roll"] = sensor.euler[1] # deg
@@ -53,7 +63,10 @@ class IMU_Thread(threading.Thread):
 
     def run(self):
         if SETTINGS["hardware"]["i2c"] == True:
-            print(f"IMU thread up")
+            # We must initialize the sensor before reading it
+            if not sensor.init():
+                print("Sensor could not be initialized")
+                exit(1)
             while not self.kill_received:
                 try:
                     start_time = time.time()
