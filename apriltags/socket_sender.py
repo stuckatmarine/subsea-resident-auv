@@ -25,7 +25,7 @@ try:
 except socket.error:
     print(f"socket_sender failed to create socket {srauv_address}")
    
-def send_over_socket(x: float, y: float, z:float):
+def send_over_socket(x: float, y: float, z: float, h: float):
     global msg_num, last_tx_time_s
     if not socket_connected or time.time() - last_tx_time_s < socket_send_interval_s:
         return
@@ -34,6 +34,7 @@ def send_over_socket(x: float, y: float, z:float):
     last_tx_time_s = time.time()
     try:
         # Send position data to srauv_main
+        msg["heading"] = h
         msg["pos_x"] = x
         msg["pos_y"] = y
         msg["pos_z"] = z
