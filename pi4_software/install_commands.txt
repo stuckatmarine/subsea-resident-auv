@@ -98,3 +98,20 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 
 Following https://www.pyimagesearch.com/2019/09/16/install-opencv-4-on-raspberry-pi-4-and-raspbian-buster/
 to build opencv from scratch
+
+
+# FFMPEG Install for raw h264 video conversion
+
+Following --> http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/
+
+at ffmpeg make config use this instead
+./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --extra-ldflags="-latomic"
+
+# Save video stream
+1. Run this sink on Pi 4, can be run in background, low CPU usage
+gst-launch-1.0 udpsrc port=5004 ! application/x-rtp, payload=96 ! rtph264depay ! mpegtsmux  ! filesink location=~/AUV_Video/video_stream_raw.ts
+
+2. Start stream from Pi Zero, tee it if nessecary onto a different port for comp vision
+
+3. Run this in home different
+fmpeg -i ~/AUV_Video/video_stream_raw.ts -vcodec copy ~/AUV_Video/video_stream.mp4

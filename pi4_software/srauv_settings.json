@@ -1,7 +1,7 @@
 {
     "hardware":{
-        "can": false,
-        "i2c": false,
+        "can": true,
+        "i2c": true,
         "headlights": false,
         "leds": false
     },
