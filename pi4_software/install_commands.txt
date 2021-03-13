@@ -109,9 +109,9 @@ at ffmpeg make config use this instead
 
 # Save video stream
 1. Run this sink on Pi 4, can be run in background, low CPU usage
-gst-launch-1.0 udpsrc port=5004 ! application/x-rtp, payload=96 ! rtph264depay ! mpegtsmux  ! filesink location=~/AUV_Video/video_stream_raw.ts
+gst-launch-1.0 udpsrc port=5004 ! application/x-rtp, payload=96 ! rtph264depay ! mpegtsmux  ! filesink location=~/auv_video/video_stream_raw.ts
 
 2. Start stream from Pi Zero, tee it if nessecary onto a different port for comp vision
 
 3. Run this in home different
-fmpeg -i ~/AUV_Video/video_stream_raw.ts -vcodec copy ~/AUV_Video/video_stream.mp4
+ffmpeg -i ~/auv_video/video_stream_raw.ts -vcodec copy ~/auv_video/video_stream.mp4
