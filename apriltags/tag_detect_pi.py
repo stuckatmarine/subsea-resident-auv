@@ -16,6 +16,8 @@ import time
 from pupil_apriltags import Detector
 import math
 
+from socket_sender import send_over_socket
+
 # Define tag detector
 at_detector = Detector(families='tag16h5',
                        nthreads=4,
@@ -188,6 +190,7 @@ while True:
     
     # Write frame to recorded video
     video_out.write(frame)
+    send_over_socket(gAUVx, gAUVy, gAUVz)
 
 # Once finished, release / destroy windows
 print("Cleaning up...")
