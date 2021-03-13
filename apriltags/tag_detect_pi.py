@@ -16,8 +16,6 @@ import time
 from pupil_apriltags import Detector
 import math
 
-from socket_sender import send_over_socket
-
 # Define tag detector
 at_detector = Detector(families='tag16h5',
                        nthreads=4,
@@ -90,9 +88,7 @@ video_out = cv2.VideoWriter('output_vid.avi', vid_encoder, fps, frame_size)
 
 print("Camera sink open, Waiting for camera feed...")
 
-#cap_receive = cv2.VideoCapture('udpsrc port=5004 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! v4l2h264dec ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
 cap_receive = cv2.VideoCapture('udpsrc port=5004 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! v4l2h264dec capture-io-mode=4 ! v4l2convert capture-io-mode=4  ! appsink sync=false', cv2.CAP_GSTREAMER)
-
 
 print("Camera feed detected, press 'ctrl+c' to quit")
 
@@ -192,7 +188,6 @@ while True:
     
     # Write frame to recorded video
     video_out.write(frame)
-    send_over_socket(gAUVx, gAUVy, gAUVz)
 
 # Once finished, release / destroy windows
 print("Cleaning up...")
