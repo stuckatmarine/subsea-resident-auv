@@ -1,7 +1,7 @@
 {
     "hardware":{
-        "can": true,
-        "i2c": true,
+        "can": false,
+        "i2c": false,
         "headlights": false,
         "leds": false
     },
@@ -11,7 +11,7 @@
     "main_msg_port": 7001,
     "main_cam_port": 7002,
     "update_interval_ms": 200,
-    "default_comms_response_str": "",
+    "default_comms_response_str": "delf_resp",
     "waypoint_tolerence_m": 0.1,
     "fly_sim": false,
     "manual_deadman_timeout_ms": 5000,

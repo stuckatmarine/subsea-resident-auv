@@ -32,13 +32,12 @@ class LocalSocketThread(threading.Thread):
         self.tel_recv = tel_recv
         self.tel_bytes = json.dumps(self.tel).encode("utf-8")
         self.last_tel_sent = -1
-        self.cmd = cmd
         self.cmd_recv = cmd_recv
-        self.cmd_bytes = json.dumps(self.cmd).encode("utf-8")
         self.last_cmd_sent = -1
         self.cmd_with_kill_recvd = False
         self.default_response = str('dflt response').encode('utf-8') # for testing, '' also acceptable
         self.dist_values = tel["dist_values"]
+        self.tag_values = tel["tag_dict"]
 
         log_filename = str(f'Logs/{datetime.now().strftime("IS--%m-%d-%Y_%H-%M-%S")}.log')
         self.logger = logger.setup_logger("internal_socket_server", log_filename)
@@ -59,14 +58,16 @@ class LocalSocketThread(threading.Thread):
 
                 if data_dict["msg_type"] == "telemetry":
                     self.tel_recv = data_dict
-
                     # update cmd_bytes if not most current
-                    if self.cmd["msg_num"] > self.last_cmd_sent:
-                        self.cmd_bytes = json.dumps(self.cmd).encode("utf-8")
+                    # if self.cmd["msg_num"] > self.last_cmd_sent:
+                    #     self.cmd_bytes = json.dumps(self.cmd).encode("utf-8")
                     
-                    self.socket.sendto(self.cmd_bytes, address)
-                    self.last_cmd_sent = self.cmd["msg_num"]
-                    self.logger.info(f"tx -> addr:{address} data:{self.cmd_bytes}")
+                    # update tel_bytes if not most current
+                    if self.tel["msg_num"] > self.last_tel_sent:
+                        self.logger.info(f"tx tel -> {self.tel}")
+                        self.tel_bytes = json.dumps(self.tel).encode("utf-8")
+
+                    self.socket.sendto(self.tel_bytes, address)
 
                 elif data_dict["msg_type"] == "command":
                     for k in data_dict:
@@ -96,6 +97,14 @@ class LocalSocketThread(threading.Thread):
                     sensor_idx = data_dict["sensor_idx"]
                     self.dist_values[sensor_idx] = data_dict["sensor_value"]
                     
+                    self.socket.sendto(self.default_response, address)
+                    # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
+                
+                elif data_dict["msg_type"] == "position":
+                    self.tag_values["pos_x"] = data_dict["pos_x"]
+                    self.tag_values["pos_y"] = data_dict["pos_y"]
+                    self.tag_values["pos_z"] = data_dict["pos_z"]
+                    self.tag_values["heading"] = data_dict["heading"]
                     self.socket.sendto(self.default_response, address)
                     # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
 

@@ -35,8 +35,14 @@ def make(source, dest = ''):
             "magnetic_y" : 11.1,     
             "magnetic_z" : 11.1,     
         },
+        "tag_dict":{
+            "pos_x": 1.0,
+            "pos_y": 1.1,
+            "pos_z": 1.2,
+            "heading": 1.3
+        },
         "thrust_values":[      # clockwise from front of vehicle, lats then verts
-            0.0,            # FR: -100 to 100
+            0.0,            # FR:
             0.0,            # RR
             0.0,            # RL
             0.0,            # FL
