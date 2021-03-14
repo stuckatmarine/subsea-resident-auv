@@ -67,7 +67,8 @@ class ThrusterThread(threading.Thread):
         # notifier = can.Notifier(bus, [can.self.logger.infoer()])
     
     def send_msg(self, cmd_str: str, d: list):
-        return
+        if SETTINGS["hardware"]["can"] == False:
+            return # allows windows rpm debugging
         if self.can_up == True:
             can_id = self.board_id | self.tx_cmds[cmd_str]
             msg = can.Message(arbitration_id=can_id, data=d, is_extended_id=False)
@@ -120,12 +121,12 @@ class ThrusterThread(threading.Thread):
         pass
 
     def run(self):
-        # if SETTINGS["hardware"]["can"] == True:
-        #     self.send_msg("arm", [0x01])
-        #     time.sleep(1)
-        #     print ("thruster armed")
-        #     # TODO: check for armed msg, handle failure conditions
-        #     self.is_armed = True
+        if SETTINGS["hardware"]["can"] == True:
+            self.send_msg("arm", [0x01])
+            time.sleep(1)
+            print ("thruster armed")
+            # TODO: check for armed msg, handle failure conditions
+            self.is_armed = True
 
         while not self.kill_received:
             time_now = timestamp.now_int_ms()

@@ -31,6 +31,8 @@ public class ServerCommunication : MonoBehaviour
     public string headlightSetting = "low";
     public State controlState = State.Idle;
 
+    public Color32 grn = new Color32(0, 138, 20, 255);
+
     public TcpSocket sock; // tcpSocket ip and port set in other script
     public byte[] tcpTxBytes = new byte[65000];
     public byte[] tcpRxBytes = new byte[65000];
@@ -225,10 +227,15 @@ public class ServerCommunication : MonoBehaviour
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
-                    // Debug.Log("imu dict" + tel.imu_dict.heading);
                     telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
                     telState.GetComponent<TMPro.TextMeshProUGUI>().text = tel.state;
                     
+                    telX.parent.GetComponent<Image>().color = grn;
+                    telY.parent.GetComponent<Image>().color = grn;
+                    telZ.parent.GetComponent<Image>().color = grn;
+                    telHeading.parent.GetComponent<Image>().color = grn;
+                    telState.parent.GetComponent<Image>().color = grn;
+
                     forces = tel.thrust_values;
                     telDistanceFloats = tel.dist_values;
                     // for (int i = 0; i < 6; i++)
@@ -237,14 +244,14 @@ public class ServerCommunication : MonoBehaviour
                     // }
                     
                     // colorize/"max" limits
-                    for (int i = 0; i < 4; i++)
-                    {
-                        updateValues(i, latMin, latMax);
-                    }
-                    for (int i = 4; i < 6; i++)
-                    {
-                        updateValues(i, vertMin, vertMax);
-                    }
+                    // for (int i = 0; i < 4; i++)
+                    // {
+                    //     updateValues(i, latMin, latMax);
+                    // }
+                    // for (int i = 4; i < 6; i++)
+                    // {
+                    //     updateValues(i, vertMin, vertMax);
+                    // }
 
                     // for (int i = 0; i < 6; i++)
                     //     forces[i] = message.raw_thrust[i];
