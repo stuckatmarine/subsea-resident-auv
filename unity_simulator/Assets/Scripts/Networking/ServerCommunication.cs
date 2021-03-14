@@ -75,6 +75,7 @@ public class ServerCommunication : MonoBehaviour
     public Camera frontCam;
     private Texture2D frontCamTexture;
     private GameObject[] spotlights;
+    public GameObject targetWaypoint;
 
     //  UI
     public Transform simHeading;
@@ -235,6 +236,10 @@ public class ServerCommunication : MonoBehaviour
                     telZ.parent.GetComponent<Image>().color = grn;
                     telHeading.parent.GetComponent<Image>().color = grn;
                     telState.parent.GetComponent<Image>().color = grn;
+
+                    targetWaypoint.transform.position = new Vector3(tel.target_pos_x,
+                                                          tel.target_pos_y,
+                                                          tel.target_pos_z);
 
                     forces = tel.thrust_values;
                     telDistanceFloats = tel.dist_values;

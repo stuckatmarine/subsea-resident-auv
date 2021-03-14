@@ -22,6 +22,10 @@ public class TelemetryModel
     public float vel_z = 0.0f;
     public float depth;
     public float alt;
+    public float target_pos_x;
+    public float target_pos_y;
+    public float target_pos_z;
+    public float target_heading_to;
     public ImuModel imu_dict;
     public TagModel tag_dict;
     public float[] thrust_values;

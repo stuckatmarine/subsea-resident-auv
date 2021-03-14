@@ -54,7 +54,7 @@ class ThrusterThread(threading.Thread):
             self.can_up = True
         else:
             self.logger.warn(f"can not enabled in srauv_settings.json")
-            print(f"can not enabled in srauv_settings.json")
+            print(f"CAN not enabled in srauv_settings.json")
 
         print(f"Thruster thread {self.id} up, can_up:{self.can_up}")
         logger.info(f"Thruster thread {self.id} up, can_up:{self.can_up}")
@@ -115,7 +115,7 @@ class ThrusterThread(threading.Thread):
 
             self.send_msg("set_rpm", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
             # self.send_msg("set_rpm", [0x00,0x05,0xDC]) # low test value
-            print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM}")
+            # print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM}")
 
     def read_msg(self):
         pass

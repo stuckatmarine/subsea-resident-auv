@@ -44,7 +44,7 @@ from external_ws_server import SrauvExternalWSS_start
 G_MAIN_INTERNAL_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
 G_LOG_FILENAME = str(f'Logs/{datetime.now().strftime("SR--%m-%d-%Y_%H-%M-%S")}.log')
 G_THRUSTER_CONFIG = SETTINGS["thruster_config"]
-G_USE_SIM_POS = SETTINGS["fly_sim"] # False -> thrust self, True -> send cmds to sim to fly
+G_USE_SIM_SENSORS = SETTINGS["fly_sim"] # False -> thrust self, True -> send cmds to sim to fly
 
 g_logger = logger.setup_logger("srauv", G_LOG_FILENAME, SETTINGS["log_to_stdout"])
 g_tel_msg = telemetry_msg.make("srauv_main", "sim") # primary srauv data (shared mem)
@@ -54,7 +54,7 @@ g_incoming_cmd_num = 0
 g_threads  = []
 g_sub_processes = []
 
-## G_USE_SIM_POS, srauv will be fed telemtry data from the sim instead of using its sensor values
+## G_USE_SIM_SENSORS, srauv will be fed telemtry data from the sim instead of using its sensor values
 g_cmd_msg = command_msg.make("srauv_main", "sim") # if g_srauv_fly_sim
 g_tel_recv = telemetry_msg.make("dflt_src", "dflt_dest") # if fly sim, use sim data, pi decisions
 
@@ -70,7 +70,7 @@ def update_telemetry():
     g_tel_msg["msg_num"] += 1
     g_tel_msg["timestamp"] = timestamp.now_string()
 
-    if G_USE_SIM_POS:
+    if G_USE_SIM_SENSORS:
         g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
         g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
         g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
@@ -88,9 +88,13 @@ def update_telemetry():
         g_tel_msg["imu_dict"]["heading"] = g_incoming_cmd["imu_dict"]["heading"]
 
     else:
-        g_tel_msg["alt"] = g_tel_msg["dist_values"][4]
+        g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
+        g_tel_msg["pos_x"] = g_tel_msg["tag_dict"]["pos_x"]
+        g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_y"]
+        g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_z"]
+        g_tel_msg["heading"] = g_tel_msg["tag_dict"]["heading"]
     
-    g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
+    # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
 def go_to_idle():
     g_tel_msg["state"] = "idle"
@@ -98,13 +102,13 @@ def go_to_idle():
     g_logger.info("--- State -> IDLE ---")
 
 def evaluate_state():
-    global g_last_topside_cmd_time_ms
+    global g_last_topside_cmd_time_ms, target
     if g_tel_msg["state"] == "idle":
         g_tel_msg["thrust_enabled"][0] = False
 
     elif g_tel_msg["state"] == "autonomous":
         g_tel_msg["thrust_enabled"][0] = True
-        if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_POS):
+        if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
             g_logger.warning(f"No more waypoints to find")
             go_to_idle()
 
@@ -115,12 +119,20 @@ def evaluate_state():
         else:
             g_tel_msg["thrust_enabled"][0] = True
 
+        # waypoint debug
+        if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
+            g_logger.warning(f"No more waypoints to find")
+        print(f"pos    x:{g_tel_msg['pos_x']}")
+        print(f"target x:{g_tel_msg['target_pos_x']}")
+        dist_x = g_tel_msg["pos_z"] - g_tel_msg['target_pos_x']
+        print(f"dist   x:{dist_x}")
+
 def parse_received_command():
     # check kill condition first for safety
     if g_incoming_cmd["force_state"] == "kill":
         close_gracefully()
 
-    global g_incoming_cmd_num, G_USE_SIM_POS, g_last_topside_cmd_time_ms
+    global g_incoming_cmd_num, G_USE_SIM_SENSORS, g_last_topside_cmd_time_ms
 
     #  only use new msgs/ not same msg twice
     if g_incoming_cmd["msg_num"] <= g_incoming_cmd_num:
@@ -148,9 +160,9 @@ def parse_received_command():
         headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
     # if g_incoming_cmd["action"] == "fly_sim_true":
-    #     G_USE_SIM_POS = True
+    #     G_USE_SIM_SENSORS = True
     # elif g_incoming_cmd["action"] == "fly_sim_false":
-    #     G_USE_SIM_POS = False
+    #     G_USE_SIM_SENSORS = False
 
 ########  thrust  ########
 def add_thrust(val_arr, amt):
@@ -220,8 +232,10 @@ def calculate_thrust():
 ########  Process Helper Functions  ########
 def start_threads():
     try:
-        g_threads.append(imu_sensor.IMU_Thread(SETTINGS["imu_sensor_config"],
-                                               g_tel_msg))
+        if not G_USE_SIM_SENSORS:
+            g_threads.append(imu_sensor.IMU_Thread(SETTINGS["imu_sensor_config"],
+                                                g_tel_msg))
+
         g_threads.append(internal_socket_server.LocalSocketThread(G_MAIN_INTERNAL_ADDR,
                                                                   g_tel_msg,
                                                                   g_cmd_msg,
@@ -297,7 +311,7 @@ def main():
 
                 parse_received_command()
 
-                # if G_USE_SIM_POS: # Use sim values and send sim cmds
+                # if G_USE_SIM_SENSORS: # Use sim values and send sim cmds
                 #     srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
                 #     srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
                 # else:
@@ -315,8 +329,8 @@ def main():
                 last_update_ms = time_now   
 
                 # debug msgs to comfirm thread operation
-                # print(f"\nstate         : {g_tel_msg['state']}")
-                g_logger.info(f"imu data : {g_tel_msg['imu_dict']}")
+                g_logger.info(f"state         : {g_tel_msg['state']}")
+                g_logger.info(f"imu data     : {g_tel_msg['imu_dict']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
                 g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")

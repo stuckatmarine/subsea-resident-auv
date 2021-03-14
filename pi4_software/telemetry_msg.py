@@ -21,6 +21,7 @@ def make(source, dest = ''):
         "target_pos_x": 0.0,
         "target_pos_y": 0.0,
         "target_pos_z": 0.0,
+        "target_heading_to": 0.0,
         "imu_dict":{
             "heading" : 315.1,       # deg
             "roll" : 315.2,          

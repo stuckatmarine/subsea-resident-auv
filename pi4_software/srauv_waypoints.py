@@ -22,12 +22,10 @@ def setup_waypoints(logger):
             print(f"Adding waypoint {w}:'{route[w]}'")
             g_waypoints.append(route[w])
 
-def update_waypoint(tel_msg: dict, logger: classmethod, srauv_fly_sim: bool):
+def update_waypoint(tel_msg, logger, srauv_fly_sim):
     global g_waypoint_idx
     if g_waypoint_idx == -1:
         return False
-
-    global t_dist_x, t_dist_y, t_dist_z, t_heading_off
 
     #  TODO add velocity and hold duration handling
     try:
@@ -35,13 +33,14 @@ def update_waypoint(tel_msg: dict, logger: classmethod, srauv_fly_sim: bool):
         tol = target["tolerance"]
 
         tel_msg["target_pos_x"] = target["pos_x"]
-        tel_msg["target_pos_y"] = target["pos_y"]
-        tel_msg["target_pos_z"] = target["pos_z"]
+        tel_msg["target_pos_y"]  = target["pos_y"]
+        tel_msg["target_pos_z"]  = target["pos_z"]
         
         t_dist_x = tel_msg["pos_x"] - target["pos_x"]
         t_dist_y = tel_msg["pos_y"] - target["pos_y"]
         t_dist_z = tel_msg["pos_z"] - target["pos_z"]
         t_heading_off = tel_msg["heading"] - math.degrees(math.atan2(t_dist_z, t_dist_x))
+        tel_msg["target_heading_to"]  = t_heading_off
         if t_heading_off > 180.0:
             t_heading_off -= 180.0
         elif t_heading_off < 180.0:
