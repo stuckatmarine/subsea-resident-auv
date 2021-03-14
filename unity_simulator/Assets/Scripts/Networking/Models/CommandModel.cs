@@ -14,6 +14,9 @@ public class CommandModel
     public float pos_x = 0.0f;
     public float pos_y = 0.0f;
     public float pos_z = 0.0f;
+    public float vel_x = 0.0f;
+    public float vel_y = 0.0f;
+    public float vel_z = 0.0f;
     public float heading = 0.0f;
     public float depth = 0.0f;
     public float alt = 0.0f;

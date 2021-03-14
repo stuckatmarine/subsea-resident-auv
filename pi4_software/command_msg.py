@@ -13,6 +13,9 @@ def make(source, dest = ''):
         "pos_x": 1.0,   # for fly by sim pos
         "pos_y": 1.1,   # for fly by sim pos
         "pos_z": 1.2,   # for fly by sim pos
+        "vel_x" : 11.1,          # m / s , interpolated
+        "vel_y" : 12.1,
+        "vel_z" : 11.1,
         "heading": 1.3, # for fly by sim pos
         "imu_dict":{
             "heading" : 315.1,       # deg

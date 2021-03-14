@@ -17,6 +17,9 @@ public class TelemetryModel
     public float pos_x;
     public float pos_y;
     public float pos_z;
+    public float vel_x = 0.0f;
+    public float vel_y = 0.0f;
+    public float vel_z = 0.0f;
     public float depth;
     public float alt;
     public ImuModel imu_dict;

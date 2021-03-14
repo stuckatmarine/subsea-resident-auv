@@ -5,7 +5,7 @@
         "headlights": false,
         "leds": false
     },
-    "fly_sim": false,
+    "fly_sim": true,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,

@@ -27,7 +27,7 @@ from time import perf_counter
 from multiprocessing import Process
 
 # Custome imports
-import srauv_navigation
+import srauv_waypoints
 import imu_sensor
 import thruster_controller
 import timestamp
@@ -69,7 +69,27 @@ t_heading_off = 0.0
 def update_telemetry():
     g_tel_msg["msg_num"] += 1
     g_tel_msg["timestamp"] = timestamp.now_string()
-    g_tel_msg["alt"] = g_tel_msg["dist_values"][4]
+
+    if G_USE_SIM_POS:
+        g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
+        g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
+        g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
+        g_tel_msg["heading"] = g_incoming_cmd["heading"]
+        g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
+        g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
+        g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
+        g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
+        g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
+        g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
+        g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
+        g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
+        g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
+        g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
+        g_tel_msg["imu_dict"]["heading"] = g_incoming_cmd["imu_dict"]["heading"]
+
+    else:
+        g_tel_msg["alt"] = g_tel_msg["dist_values"][4]
+    
     g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
 def go_to_idle():
@@ -84,7 +104,8 @@ def evaluate_state():
 
     elif g_tel_msg["state"] == "autonomous":
         g_tel_msg["thrust_enabled"][0] = True
-        if not srauv_navigation.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_POS):
+        if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_POS):
+            g_logger.warning(f"No more waypoints to find")
             go_to_idle()
 
     elif g_tel_msg["state"] == "manual":
@@ -126,10 +147,10 @@ def parse_received_command():
         g_tel_msg["headlights_setting"] = g_incoming_cmd["headlight_setting"]
         headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
-    if g_incoming_cmd["action"] == "fly_sim_true":
-        G_USE_SIM_POS = True
-    elif g_incoming_cmd["action"] == "fly_sim_false":
-        G_USE_SIM_POS = False
+    # if g_incoming_cmd["action"] == "fly_sim_true":
+    #     G_USE_SIM_POS = True
+    # elif g_incoming_cmd["action"] == "fly_sim_false":
+    #     G_USE_SIM_POS = False
 
 ########  thrust  ########
 def add_thrust(val_arr, amt):
@@ -263,7 +284,7 @@ def main():
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
     headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
-    srauv_navigation.setup_waypoints(g_logger)
+    srauv_waypoints.setup_waypoints(g_logger)
 
     start_threads()
 
@@ -276,13 +297,13 @@ def main():
 
                 parse_received_command()
 
-                if G_USE_SIM_POS: # Use sim values and send sim cmds
-                    srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
-                    srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
-                else:
-                    update_telemetry() # use sensor values and thrusters
+                # if G_USE_SIM_POS: # Use sim values and send sim cmds
+                #     srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
+                #     srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
+                # else:
+                update_telemetry() # use sensor values and thrusters
 
-                srauv_navigation.estimate_position(g_tel_msg)
+                srauv_waypoints.estimate_position(g_tel_msg)
 
                 evaluate_state()
                 
