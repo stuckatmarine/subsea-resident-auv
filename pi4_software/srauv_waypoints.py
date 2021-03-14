@@ -60,6 +60,10 @@ def update_waypoint(tel_msg, logger, srauv_fly_sim):
                 logger.info(f"Waypoint reached, no more in path. Requesting Idle")
                 print(f"Waypoint reached, no more in path. Requesting Idle")
                 return False
+        else:
+            print(f'tel  xyz {tel_msg["pos_x"]} {tel_msg["pos_y"]} {tel_msg["pos_z"]}')
+            print(f'tar  xyz {target["pos_x"]} {target["pos_y"]} {target["pos_z"]}')
+            print(f"dist xyz {t_dist_x} {t_dist_y} {t_dist_z}")
 
     except Exception as e:
         logger.error(f"Error updating waypoints, err:{e}")

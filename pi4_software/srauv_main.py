@@ -122,10 +122,6 @@ def evaluate_state():
         # waypoint debug
         if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
             g_logger.warning(f"No more waypoints to find")
-        print(f"pos    x:{g_tel_msg['pos_x']}")
-        print(f"target x:{g_tel_msg['target_pos_x']}")
-        dist_x = g_tel_msg["pos_z"] - g_tel_msg['target_pos_x']
-        print(f"dist   x:{dist_x}")
 
 def parse_received_command():
     # check kill condition first for safety
