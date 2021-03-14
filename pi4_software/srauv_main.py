@@ -67,11 +67,9 @@ def update_telemetry():
         g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
         g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
         g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
-       
+        g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
         if g_incoming_cmd["imu_dict"]["heading"] < 0:
-             g_tel_msg["heading"] = -g_incoming_cmd["imu_dict"]["heading"]
-        else:
-             g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
+            g_tel_msg["heading"] = -g_tel_msg["heading"]
         g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
@@ -188,7 +186,7 @@ def calculate_thrust():
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
 
             # isolate rot from lateral movement
-            print(f'tel heading {g_tel_msg["heading"]}')
+            # print(f'tel heading {g_tel_msg["heading"]}')
             if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
             elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
