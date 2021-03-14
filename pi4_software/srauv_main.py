@@ -58,13 +58,6 @@ g_sub_processes = []
 g_cmd_msg = command_msg.make("srauv_main", "sim") # if g_srauv_fly_sim
 g_tel_recv = telemetry_msg.make("dflt_src", "dflt_dest") # if fly sim, use sim data, pi decisions
 
-# TODO: simple flight system based on target waypoint
-vel_rot = 0.0
-t_dist_x = 0.0
-t_dist_y = 0.0
-t_dist_z = 0.0
-t_heading_off = 0.0
-
 ########  State  ########
 def update_telemetry():
     g_tel_msg["msg_num"] += 1
@@ -102,7 +95,7 @@ def go_to_idle():
     g_logger.info("--- State -> IDLE ---")
 
 def evaluate_state():
-    global g_last_topside_cmd_time_ms, target
+    global g_last_topside_cmd_time_ms
     if g_tel_msg["state"] == "idle":
         g_tel_msg["thrust_enabled"][0] = False
 
@@ -166,7 +159,7 @@ def add_thrust(val_arr, amt):
         val_arr[i] += amt[i]
 
 def calculate_thrust():
-    global G_THRUSTER_CONFIG, t_dist_x, t_dist_y, t_dist_z, t_heading_off
+    global G_THRUSTER_CONFIG, SETTINGS, g_tel_msg
     new_thrust_values = [0, 0, 0, 0, 0, 0]
 
     if g_tel_msg["thrust_enabled"][0] == False:
@@ -177,29 +170,34 @@ def calculate_thrust():
     # TODO add PID smoothing/ thrust slowing when nearing target
     
     if g_tel_msg["state"] == "autonomous":
-        if abs(t_dist_x) > G_THRUSTER_CONFIG["max_spd_min_range_m"]:
-            if t_dist_x > 0:
+        if SETTINGS["use_ai_thrust"]:
+            print("TODO ai model thrust getter")
+        else:
+            ## simple grute force thrust try
+            t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
+            t_dist_y = g_tel_msg["pos_y"] - g_tel_msg["target_pos_y"]
+            t_dist_z = g_tel_msg["pos_z"] - g_tel_msg["target_pos_z"]
+
+            if t_dist_y > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
+            elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
+
+            # isolate rot from lateral movement
+            # if g_tel_msg["heading"] > 15:
+            #     add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
+            # elif g_tel_msg["heading"] < 15:
+            #     add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
+            # else:
+            if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
-            else:
+            elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
 
-        if abs(t_dist_y) > G_THRUSTER_CONFIG["max_spd_min_range_m"]:
-            if t_dist_y > 0:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-            else:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
-
-        if abs(t_dist_z) > G_THRUSTER_CONFIG["max_spd_min_range_m"]:
-            if t_dist_z > 0:
+            if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
-            else:
+            elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
-
-        # if abs(t_heading_off) > WAYPOINT_INFO["targets"][waypoint_path[waypoint_idx]]["heading_tol"]:
-        #     if t_heading_off > 0:
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
-        #     else:
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
 
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]

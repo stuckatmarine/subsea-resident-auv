@@ -6,6 +6,7 @@
         "leds": false
     },
     "fly_sim": true,
+    "use_ai_thrust": false,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,
@@ -31,7 +32,7 @@
         "max_thrust": 60,
         "deadman_timeout_ms": 2000,
         "thrust_interval_ms": 200,
-        "max_spd_min_range_m": 0.5,
+        "thrust_dist_thershold_m": 0.2,
         "board_id_base": 8,
         "board_id_shift": 6,
         "rpm_max": 2000,
