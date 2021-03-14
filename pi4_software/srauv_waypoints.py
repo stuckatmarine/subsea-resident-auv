@@ -52,6 +52,7 @@ def update_waypoint(tel_msg, logger, srauv_fly_sim):
         elif g_t_heading_off < 180.0:
             g_t_heading_off += 180.0
         tel_msg["target_heading_to"]  = g_t_heading_off
+        # print(f"target heading to {g_t_heading_off}")
 
         # if waypoint reached go to next
         if (abs(g_t_dist_x) < tol and

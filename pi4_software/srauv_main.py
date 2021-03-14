@@ -67,7 +67,11 @@ def update_telemetry():
         g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
         g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
         g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
-        g_tel_msg["heading"] = g_incoming_cmd["heading"]
+       
+        if g_incoming_cmd["imu_dict"]["heading"] < 0:
+             g_tel_msg["heading"] = -g_incoming_cmd["imu_dict"]["heading"]
+        else:
+             g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
         g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
@@ -184,20 +188,21 @@ def calculate_thrust():
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
 
             # isolate rot from lateral movement
-            # if g_tel_msg["heading"] > 15:
-            #     add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
-            # elif g_tel_msg["heading"] < 15:
-            #     add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
-            # else:
-            if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
-            elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
+            print(f'tel heading {g_tel_msg["heading"]}')
+            if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
+            elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
+            else:
+                if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
+                elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
 
-            if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
-            elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
+                if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
+                elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
+                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
 
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
@@ -311,7 +316,7 @@ def main():
                 # else:
                 update_telemetry() # use sensor values and thrusters
 
-                srauv_waypoints.estimate_position(g_tel_msg)
+                # srauv_waypoints.estimate_position(g_tel_msg)
 
                 evaluate_state()
                 
@@ -327,6 +332,8 @@ def main():
                 g_logger.info(f"imu data     : {g_tel_msg['imu_dict']}")
                 #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
                 g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
+                g_logger.info(f"tel msg       : {g_tel_msg}")
+                # print(f"tel msg heading   : {g_tel_msg['heading']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 g_logger.info(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 

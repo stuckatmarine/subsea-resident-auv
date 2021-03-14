@@ -297,6 +297,7 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.depth = distancesFloat[4];
         tel_msg.alt = distancesFloat[5];
         tel_msg.imu_dict.heading = srauv.rotation.y * 360.0f;
+        tel_msg.heading = srauv.rotation.y * 360.0f;
         tel_msg.imu_dict.gyro_y = rb.angularVelocity.y;
         tel_msg.imu_dict.vel_x = rb.velocity.x;
         tel_msg.imu_dict.vel_y = rb.velocity.y;

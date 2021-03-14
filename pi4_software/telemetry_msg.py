@@ -15,6 +15,7 @@ def make(source, dest = ''):
         "pos_z" : 1.1,              # navigation est 
         "depth" : 0.0,              # sensor val
         "alt" : 0.0,                # sensor val
+        "heading" : 0.0,                # sensor val
         "vel_x" : 11.1,          # m / s , interpolated
         "vel_y" : 12.1,
         "vel_z" : 11.1,
