@@ -63,7 +63,7 @@ def update_telemetry():
     g_tel_msg["msg_num"] += 1
     g_tel_msg["timestamp"] = timestamp.now_string()
 
-    if G_USE_SIM_SENSORS:
+    if G_USE_SIM_SENSORS == True:
         g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
         g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
         g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
@@ -115,7 +115,7 @@ def evaluate_state():
             g_tel_msg["thrust_enabled"][0] = True
 
         # waypoint debug
-        if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
+        if srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS) == False:
             g_logger.warning(f"No more waypoints to find")
 
 def parse_received_command():
@@ -308,27 +308,27 @@ def main():
 
                 parse_received_command()
 
-                # if G_USE_SIM_SENSORS: # Use sim values and send sim cmds
-                #     srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
-                #     srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
-                # else:
+                # # if G_USE_SIM_SENSORS: # Use sim values and send sim cmds
+                # #     srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
+                # #     srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
+                # # else:
                 update_telemetry() # use sensor values and thrusters
 
-                # srauv_waypoints.estimate_position(g_tel_msg)
+                srauv_waypoints.estimate_position(g_tel_msg)
 
                 evaluate_state()
                 
                 calculate_thrust()
 
-                # update loop performance timer
+                # # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-                # g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
+                g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
 
                 # debug msgs to comfirm thread operation
-                g_logger.info(f"state         : {g_tel_msg['state']}")
-                g_logger.info(f"imu data     : {g_tel_msg['imu_dict']}")
-                #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
+                # g_logger.info(f"state         : {g_tel_msg['state']}")
+                # g_logger.info(f"imu data     : {g_tel_msg['imu_dict']}")
+                # #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
                 g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 g_logger.info(f"tel msg       : {g_tel_msg}")
                 # print(f"tel msg heading   : {g_tel_msg['heading']}")

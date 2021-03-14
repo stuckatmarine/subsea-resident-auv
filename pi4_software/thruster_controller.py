@@ -73,7 +73,7 @@ class ThrusterThread(threading.Thread):
             can_id = self.board_id | self.tx_cmds[cmd_str]
             msg = can.Message(arbitration_id=can_id, data=d, is_extended_id=False)
             self.bus.send(msg)
-            self.logger.info(f"Thruster sending CAN_id:{can_id} data:{d}")
+            self.logger.info(f"Thruster sending CAN_id:{can_id:03x} data:{d}")
         else:
             self.logger.warning(f"CANBUS not up, thruster id: \
                 {self.id} thrust_enabled:{self.thrust_enabled[0]} motor_on:{self.is_motor_on}")
@@ -113,9 +113,11 @@ class ThrusterThread(threading.Thread):
             if self.config["direction_arr"][self.id] == False:
                 thrust_dir = 0x01 if thrust_dir == 0x00 else 0x00
 
-            self.send_msg("set_rpm", [thrust_dir, (int(thrust_RPM) >> 16) & 0xff, int(thrust_RPM) & 0xff])
+            th_hi = (int(thrust_RPM) >> 8) & 0xff
+            th_lo = int(thrust_RPM) & 0xff
+            self.send_msg("set_rpm", [thrust_dir, th_hi, th_lo])
             # self.send_msg("set_rpm", [0x00,0x05,0xDC]) # low test value
-            # print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM}")
+            print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM} th_hi:{th_hi} th_lo:{th_lo}")
 
     def read_msg(self):
         pass
@@ -139,7 +141,7 @@ class ThrusterThread(threading.Thread):
             except Exception as oof:
                 self.logger.info(oof)
             
-        #     self.send_msg("motor_onoff", [0x00])
+        self.send_msg("motor_onoff", [0x00])
 
         # else:
         #     self.logger.warn(f"setting hardware CAN not enabled for thruster id{self.id}")
