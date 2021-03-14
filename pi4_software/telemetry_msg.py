@@ -15,6 +15,9 @@ def make(source, dest = ''):
         "pos_z" : 1.1,              # navigation est 
         "depth" : 0.0,              # sensor val
         "alt" : 0.0,                # sensor val
+        "target_pos_x": 0.0,
+        "target_pos_y": 0.0,
+        "target_pos_z": 0.0,
         "imu_dict":{
             "heading" : 315.1,       # deg
             "roll" : 315.2,          

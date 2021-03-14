@@ -84,7 +84,8 @@ def evaluate_state():
 
     elif g_tel_msg["state"] == "autonomous":
         g_tel_msg["thrust_enabled"][0] = True
-        srauv_navigation.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_POS)
+        if not srauv_navigation.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_POS):
+            go_to_idle()
 
     elif g_tel_msg["state"] == "manual":
         if timestamp.now_int_ms() - g_last_topside_cmd_time_ms > SETTINGS["manual_deadman_timeout_ms"]:
@@ -262,7 +263,7 @@ def main():
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
     headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
-    srauv_navigation.setup_waypoints(logger)
+    srauv_navigation.setup_waypoints(g_logger)
 
     start_threads()
 

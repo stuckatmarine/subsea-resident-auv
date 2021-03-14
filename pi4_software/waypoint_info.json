@@ -1,11 +1,12 @@
 {
     "route":{
-        "0": "base_corner_lo",
-        "1": "middle_tank_lo",
-        "2": "middle_tank_hi",
-        "3": "middle_tank_lo",
-        "4": "base_corner_lo",
-        "5": "base_corner_surface"
+        "0": "base_corner_surface",
+        "1": "base_corner_lo",
+        "2": "middle_tank_lo",
+        "3": "middle_tank_hi",
+        "4": "middle_tank_lo",
+        "5": "base_corner_lo",
+        "6": "base_corner_surface"
     },
     "targets":{
         "base_corner_lo":{
