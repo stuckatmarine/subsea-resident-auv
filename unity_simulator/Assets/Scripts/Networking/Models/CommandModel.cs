@@ -11,6 +11,13 @@ public class CommandModel
     public string timestamp = "";
     public string force_state = "";
     public string action = "";
+    public float pos_x = 0.0f;
+    public float pos_y = 0.0f;
+    public float pos_z = 0.0f;
+    public float heading = 0.0f;
+    public float depth = 0.0f;
+    public float alt = 0.0f;
+    public ImuModel imu_dict;
     public bool can_thrust = false;
     public string headlight_setting = "low";
     public string thrust_type = "";

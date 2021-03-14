@@ -15,7 +15,8 @@ msg = {
     "timestamp" : time.strftime("%Y-%m-%d %H:%M.%S"),
     "pos_x" : -0.1,
     "pos_y" : -0.2,
-    "pos_z" : -0.3
+    "pos_z" : -0.3,
+    "heading" : 0.4
 }
 
 try:
@@ -34,10 +35,10 @@ def send_over_socket(x: float, y: float, z: float, h: float):
     last_tx_time_s = time.time()
     try:
         # Send position data to srauv_main
-        msg["heading"] = h
         msg["pos_x"] = x
         msg["pos_y"] = y
         msg["pos_z"] = z
+        msg["heading"] = h
         print(f"socket_sender tx msg:{msg}")
         srauv_socket.sendto(json.dumps(msg).encode("utf-8"), srauv_address)
         # Get response from srauv_main. Log it

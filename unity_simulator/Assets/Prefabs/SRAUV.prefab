@@ -5851,7 +5851,7 @@ Transform:
   m_GameObject: {fileID: 3969754098235947163}
   m_LocalRotation: {x: 0, y: -0.08582548, z: 0, w: 0.99631023}
   m_LocalPosition: {x: -6.87, y: 3.56, z: -10.27}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4668923053820840022}
   - {fileID: 4144422238014630051}
@@ -5968,12 +5968,23 @@ MonoBehaviour:
   - {fileID: 6158722733538739871}
   - {fileID: 6158722734254519704}
   - {fileID: 6158722733504306075}
+  UiVertThrusters: []
+  UiLatThrusters: []
+  raw_thrust: []
+  raw_thrust_spd: 25
+  dir_thrust: []
   rb: {fileID: 6158722734134646902}
   vertSpd: 50
   latSpd: 40
+  enableManualCmds: 1
+  enableAbsoluteCmds: 0
   WS: {fileID: 0}
   lineMaterial: {fileID: 2100000, guid: b3a6b8fd01e90e34d900e8a7718d9886, type: 2}
-  drawLines: 1
+  drawLinesCmd: 0
+  drawLinesManual: 1
+  raw_thrust_used: 0
+  dir_thrust_used: 0
+  lean_training: 0
 --- !u!114 &6158722733243486063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6027,6 +6038,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  distancesFloat: []
   latMax: 20
   latMin: 1
   vertMax: 20
@@ -6034,8 +6046,8 @@ MonoBehaviour:
   colorValid: {r: 0.14578143, g: 0.72156864, b: 0.24349172, a: 0}
   colorHigh: {r: 0.6037736, g: 0.10537558, b: 0.10537558, a: 0}
   colorLow: {r: 0.07524917, g: 0.39821818, b: 0.8396226, a: 0}
-  lineMaterial: {fileID: 2100000, guid: 65981a962ab5c4e4e97468409d6c12b0, type: 2}
   drawLines: 1
+  lean_training: 0
 --- !u!1 &4044469542586913633
 GameObject:
   m_ObjectHideFlags: 0

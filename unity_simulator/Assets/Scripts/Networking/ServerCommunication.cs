@@ -130,7 +130,8 @@ public class ServerCommunication : MonoBehaviour
         //tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
         //tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
-        frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
+        if (sendScreenshots)
+            frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
         if (!useTcpSocket)
         {
@@ -411,6 +412,23 @@ public class ServerCommunication : MonoBehaviour
         DateTime timestamp = DateTime.Now;
         cmd_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
         
+        cmd_msg.pos_x = srauv.position.x;
+        cmd_msg.pos_y = srauv.position.y;
+        cmd_msg.pos_z = srauv.position.z;
+        cmd_msg.depth = distancesFloat[4];
+        cmd_msg.alt = distancesFloat[5];
+        cmd_msg.imu_dict.pitch = srauv.rotation.x * 360.0f;
+        cmd_msg.imu_dict.heading = srauv.rotation.y * 360.0f;
+        cmd_msg.imu_dict.roll = srauv.rotation.z * 360.0f;
+        cmd_msg.imu_dict.gyro_x = rb.angularVelocity.x;
+        cmd_msg.imu_dict.gyro_y = rb.angularVelocity.y;
+        cmd_msg.imu_dict.gyro_z = rb.angularVelocity.z;
+        cmd_msg.imu_dict.linear_accel_x = (rb.velocity.x - cmd_msg.imu_dict.vel_x) / Time.fixedDeltaTime;
+        cmd_msg.imu_dict.linear_accel_y = (rb.velocity.y - cmd_msg.imu_dict.vel_y) / Time.fixedDeltaTime;
+        cmd_msg.imu_dict.linear_accel_z = (rb.velocity.z - cmd_msg.imu_dict.vel_z) / Time.fixedDeltaTime;
+        cmd_msg.imu_dict.vel_x = rb.velocity.x;
+        cmd_msg.imu_dict.vel_y = rb.velocity.y;
+        cmd_msg.imu_dict.vel_z = rb.velocity.z;
         
         for (int i = 0; i < 4; i++)
         {

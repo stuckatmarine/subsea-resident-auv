@@ -44,7 +44,7 @@ public class Pilot : Agent
     public float YawSpd = 5.0f;
 
     private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3 TankMaxs = new Vector3(12.0f, 6.0f, 12.0f);
+    private Vector3 TankMaxs = new Vector3(3.6576f, 3.6576f, 3.6576f);
 
     private EnvironmentParameters resetParams;
     private StatsRecorder statsRecorder;
@@ -210,7 +210,7 @@ public class Pilot : Agent
         srauv.position = GetRandomLocation();
         goal = GetRandomLocation(); // maybe check its not to close already
         goalBox.position = goal;
-        startPos.position = new Vector3(tank.position.x, 12.0f, tank.position.z);
+        startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
         
         // reset current rotation
         srauv.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
@@ -227,9 +227,9 @@ public class Pilot : Agent
     IEnumerator TargetReachedSwapGroundMaterial(Transform ind, float time)
     {
 
-        ind.position = new Vector3(tank.position.x + 6.0f, 0.0f, tank.position.z + 6.0f);
+        ind.position = new Vector3(tank.position.x + 1.8288f, 0.0f, tank.position.z + 1.8288f);
         yield return new WaitForSeconds(time); // Wait for 2 sec
-        ind.position = new Vector3(tank.position.x + 6.0f, -1.0f, tank.position.z + 6.0f);
+        ind.position = new Vector3(tank.position.x + 1.8288f, -0.3048f, tank.position.z + 1.8288f);
     }
 
     private Vector3 GetRandomLocation()
@@ -239,9 +239,9 @@ public class Pilot : Agent
 
         do
         {
-            x = Random.Range(-tankBounds.extents.x * 0.75f, tankBounds.extents.x * 0.75f) + tank.position.x + 6.0f;
+            x = Random.Range(-tankBounds.extents.x * 0.75f, tankBounds.extents.x * 0.75f) + tank.position.x + 1.8288f;
             y = Random.Range(TankMins.y, TankMaxs.y);
-            z = Random.Range(-tankBounds.extents.z * 0.75f, tankBounds.extents.z * 0.75f) + tank.position.z + 6.0f;
+            z = Random.Range(-tankBounds.extents.z * 0.75f, tankBounds.extents.z * 0.75f) + tank.position.z + 1.8288f;
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
