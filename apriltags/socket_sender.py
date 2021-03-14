@@ -4,7 +4,7 @@ import time
 import json
 
 socket_connected = False
-srauv_address = ("192.168.137.2", 7001)
+srauv_address = ("localhost", 7001)
 last_tx_time_s = 0
 socket_send_interval_s = 0.200
 msg_num = -1

@@ -23,7 +23,7 @@ at_detector = Detector(families='tag16h5',
                        quad_decimate=2.0,
                        quad_sigma=0.0,
                        refine_edges=1,
-                       decode_sharpening=0.50,
+                       decode_sharpening=0.25,
                        debug=0)
 
 # Global Camera Pose Parameters #
@@ -170,6 +170,7 @@ while True:
                 gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
 
                 print("TAG! at " + f'{(time.time()-t0):.4f}' + " s")
+                send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading)
 
     # Add Pose details to frame view if Tag detected
     if(gTID is not None):
@@ -189,7 +190,6 @@ while True:
     
     # Write frame to recorded video
     video_out.write(frame)
-    send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading)
 
 # Once finished, release / destroy windows
 print("Cleaning up...")
