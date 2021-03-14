@@ -5,7 +5,7 @@
         "headlights": false,
         "leds": false
     },
-    "fly_sim": true,
+    "fly_sim": false,
     "use_ai_thrust": false,
     "log_to_stdout": false,
     "external_ip": "",
