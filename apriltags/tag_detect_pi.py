@@ -10,6 +10,7 @@
 # Run this on the Raspberry Pi 4 only, requires 
 # custom build of OpenCV 4 to enable GStreamer
 
+# Imports #
 import numpy as np
 import cv2
 import time
@@ -17,7 +18,10 @@ from pupil_apriltags import Detector
 import math
 from socket_sender import send_over_socket
 
-# Define tag detector
+# If DEBUG mode is True, displays tag and camera pose information to video
+DEBUG = False
+
+# Define tag detector #
 at_detector = Detector(families='tag16h5',
                        nthreads=4,
                        quad_decimate=2.0,
@@ -129,7 +133,7 @@ while True:
             ptA = (int(ptA[0]), int(ptA[1]))
 
             # Filter out small false positives that pass hamming test
-            if (ptC[0]-ptA[0] > 30) and (ptC[1]-ptA[1] > 30):
+            if ((abs(ptC[0]-ptA[0]) > 20) and (abs(ptC[1]-ptA[1]) > 20)):
 
                 gTID = tag.tag_id # Set tag ID
 
@@ -172,8 +176,8 @@ while True:
                 print("TAG! at " + f'{(time.time()-t0):.4f}' + " s")
                 send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading)
 
-    # Add Pose details to frame view if Tag detected
-    if(gTID is not None):
+    # Add Pose details to frame view if Tag detected and DEBUG mode enabled
+    if((gTID is not None) and (DEBUG == True)):
         cv2.putText(frame, "CAM_X: " + f'{gCam_pose_t[0,0]:.3f}' + "m", (50,400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
         cv2.putText(frame, "CAM_Y: " + f'{gCam_pose_t[1,0]:.3f}' + "m", (50,420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
         cv2.putText(frame, "CAM_Z: " + f'{gCam_pose_t[2,0]:.3f}' + "m", (50,440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
