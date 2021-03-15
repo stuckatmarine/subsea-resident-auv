@@ -228,7 +228,8 @@ public class ServerCommunication : MonoBehaviour
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
-                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
+                    // telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
+                    telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
                     telState.GetComponent<TMPro.TextMeshProUGUI>().text = tel.state;
                     
                     telX.parent.GetComponent<Image>().color = grn;
