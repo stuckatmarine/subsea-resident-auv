@@ -105,6 +105,7 @@ class LocalSocketThread(threading.Thread):
                     self.tag_values["pos_y"] = data_dict["pos_y"]
                     self.tag_values["pos_z"] = data_dict["pos_z"]
                     self.tag_values["heading"] = data_dict["heading"]
+                    self.tag_values["tag_id"] = data_dict["tag_id"]
                     self.socket.sendto(self.default_response, address)
                     # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
 

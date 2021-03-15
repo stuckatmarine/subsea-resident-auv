@@ -4,7 +4,7 @@ import time
 import json
 
 socket_connected = False
-srauv_address = ("localhost", 7001)
+srauv_address = ("localhost", 7003)
 last_tx_time_s = 0
 socket_send_interval_s = 0.200
 msg_num = -1
@@ -16,7 +16,8 @@ msg = {
     "pos_x" : -0.1,
     "pos_y" : -0.2,
     "pos_z" : -0.3,
-    "heading" : 0.4
+    "heading" : 0.4,
+    "tag_id" : -1
 }
 
 try:
@@ -26,7 +27,7 @@ try:
 except socket.error:
     print(f"socket_sender failed to create socket {srauv_address}")
    
-def send_over_socket(x: float, y: float, z: float, h: float):
+def send_over_socket(x: float, y: float, z: float, h: float, t: int):
     global msg_num, last_tx_time_s
     if not socket_connected or time.time() - last_tx_time_s < socket_send_interval_s:
         return
@@ -39,6 +40,7 @@ def send_over_socket(x: float, y: float, z: float, h: float):
         msg["pos_y"] = y
         msg["pos_z"] = z
         msg["heading"] = h
+        msg["tag_id"] = t
         print(f"socket_sender tx msg:{msg}")
         srauv_socket.sendto(json.dumps(msg).encode("utf-8"), srauv_address)
         # Get response from srauv_main. Log it

@@ -88,6 +88,8 @@ def update_telemetry():
         g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_y"]
         g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_z"]
         g_tel_msg["heading"] = g_tel_msg["tag_dict"]["heading"]
+        #g_tel_msg["heading"] = g_tel_msg["imu_dict"]["heading"]
+        #g_tel_msg["tag_id"] = g_tel_msg["tag_dict"]["tag_id"] for DEBUG
     
     # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
@@ -234,6 +236,11 @@ def start_threads():
                                                 g_tel_msg))
 
         g_threads.append(internal_socket_server.LocalSocketThread(G_MAIN_INTERNAL_ADDR,
+                                                                  g_tel_msg,
+                                                                  g_cmd_msg,
+                                                                  g_tel_recv,
+                                                                  g_incoming_cmd))
+        g_threads.append(internal_socket_server.LocalSocketThread(("localhost", 7003),
                                                                   g_tel_msg,
                                                                   g_cmd_msg,
                                                                   g_tel_recv,

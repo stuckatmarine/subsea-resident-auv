@@ -47,7 +47,8 @@ def make(source, dest = ''):
             "pos_x": 1.0,
             "pos_y": 1.1,
             "pos_z": 1.2,
-            "heading": 1.3
+            "heading": 1.3,
+            "tag_id": -1
         },
         "thrust_values":[      # clockwise from front of vehicle, lats then verts
             0.0,            # FR:
