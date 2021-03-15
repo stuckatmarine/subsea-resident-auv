@@ -309,16 +309,16 @@ public class ThrusterController : MonoBehaviour
 
     public void strafeRight(float spd)
     {
-        applyThrust(latThrusters[0], -spd);
-        applyThrust(latThrusters[1], spd);
+        applyThrust(latThrusters[0], spd);
+        applyThrust(latThrusters[1], -spd);
         applyThrust(latThrusters[2], -spd);
         applyThrust(latThrusters[3], spd);
     }
 
     public void strafeLeft(float spd)
     {
-        applyThrust(latThrusters[0], spd);
-        applyThrust(latThrusters[1], -spd);
+        applyThrust(latThrusters[0], -spd);
+        applyThrust(latThrusters[1], spd);
         applyThrust(latThrusters[2], spd);
         applyThrust(latThrusters[3], -spd);
     }
@@ -326,16 +326,16 @@ public class ThrusterController : MonoBehaviour
     public void turnRight(float spd)
     {
         applyThrust(latThrusters[0], -spd);
-        applyThrust(latThrusters[1], -spd);
-        applyThrust(latThrusters[2], spd);
+        applyThrust(latThrusters[1], spd);
+        applyThrust(latThrusters[2], -spd);
         applyThrust(latThrusters[3], spd);
     }
 
     public void turnLeft(float spd)
     {
         applyThrust(latThrusters[0], spd);
-        applyThrust(latThrusters[1], spd);
-        applyThrust(latThrusters[2], -spd);
+        applyThrust(latThrusters[1], -spd);
+        applyThrust(latThrusters[2], spd);
         applyThrust(latThrusters[3], -spd);
     }
 

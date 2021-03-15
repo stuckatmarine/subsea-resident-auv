@@ -195,7 +195,11 @@ while True:
                 gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
 
                 print("TAG! at " + f'{(time.time()-t0):.4f}' + " s")
-                send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading, gTID)
+
+                if (gAUVx < 0.0 or gAUVx > 3.7 or gAUVy < 0.0 or gAUVy > 3.7 or gAUVz < 0.0 or gAUVz > 3.70):
+                    print("Coordinates out of bounds!") #Do nothing, coordinates are out of bounds and in error
+                else:
+                    send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading, gTID)
 
     # Add Pose details to frame view if Tag detected and DEBUG mode enabled
     if((gTID is not None) and (DEBUG == True)):

@@ -184,6 +184,7 @@ public class ServerCommunication : MonoBehaviour
             lastTxTime = (int)Time.time * 1000;
         }
 
+        // Debug.Log("Forces " + forces);
         srauv.GetComponent<ThrusterController>().applyLatThrust(0, forces[0]);
         srauv.GetComponent<ThrusterController>().applyLatThrust(1, forces[1]);
         srauv.GetComponent<ThrusterController>().applyLatThrust(2, forces[2]);
