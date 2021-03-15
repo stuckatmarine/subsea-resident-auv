@@ -19,7 +19,7 @@ import math
 # Define tag detector
 at_detector = Detector(families='tag16h5',
                        nthreads=4,
-                       quad_decimate=2.0,
+                       quad_decimate=1.0,
                        quad_sigma=0.0,
                        refine_edges=1,
                        decode_sharpening=0.50,
@@ -56,6 +56,16 @@ gTank_T_Marker4 = np.array([[-1.0, 0.0, 0.0, 2.0],
                             [ 0.0,-1.0, 0.0, 2.0],
                             [ 0.0, 0.0, 0.0, 1.0]])
 
+gTank_T_Marker5 = np.array([[ 1.0, 0.0, 0.0, 1.0],
+                            [ 0.0,-1.0, 0.0, 1.0],
+                            [ 0.0, 0.0,-1.0, 0.0],
+                            [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Marker6 = np.array([[ 1.0, 0.0, 0.0, 1.523],
+                            [ 0.0,-1.0, 0.0, 1.000],
+                            [ 0.0, 0.0,-1.0, 0.0],
+                            [ 0.0, 0.0, 0.0, 1.0]])
+
 # Camera to AUV transforms
 gFrontCam_T_AUV = np.array([[1.0, 0.0, 0.0, 0.0],
                             [0.0, 0.0,-1.0, 0.0],
@@ -66,6 +76,11 @@ gBackCam_T_AUV = np.array([[-1.0, 0.0, 0.0, 0.0  ],
                             [ 0.0, 0.0,-1.0, 0.0  ],
                             [ 0.0,-1.0, 0.0,-0.184],
                             [ 0.0, 0.0, 0.0, 1.0  ]])
+
+gBottomCam_T_AUV = np.array([[ 1.0, 0.0, 0.0, 0.0],
+                            [ 0.0,-1.0, 0.0, 0.0],
+                            [ 0.0, 0.0,-1.0, -0.05314],
+                            [ 0.0, 0.0, 0.0, 1.0]])
 
 Tank_T_AUV = np.array([[0.0, 0.0, 0.0, 0.0  ],
                             [ 0.0, 0.0, 0.0, 0.0  ],
@@ -80,7 +95,7 @@ gAUVheading = 0.0
 
 # Output video parameters
 fourcc = cv2.VideoWriter_fourcc(*"XVID")
-video_out = cv2.VideoWriter('output_vid.avi',fourcc, 20, (640,480))
+video_out = cv2.VideoWriter('output_vid.avi',fourcc, 15, (640,480))
 
 print("Camera sink open, Waiting for camera feed...")
 
@@ -140,16 +155,23 @@ while True:
 
             # Calculate AUV frame relative to tank frame
             if (gCam_pose_T.any()):
-                if tag.tag_id == 0:
-                    Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-                elif tag.tag_id == 1:
-                    Tank_T_AUV = gTank_T_Marker2 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-                elif tag.tag_id == 2:
-                    Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-                elif tag.tag_id == 3:
-                    Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
+                if tag.tag_id == 15:
+                    Tank_T_AUV = gTank_T_Marker5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 0:
+                    Tank_T_AUV = gTank_T_Marker6 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                 else:
-                    Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBackCam_T_AUV
+                    print("Not a valid tag ID")
+            # if (gCam_pose_T.any()):
+            #     if tag.tag_id == 0:
+            #         Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
+            #     elif tag.tag_id == 1:
+            #         Tank_T_AUV = gTank_T_Marker2 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
+            #     elif tag.tag_id == 2:
+            #         Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
+            #     elif tag.tag_id == 3:
+            #         Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
+            #     else:
+            #         Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBackCam_T_AUV
             
             # Calculte AUV parameters
             gAUVx = Tank_T_AUV[0, 3]

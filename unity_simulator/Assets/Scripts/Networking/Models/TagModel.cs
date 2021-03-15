@@ -10,4 +10,5 @@ public class TagModel
     public float pos_y;
     public float pos_z;
     public float heading;
+    public int tag_id;
 }
