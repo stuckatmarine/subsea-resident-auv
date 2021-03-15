@@ -13,6 +13,7 @@
     "internal_ip": "localhost",
     "main_msg_port": 7001,
     "main_cam_port": 7002,
+    "main_tag_port": 7003,
     "update_interval_ms": 200,
     "default_comms_response_str": "delf_resp",
     "waypoint_tolerence_m": 0.1,

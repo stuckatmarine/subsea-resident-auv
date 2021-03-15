@@ -42,6 +42,7 @@ from external_ws_server import SrauvExternalWSS_start
 
 ###################  Globals  ###################
 G_MAIN_INTERNAL_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
+G_MAIN_TAG_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_tag_port"])
 G_LOG_FILENAME = str(f'Logs/{datetime.now().strftime("SR--%m-%d-%Y_%H-%M-%S")}.log')
 G_THRUSTER_CONFIG = SETTINGS["thruster_config"]
 G_USE_SIM_SENSORS = SETTINGS["fly_sim"] # False -> thrust self, True -> send cmds to sim to fly
@@ -83,13 +84,19 @@ def update_telemetry():
         g_tel_msg["imu_dict"]["heading"] = g_incoming_cmd["imu_dict"]["heading"]
 
     else:
+        # TODO: choose best values to store in root tel msg
         g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
         g_tel_msg["pos_x"] = g_tel_msg["tag_dict"]["pos_x"]
-        g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_y"]
-        g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_z"]
-        g_tel_msg["heading"] = g_tel_msg["tag_dict"]["heading"]
+
+        ## change from apritag coord system to unity
+        g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_z"] # swap z - y
+        g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_y"] # swap z - y
+        g_tel_msg["heading"] = g_tel_msg["heading"] - 90 # unity x+ is north
+        if g_tel_msg["tag_dict"]["heading"] < 0:
+            g_tel_msg["heading"] = g_tel_msg["heading"] + 360
+        
+        
         #g_tel_msg["heading"] = g_tel_msg["imu_dict"]["heading"]
-        #g_tel_msg["tag_id"] = g_tel_msg["tag_dict"]["tag_id"] for DEBUG
     
     # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
@@ -240,7 +247,7 @@ def start_threads():
                                                                   g_cmd_msg,
                                                                   g_tel_recv,
                                                                   g_incoming_cmd))
-        g_threads.append(internal_socket_server.LocalSocketThread(("localhost", 7003),
+        g_threads.append(internal_socket_server.LocalSocketThread(G_MAIN_TAG_ADDR,
                                                                   g_tel_msg,
                                                                   g_cmd_msg,
                                                                   g_tel_recv,
@@ -273,7 +280,7 @@ def close_gracefully():
          # msg socket thread to close it, its blocking on recv
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(str("stop").encode("utf-8"), G_MAIN_INTERNAL_ADDR)
-
+        sock.sendto(str("stop").encode("utf-8"), G_MAIN_TAG_ADDR)
 
         for t in g_threads:
             t.kill_received = True
