@@ -1,45 +1,19 @@
 {
     "route":{
-        "0": "tag_0_3m",
-        "1": "tag_0_2m",
-        "2": "tag_1_2m",
-        "3": "tag_0_2m",
-        "4": "tag_0_3m"
+        "0": "1_3_1",
+        "1": "1_2_1",
+        "2": "1_2_2",
+        "3": "2.5_2_2.5",
+        "4": "2.5_2_1",
+        "5": "2.5_3.5_1",
+        "6": "1_2_2",
+        "7": "1_2_1",
+        "8": "1_3_1"
     },
     "targets":{
-        "tag_0_3m":{
-            "label": "tag_0_3m",
-            "pos_x": 0.5,
-            "pos_y": 3.0,
-            "pos_z": 0.5,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "tag_0_2m":{
-            "label": "tag_0_2m",
-            "pos_x": 0.5,
-            "pos_y": 2.0,
-            "pos_z": 0.5,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "tag_0_1m":{
-            "label": "tag_0_1m",
-            "pos_x": 0.5,
-            "pos_y": 1.0,
-            "pos_z": 0.5,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "tag_1_3m":{
-            "label": "tag_1_3m",
-            "pos_x": 0.5,
+        "1_3_1":{
+            "label": "1_3_1",
+            "pos_x": 1.0,
             "pos_y": 3.0,
             "pos_z": 1.0,
             "tolerance": 0.3,
@@ -47,9 +21,9 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "tag_1_2m":{
-            "label": "tag_1_2m",
-            "pos_x": 0.5,
+        "1_2_1":{
+            "label": "1_2_1",
+            "pos_x": 1.0,
             "pos_y": 2.0,
             "pos_z": 1.0,
             "tolerance": 0.3,
@@ -57,29 +31,9 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "tag_1_1m":{
-            "label": "tag_1_1m",
-            "pos_x": 0.5,
-            "pos_y": 1.0,
-            "pos_z": 1.0,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "tag_2_3m":{
-            "label": "tag_2_3m",
-            "pos_x": 0.5,
-            "pos_y": 3.0,
-            "pos_z": 2.0,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "tag_2_2m":{
-            "label": "tag_2_2m",
-            "pos_x": 0.5,
+        "1_2_2":{
+            "label": "1_2_2",
+            "pos_x": 1.0,
             "pos_y": 2.0,
             "pos_z": 2.0,
             "tolerance": 0.3,
@@ -87,11 +41,31 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "tag_2_1m":{
-            "label": "tag_2_1m",
-            "pos_x": 0.5,
-            "pos_y": 1.0,
-            "pos_z": 2.0,
+        "2.5_2_2.5":{
+            "label": "2.5_2_2.5",
+            "pos_x": 2.5,
+            "pos_y": 2.0,
+            "pos_z": 2.5,
+            "tolerance": 0.3,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "2.5_2_1":{
+            "label": "2.5_2_1",
+            "pos_x": 2.5,
+            "pos_y": 2.0,
+            "pos_z": 1.0,
+            "tolerance": 0.3,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "2.5_3.5_1":{
+            "label": "2.5_3.5_1",
+            "pos_x": 2.5,
+            "pos_y": 3.5,
+            "pos_z": 1.0,
             "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,

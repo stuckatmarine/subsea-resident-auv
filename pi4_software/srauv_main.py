@@ -69,19 +69,22 @@ def update_telemetry():
         g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
         g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
         g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
+        g_tel_msg["vel_x"] = g_incoming_cmd["vel_x"]
+        g_tel_msg["vel_y"] = g_incoming_cmd["vel_y"]
+        g_tel_msg["vel_z"] = g_incoming_cmd["vel_z"]
         g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
         if g_incoming_cmd["imu_dict"]["heading"] < 0:
             g_tel_msg["heading"] = -g_tel_msg["heading"]
         g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
-        g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
-        g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
+        g_tel_msg["imu_dict"]["gyro_y"] = g_incoming_cmd["imu_dict"]["gyro_y"]
+        g_tel_msg["imu_dict"]["gyro_z"] = g_incoming_cmd["imu_dict"]["gyro_z"]
         g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
-        g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
-        g_tel_msg["imu_dict"]["vel_x"] = g_incoming_cmd["imu_dict"]["vel_x"]
+        g_tel_msg["imu_dict"]["vel_y"] = g_incoming_cmd["imu_dict"]["vel_y"]
+        g_tel_msg["imu_dict"]["vel_z"] = g_incoming_cmd["imu_dict"]["vel_z"]
         g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
-        g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
-        g_tel_msg["imu_dict"]["linear_accel_x"] = g_incoming_cmd["imu_dict"]["linear_accel_x"]
+        g_tel_msg["imu_dict"]["linear_accel_y"] = g_incoming_cmd["imu_dict"]["linear_accel_y"]
+        g_tel_msg["imu_dict"]["linear_accel_z"] = g_incoming_cmd["imu_dict"]["linear_accel_z"]
         g_tel_msg["imu_dict"]["heading"] = g_incoming_cmd["imu_dict"]["heading"]
 
     else:
@@ -112,7 +115,7 @@ def evaluate_state():
     if g_tel_msg["state"] == "idle":
         g_tel_msg["thrust_enabled"][0] = False
 
-    elif g_tel_msg["state"] == "autonomous":
+    elif g_tel_msg["state"] == "autonomous" or g_tel_msg["state"] == "simple_ai":
         g_tel_msg["thrust_enabled"][0] = True
         if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
             g_logger.warning(f"No more waypoints to find")
@@ -180,38 +183,56 @@ def calculate_thrust():
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
         return
 
-    # TODO add PID smoothing/ thrust slowing when nearing target
-    
     if g_tel_msg["state"] == "autonomous":
-        if SETTINGS["use_ai_thrust"]:
-            print("TODO ai model thrust getter")
+        print("need ML autonomy")
+    
+    elif g_tel_msg["state"] == "simple_ai":
+        ## simple grute force thrust try
+        t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
+        t_dist_y = g_tel_msg["pos_y"] - g_tel_msg["target_pos_y"]
+        t_dist_z = g_tel_msg["pos_z"] - g_tel_msg["target_pos_z"]
+
+        if t_dist_y > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_y"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
+        elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
+        # else:
+        #     if (t_dist_y > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+        #         g_tel_msg["vel_y"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
+        #     elif (t_dist_y < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+        #         g_tel_msg["vel_y"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
+
+        # isolate rot from lateral movement
+        if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
+            add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
+        elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
+            add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
         else:
-            ## simple grute force thrust try
-            t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
-            t_dist_y = g_tel_msg["pos_y"] - g_tel_msg["target_pos_y"]
-            t_dist_z = g_tel_msg["pos_z"] - g_tel_msg["target_pos_z"]
+            if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
+            elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
+            # else:
+        #         if (t_dist_x > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+        #             g_tel_msg["vel_x"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+        #             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
+        #         elif (t_dist_x < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+        #             g_tel_msg["vel_x"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+        #             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
 
-            if t_dist_y > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
-            elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-
-            # isolate rot from lateral movement
-            # print(f'tel heading {g_tel_msg["heading"]}')
-            if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
-            elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
-                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
-            else:
-                if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
-                elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
-
-                if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
-                elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
-                    add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
+            if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_z"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
+            elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_z"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+                add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
+            # else:
+            #     if (t_dist_z > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+            #         g_tel_msg["vel_z"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+            #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
+            #     elif (t_dist_z < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
+            #         g_tel_msg["vel_z"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
+            #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
 
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]

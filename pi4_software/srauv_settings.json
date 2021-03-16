@@ -1,12 +1,12 @@
 {
     "hardware":{
-        "can": true,
-        "i2c": true,
-        "headlights": true,
+        "can": false,
+        "i2c": false,
+        "headlights": false,
         "leds": false
     },
-    "fly_sim": false,
-    "use_ai_thrust": false,
+    "gimp_thrusters": false,
+    "fly_sim": true,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,
@@ -31,6 +31,112 @@
     "thruster_config":{
         "num_thrusters": 6,
         "max_thrust": 30,
+        "deadman_timeout_ms": 1000,
+        "thrust_interval_ms": 200,
+        "thrust_dist_thershold_m": 0.3,
+        "thrust_counter_thershold_m": 0.2,
+        "thrust_counter_thershold_spd": 0.02,
+        "board_id_base": 8,
+        "board_id_shift": 6,
+        "rpm_max": 2000,
+        "direction_arr":[
+            false,
+            true,
+            false,
+            true,
+            true,
+            true
+        ],
+        "CAN_tx_ids":{
+            "arm": 0,            
+            "abort": 1,
+            "motor_onoff": 2,
+            "set_rpm": 3,
+            "set_accel": 4
+        },
+        "CAN_rx_ids":{
+            "measured_rpm": 5,
+            "measured_voltage": 6,
+            "measured_torque": 7,
+            "board_state": 8,
+            "fault_state": 9
+        },
+        "_":[
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "fwd":[
+            10,
+            10,
+            10,
+            10,
+            0,
+            0
+        ],
+        "rev":[
+            -10,
+            -10,
+            -10,
+            -10,
+            0,
+            0
+        ],
+        "lat_right":[
+            10,
+            -10,
+            -10,
+            10,
+            0,
+            0
+        ],
+        "lat_left":[
+            -10,
+            10,
+            10,
+            -10,
+            0,
+            0
+        ],
+        "rot_right":[
+            -5,
+            5,
+            -5,
+            5,
+            0,
+            0
+        ],
+        "rot_left":[
+            5,
+            -5,
+            5,
+            -5,
+            0,
+            0
+        ],
+        "up":[
+            0,
+            0,
+            0,
+            0,
+            20,
+            20
+        ],
+        "down":[
+            0,
+            0,
+            0,
+            0,
+            -20,
+            -20
+        ]
+    },
+    "gimp_thruster_config":{
+        "num_thrusters": 6,
+        "max_thrust": 60,
         "deadman_timeout_ms": 1000,
         "thrust_interval_ms": 200,
         "thrust_dist_thershold_m": 0.2,

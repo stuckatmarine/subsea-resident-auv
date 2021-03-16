@@ -19,10 +19,12 @@ public class DistanceSensors : MonoBehaviour
     public bool drawLines = true;
 
     public bool lean_training = false;
+    public bool isMlTank = false;
 
     void Start()
     {
-        lean_training = gameObject.GetComponent<Pilot>().lean_training;
+        if (isMlTank)
+            lean_training = gameObject.GetComponent<Pilot>().lean_training;
     }
 
     // Update is called once per frame

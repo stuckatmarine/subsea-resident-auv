@@ -16,9 +16,11 @@ public class ServerCommunication : MonoBehaviour
     {
         Idle,
         Manual,
+        SimpleAi,
         Auto
     }
 
+    public bool useSrauvPos = false;
     public bool send_cmds = false;
     public bool send_tel = false;
     public bool disableWebsocketServer = false; // disables all socket stuff for training
@@ -27,6 +29,7 @@ public class ServerCommunication : MonoBehaviour
     public bool enableLogging = false;
     public bool enableVehicleCmds = false; // pi_fly_sim, vehicle sends commands up (do not use)
     public bool sendScreenshots = false; // sends fron cam img as string
+    public bool isMlTank = false; // sends fron cam img as string
     
     public string headlightSetting = "low";
     public State controlState = State.Idle;
@@ -88,6 +91,7 @@ public class ServerCommunication : MonoBehaviour
     public Transform telX;
     public Transform telY;
     public Transform telZ;
+    public float forcesDownscaler = 10.0f;
     public float latMax;
     public float latMin;
     public float vertMax;
@@ -113,7 +117,10 @@ public class ServerCommunication : MonoBehaviour
         sock = GetComponent<TcpSocket>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         distancesFloat = srauv.GetComponent<DistanceSensors>().distancesFloat;
-        goalPos = srauv.GetComponent<Pilot>().goal;
+
+        if (isMlTank)
+            goalPos = srauv.GetComponent<Pilot>().goal;
+
         raw_thrust_arr = srauv.GetComponent<ThrusterController>().raw_thrust;
         cmd_msg.raw_thrust = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
         
@@ -136,12 +143,15 @@ public class ServerCommunication : MonoBehaviour
         if (sendScreenshots)
             frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
 
-        if (!useTcpSocket)
+        if (useWebsocket)
         {
             server = "ws://" + host + ":" + port;
             Debug.Log("using websocket setver " + server);
-            client = new WsClient(server);
-            ConnectToServer();
+            if (client == null)
+            {   
+                client = new WsClient(server);
+                ConnectToServer();
+            }
         }
         setSpotlights();
     }
@@ -161,7 +171,7 @@ public class ServerCommunication : MonoBehaviour
         simY.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.y.ToString("#.00");
         simZ.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.z.ToString("#.00");
 
-        if (!useTcpSocket)
+        if (useWebsocket && client != null)
         {
             // Check if server send new messages
             var cqueue = client.receiveQueue;
@@ -184,13 +194,13 @@ public class ServerCommunication : MonoBehaviour
             lastTxTime = (int)Time.time * 1000;
         }
 
-        // Debug.Log("Forces " + forces);
-        srauv.GetComponent<ThrusterController>().applyLatThrust(0, forces[0]);
-        srauv.GetComponent<ThrusterController>().applyLatThrust(1, forces[1]);
-        srauv.GetComponent<ThrusterController>().applyLatThrust(2, forces[2]);
-        srauv.GetComponent<ThrusterController>().applyLatThrust(3, forces[3]);
-        srauv.GetComponent<ThrusterController>().applyVertThrust(0, forces[4]);
-        srauv.GetComponent<ThrusterController>().applyVertThrust(1, forces[5]);
+        // Debug.Log("Forces " + forces)
+        srauv.GetComponent<ThrusterController>().applyLatThrust(0, forces[0], useSrauvPos);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(1, forces[1], useSrauvPos);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(2, forces[2], useSrauvPos);
+        srauv.GetComponent<ThrusterController>().applyLatThrust(3, forces[3], useSrauvPos);
+        srauv.GetComponent<ThrusterController>().applyVertThrust(0, forces[4], useSrauvPos);
+        srauv.GetComponent<ThrusterController>().applyVertThrust(1, forces[5], useSrauvPos);
     }
 
     /// <summary>
@@ -243,7 +253,18 @@ public class ServerCommunication : MonoBehaviour
                                                           tel.target_pos_y,
                                                           tel.target_pos_z);
 
+                    if (useSrauvPos)
+                    {
+                        srauv.position = new Vector3(tel.pos_x, tel.pos_y, tel.pos_z);
+                        // srauv.rotation.y = tel_msg.heading;
+                    }
+
                     forces = tel.thrust_values;
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (forces[i] != 0)
+                            forces[i] = forces[i] / forcesDownscaler;
+                    }
                     telDistanceFloats = tel.dist_values;
                     // for (int i = 0; i < 6; i++)
                     // {
@@ -432,9 +453,9 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.pos_z = srauv.position.z;
         cmd_msg.depth = distancesFloat[4];
         cmd_msg.alt = distancesFloat[5];
-        cmd_msg.imu_dict.pitch = srauv.rotation.x * 360.0f;
-        cmd_msg.imu_dict.heading = srauv.rotation.y * 360.0f;
-        cmd_msg.imu_dict.roll = srauv.rotation.z * 360.0f;
+        cmd_msg.imu_dict.pitch = srauv.eulerAngles.z;
+        cmd_msg.imu_dict.heading = srauv.eulerAngles.y;
+        cmd_msg.imu_dict.roll = srauv.eulerAngles.x;
         cmd_msg.imu_dict.gyro_x = rb.angularVelocity.x;
         cmd_msg.imu_dict.gyro_y = rb.angularVelocity.y;
         cmd_msg.imu_dict.gyro_z = rb.angularVelocity.z;
@@ -444,6 +465,10 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.imu_dict.vel_x = rb.velocity.x;
         cmd_msg.imu_dict.vel_y = rb.velocity.y;
         cmd_msg.imu_dict.vel_z = rb.velocity.z;
+        cmd_msg.vel_x = rb.velocity.x;
+        Debug.Log("velx " + rb.velocity.x);
+        cmd_msg.vel_y = rb.velocity.y;
+        cmd_msg.vel_z = rb.velocity.z;
         
         for (int i = 0; i < 4; i++)
         {
@@ -473,6 +498,10 @@ public class ServerCommunication : MonoBehaviour
         else if (controlState == State.Auto)
         {
             cmd_msg.force_state = "autonomous";
+        }
+        else if (controlState == State.SimpleAi)
+        {
+            cmd_msg.force_state = "simple_ai";
         }
         else
         {
@@ -550,6 +579,11 @@ public class ServerCommunication : MonoBehaviour
         controlState = State.Auto;
     }
 
+    public void setStateWaypoint()
+    {
+        controlState = State.SimpleAi;
+    }
+
     private void updateValues(int i, float min, float max)
     {
         if (telDistanceFloats[i] < max)
@@ -569,6 +603,12 @@ public class ServerCommunication : MonoBehaviour
     public void toggleSendCmds()
     {
         send_cmds =  !send_cmds;
+    }
+
+    public void toggleSrauvPos()
+    {
+        useSrauvPos =  !useSrauvPos;
+        srauv.GetComponent<Rigidbody>().isKinematic = useSrauvPos;
     }
 
     public void sendTcp()
