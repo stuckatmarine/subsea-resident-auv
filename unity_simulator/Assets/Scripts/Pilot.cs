@@ -35,7 +35,7 @@ public class Pilot : Agent
     private Collider collider;
     private ThrusterController thrustCtrl;
     
-    private Camera frontCam;
+    private Camera downCam;
     private Texture2D frontCamTexture;
 
     private GameObject thrusterController;
@@ -54,7 +54,7 @@ public class Pilot : Agent
     private StatsRecorder statsRecorder;
     private int successes = 1;
 
-    private Renderer tag;
+    public List<Transform> tags;
 
     public override void Initialize()
     {
@@ -70,8 +70,13 @@ public class Pilot : Agent
             goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
             indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
             indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
-            tag = gameObject.transform.Find("aprilTag (0)").gameObject.transform.GetComponent<Renderer>();
+            downCam = gameObject.transform.Find("DownCam").gameObject.transform.Find("CameraDown").GetComponent<Camera>();
             statsRecorder = Academy.Instance.StatsRecorder;
+            
+            for (int i=0; i < 9; i++)
+            {
+                tags.Add(gameObject.transform.parent.gameObject.transform.Find(string.Format("aprilTag ({0})", i)).gameObject.transform);
+            }
         }
 
         rb = srauv.GetComponent<Rigidbody>();
@@ -90,31 +95,43 @@ public class Pilot : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        bool tagInView = false;
+        for (int i=0; i < 9; i++)
+        {
+            // note this api uses y variable as the equalivant of our z
+            Vector3 viewPos = downCam.WorldToViewportPoint(tags[i].position);
+
+            // simulating noise of random inaccuracies in AprilTag detector
+            float rand = Random.Range(0, 10);
+
+            if (0.15f < viewPos.x && viewPos.x < 0.85f &&
+                0.15f < viewPos.y && viewPos.y < 0.85f &&
+                0.95f < viewPos.z && rand < 9)
+            {
+                tagInView = true;
+            }
+        }
+
+        if (tagInView)
+        {
+            // we see an AprilTag so last known pos is right now
+            lastKnownPos = srauv.position - tank.position;
+            lastKnownHeading = srauv.rotation.y % 360;
+        }
+
+        // position & heading from AprilTag
+        sensor.AddObservation(lastKnownPos);
+        sensor.AddObservation(lastKnownHeading);
+
+        // goal position
+        sensor.AddObservation(goal - tank.position);
+
         // mimic IMU instantaneous accelerations
         sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
         lastVel = rb.velocity;
 
         // angular velocity from IMU gyro
         sensor.AddObservation(rb.angularVelocity.y);
-
-        // position & heading from April Tags        
-        if (((srauv.position.x - tank.position.x) < 2.5f &&
-             (srauv.position.z - tank.position.z) < 2.5f &&
-              srauv.position.y > 1.5f) || // lax y for inner tag bounds
-            ((srauv.position.x - tank.position.x) < 2.7f &&
-             (srauv.position.z - tank.position.z) < 2.7f &&
-              srauv.position.y > 2.0f)) // strict y for outer tag bounds
-
-        {
-            // we do see an April Tag, so last known is right now
-            lastKnownPos = srauv.position - tank.position;
-            lastKnownHeading = srauv.rotation.y % 360;
-        }
-        sensor.AddObservation(lastKnownPos);
-        sensor.AddObservation(lastKnownHeading);
-
-        // goal position
-        sensor.AddObservation(goal - tank.position);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -239,6 +256,8 @@ public class Pilot : Agent
         
         // reset all current velocties
         lastVel = Vector3.zero;
+        lastKnownPos = Vector3.zero;
+        lastKnownHeading = 0;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         massUpper.velocity = Vector3.zero;
