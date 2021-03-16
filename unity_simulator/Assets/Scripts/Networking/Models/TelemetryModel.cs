@@ -29,6 +29,7 @@ public class TelemetryModel
     public float target_heading_to;
     public ImuModel imu_dict;
     public TagModel tag_dict;
+    public PressureModel depth_sensor_dict;
     public float[] thrust_values;
     public float[] dist_values;
 }

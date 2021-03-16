@@ -50,6 +50,11 @@ def make(source, dest = ''):
             "heading": 1.3,
             "tag_id": -1
         },
+        "depth_sensor_dict":{
+            "mbar": 1.0,
+            "temp": 1.1,
+            "depth": 1.2
+        },
         "thrust_values":[      # clockwise from front of vehicle, lats then verts
             0.0,            # FR:
             0.0,            # RR
