@@ -47,36 +47,51 @@ gAUVheading = 0.0
 # Transformation Matrices #
 
 # Tank to Marker Transforms
-gTank_T_Marker1 = np.array([[0.0, 0.0,-1.0, 0.0],
-                            [1.0, 0.0, 0.0, 2.0],
-                            [0.0,-1.0, 0.0, 2.0],
-                            [0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker2 = np.array([[1.0, 0.0, 0.0, 2.0],
-                            [0.0, 0.0, 1.0, 4.0],
-                            [0.0,-1.0, 0.0, 2.0],
-                            [0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag0 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker3 = np.array([[ 0.0, 0.0, 1.0, 4.0],
-                            [-1.0, 0.0, 0.0, 2.0],
-                            [ 0.0,-1.0, 0.0, 2.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag1 = np.array([[ 1.0, 0.0, 0.0, 1.548],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker4 = np.array([[-1.0, 0.0, 0.0, 2.0],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0,-1.0, 0.0, 2.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag2 = np.array([[ 1.0, 0.0, 0.0, 2.343],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker5 = np.array([[ 1.0, 0.0, 0.0, 1.0],
-                            [ 0.0,-1.0, 0.0, 1.0],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag3 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 1.265],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker6 = np.array([[ 1.0, 0.0, 0.0, 1.523],
-                            [ 0.0,-1.0, 0.0, 1.000],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag4 = np.array([[ 1.0, 0.0, 0.0, 1.550],
+                         [ 0.0,-1.0, 0.0, 1.295],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
+gTank_T_Tag5 = np.array([[ 1.0, 0.0, 0.0, 2.350],
+                         [ 0.0,-1.0, 0.0, 1.285],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag12 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 2.057],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag14 = np.array([[ 1.0, 0.0, 0.0, 1.545],
+                         [ 0.0,-1.0, 0.0, 2.065],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag16 = np.array([[ 1.0, 0.0, 0.0, 2.340],
+                         [ 0.0,-1.0, 0.0, 2.077],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
 # Camera to AUV transforms
 gFrontCam_T_AUV = np.array([[1.0, 0.0, 0.0, 0.0],
@@ -173,20 +188,26 @@ while True:
 
                 # Calculate AUV frame relative to tank frame
                 if (gCam_pose_T.any()):
-                    if tag.tag_id == 15:
+                    if tag.tag_id == 0:
+                        Tank_T_AUV = gTank_T_Marker0 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 1:
+                        Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 2:
+                        Tank_T_AUV = gTank_T_Marker2 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 3:
+                        Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 4:
+                        Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 5:
                         Tank_T_AUV = gTank_T_Marker5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
-                    elif tag.tag_id == 0:
-                        Tank_T_AUV = gTank_T_Marker6 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 12:
+                        Tank_T_AUV = gTank_T_Marker12 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 14:
+                        Tank_T_AUV = gTank_T_Marker14 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                    elif tag.tag_id == 16:
+                        Tank_T_AUV = gTank_T_Marker16 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     else:
                         print("Not a valid tag ID")
-
-                    
-                    #elif tag.tag_id == 2:
-                    #    Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-                    #elif tag.tag_id == 3:
-                    #    Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-                    #else:
-                    #    Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBackCam_T_AUV
                 
                 # Calculte AUV parameters
                 gAUVx = Tank_T_AUV[0, 3]
