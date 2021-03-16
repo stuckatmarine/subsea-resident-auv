@@ -10,11 +10,21 @@
 # Run this on windows only, requires 
 # custom build of OpenCV 4 to to enable GStreamer
 
+# Imports #
 import numpy as np
 import cv2
 import time
 from pupil_apriltags import Detector
 import math
+
+# If DEBUG mode is True, displays tag and camera pose information to video
+DEBUG = False
+
+# If STREAM, video is captured from gstreamer pipeline, else its read from a file
+STREAM = False
+
+# If WATER, use underwater camera calibration results
+WATER = True
 
 # Define tag detector
 at_detector = Detector(families='tag16h5',
@@ -36,35 +46,50 @@ gTID = None
 # Transformation Matrices #
 
 # Tank to Marker Transforms
-gTank_T_Marker1 = np.array([[0.0, 0.0,-1.0, 0.0],
-                            [1.0, 0.0, 0.0, 2.0],
-                            [0.0,-1.0, 0.0, 2.0],
-                            [0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag0 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker2 = np.array([[1.0, 0.0, 0.0, 2.0],
-                            [0.0, 0.0, 1.0, 4.0],
-                            [0.0,-1.0, 0.0, 2.0],
-                            [0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag1 = np.array([[ 1.0, 0.0, 0.0, 1.548],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker3 = np.array([[ 0.0, 0.0, 1.0, 4.0],
-                            [-1.0, 0.0, 0.0, 2.0],
-                            [ 0.0,-1.0, 0.0, 2.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag2 = np.array([[ 1.0, 0.0, 0.0, 2.343],
+                         [ 0.0,-1.0, 0.0, 0.500],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker4 = np.array([[-1.0, 0.0, 0.0, 2.0],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0,-1.0, 0.0, 2.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag3 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 1.265],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker5 = np.array([[ 1.0, 0.0, 0.0, 1.0],
-                            [ 0.0,-1.0, 0.0, 1.0],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag4 = np.array([[ 1.0, 0.0, 0.0, 1.550],
+                         [ 0.0,-1.0, 0.0, 1.295],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
-gTank_T_Marker6 = np.array([[ 1.0, 0.0, 0.0, 1.523],
-                            [ 0.0,-1.0, 0.0, 1.000],
-                            [ 0.0, 0.0,-1.0, 0.0],
-                            [ 0.0, 0.0, 0.0, 1.0]])
+gTank_T_Tag5 = np.array([[ 1.0, 0.0, 0.0, 2.350],
+                         [ 0.0,-1.0, 0.0, 1.285],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag12 = np.array([[ 1.0, 0.0, 0.0, 0.750],
+                         [ 0.0,-1.0, 0.0, 2.057],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag14 = np.array([[ 1.0, 0.0, 0.0, 1.545],
+                         [ 0.0,-1.0, 0.0, 2.065],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
+
+gTank_T_Tag16 = np.array([[ 1.0, 0.0, 0.0, 2.340],
+                         [ 0.0,-1.0, 0.0, 2.077],
+                         [ 0.0, 0.0,-1.0, 0.0],
+                         [ 0.0, 0.0, 0.0, 1.0]])
 
 # Camera to AUV transforms
 gFrontCam_T_AUV = np.array([[1.0, 0.0, 0.0, 0.0],
@@ -95,11 +120,14 @@ gAUVheading = 0.0
 
 # Output video parameters
 fourcc = cv2.VideoWriter_fourcc(*"XVID")
-video_out = cv2.VideoWriter('output_vid.avi',fourcc, 15, (640,480))
+video_out = cv2.VideoWriter('output_vid.avi',fourcc, 10, (640,480))
 
 print("Camera sink open, Waiting for camera feed...")
 
-cap_receive = cv2.VideoCapture('udpsrc port=5001 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! avdec_h264  ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
+if STREAM:
+    cap_receive = cv2.VideoCapture('udpsrc port=5001 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! avdec_h264  ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
+else:
+    cap_receive = cv2.VideoCapture('Videos/video_stream_march_16.mp4') 
 
 print("Camera feed detected, press 'q' to quit and 'c' to capture")
 
@@ -121,7 +149,11 @@ while True:
 
     # Convert frame to gray and detect april tags using in-air camera calibration values
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[800.5335,801.2600,313.2403,231.1194], tag_size=0.1555)
+    if WATER:
+        tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[1127.7,1139.3,314.7352,226.3186], tag_size=0.1555)
+    else:
+        tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[800.5335,801.2600,313.2403,231.1194], tag_size=0.1555)
+
 
     time_detect = time.time()-t1
 
@@ -155,23 +187,26 @@ while True:
 
             # Calculate AUV frame relative to tank frame
             if (gCam_pose_T.any()):
-                if tag.tag_id == 15:
-                    Tank_T_AUV = gTank_T_Marker5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
-                elif tag.tag_id == 0:
-                    Tank_T_AUV = gTank_T_Marker6 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                if tag.tag_id == 0:
+                    Tank_T_AUV = gTank_T_Tag0 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 1:
+                    Tank_T_AUV = gTank_T_Tag1 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 2:
+                    Tank_T_AUV = gTank_T_Tag2 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 3:
+                    Tank_T_AUV = gTank_T_Tag3 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 4:
+                    Tank_T_AUV = gTank_T_Tag4 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 5:
+                    Tank_T_AUV = gTank_T_Tag5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 12:
+                    Tank_T_AUV = gTank_T_Tag12 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 14:
+                    Tank_T_AUV = gTank_T_Tag14 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                elif tag.tag_id == 16:
+                    Tank_T_AUV = gTank_T_Tag16 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                 else:
                     print("Not a valid tag ID")
-            # if (gCam_pose_T.any()):
-            #     if tag.tag_id == 0:
-            #         Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-            #     elif tag.tag_id == 1:
-            #         Tank_T_AUV = gTank_T_Marker2 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-            #     elif tag.tag_id == 2:
-            #         Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-            #     elif tag.tag_id == 3:
-            #         Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gFrontCam_T_AUV
-            #     else:
-            #         Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBackCam_T_AUV
             
             # Calculte AUV parameters
             gAUVx = Tank_T_AUV[0, 3]

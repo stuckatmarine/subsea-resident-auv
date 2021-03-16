@@ -189,23 +189,23 @@ while True:
                 # Calculate AUV frame relative to tank frame
                 if (gCam_pose_T.any()):
                     if tag.tag_id == 0:
-                        Tank_T_AUV = gTank_T_Marker0 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag0 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 1:
-                        Tank_T_AUV = gTank_T_Marker1 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag1 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 2:
-                        Tank_T_AUV = gTank_T_Marker2 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag2 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 3:
-                        Tank_T_AUV = gTank_T_Marker3 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag3 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 4:
-                        Tank_T_AUV = gTank_T_Marker4 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag4 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 5:
-                        Tank_T_AUV = gTank_T_Marker5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag5 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 12:
-                        Tank_T_AUV = gTank_T_Marker12 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag12 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 14:
-                        Tank_T_AUV = gTank_T_Marker14 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag14 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     elif tag.tag_id == 16:
-                        Tank_T_AUV = gTank_T_Marker16 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
+                        Tank_T_AUV = gTank_T_Tag16 @ np.linalg.inv(gCam_pose_T) @ gBottomCam_T_AUV
                     else:
                         print("Not a valid tag ID")
                 
