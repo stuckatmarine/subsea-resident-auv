@@ -95,7 +95,7 @@ public class Pilot : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        bool tagInView = false;
+        int tagInView = 0;
         for (int i=0; i < 9; i++)
         {
             // note this api uses y variable as the equalivant of our z
@@ -108,11 +108,11 @@ public class Pilot : Agent
                 0.15f < viewPos.y && viewPos.y < 0.85f &&
                 0.95f < viewPos.z && rand < 9)
             {
-                tagInView = true;
+                tagInView = 1;
             }
         }
 
-        if (tagInView)
+        if (tagInView == 1)
         {
             // we see an AprilTag so last known pos is right now
             lastKnownPos = srauv.position - tank.position;
@@ -120,6 +120,7 @@ public class Pilot : Agent
         }
 
         // position & heading from AprilTag
+        sensor.AddObservation(tagInView);
         sensor.AddObservation(lastKnownPos);
         sensor.AddObservation(lastKnownHeading);
 
@@ -257,7 +258,7 @@ public class Pilot : Agent
         // reset all current velocties
         lastVel = Vector3.zero;
         lastKnownPos = Vector3.zero;
-        lastKnownHeading = 0;
+        lastKnownHeading = 0.0f;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         massUpper.velocity = Vector3.zero;
