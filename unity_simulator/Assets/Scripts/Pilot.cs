@@ -47,8 +47,8 @@ public class Pilot : Agent
     public float VerticalSpd = 5.0f;
     public float YawSpd = 2.5f;
 
-    private Vector3 TankMins = new Vector3(0.0f, 2.0f, 0.0f);
-    private Vector3 TankMaxs = new Vector3(3.6576f, 3.4f, 3.6576f);
+    private Vector3 TankMins = new Vector3(0.8f, 1.5f, 0.8f);
+    private Vector3 TankMaxs = new Vector3(2.3f, 3.4f, 2.3f);
 
     private EnvironmentParameters resetParams;
     private StatsRecorder statsRecorder;
@@ -281,9 +281,9 @@ public class Pilot : Agent
 
         do
         {
-            x = Random.Range(-tankBounds.extents.x * 0.75f, tankBounds.extents.x * 0.75f) + tank.position.x + 1.8288f;
+            x = Random.Range(TankMins.x, TankMaxs.x) + tank.position.x;
             y = Random.Range(TankMins.y, TankMaxs.y);
-            z = Random.Range(-tankBounds.extents.z * 0.75f, tankBounds.extents.z * 0.75f) + tank.position.z + 1.8288f;
+            z = Random.Range(TankMins.z, TankMaxs.z) + tank.position.z;
 
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
