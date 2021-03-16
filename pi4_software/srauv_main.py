@@ -86,18 +86,18 @@ def update_telemetry():
 
     else:
         # TODO: choose best values to store in root tel msg
-        # g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
+        g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
         g_tel_msg["pos_x"] = g_tel_msg["tag_dict"]["pos_x"]
 
         ## change from apritag coord system to unity
         g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_z"] # swap z - y
-        # g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_y"] # swap z - y
+        g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_y"] # swap z - y
         g_tel_msg["heading"] = g_tel_msg["heading"] - 90 # unity x+ is north
         if g_tel_msg["tag_dict"]["heading"] < 0:
             g_tel_msg["heading"] = g_tel_msg["heading"] + 360
 
-        g_tel_msg["depth"] = g_tel_msg["depth_sensor_dict"]["depth"]
-        g_tel_msg["pos_z"] = 3.8 * g_tel_msg["depth"] # 3.8m == tank depth
+        # g_tel_msg["depth"] = g_tel_msg["depth_sensor_dict"]["depth"]
+        # g_tel_msg["pos_z"] = 3.8 * g_tel_msg["depth"] # 3.8m == tank depth
         g_tel_msg["alt"] = g_tel_msg["pos_z"]
     
     # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
