@@ -123,7 +123,7 @@ class ThrusterThread(threading.Thread):
         pass
 
     def run(self):
-        if SETTINGS["hardware"]["can"] == True:
+        if SETTINGS["hardware"]["can"] == True and self.id != 3:
             self.send_msg("arm", [0x01])
             time.sleep(1)
             print ("thruster armed")

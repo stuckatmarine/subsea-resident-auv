@@ -10,7 +10,7 @@ import copy
 import timestamp
 from srauv_settings import SETTINGS
 
-USE_ME = True
+USE_ME = False
 FRESHWATER = 997.0474 # kg/m^3
 SALTWATER  = 1023.6   # kg/m^3
 GRAVITY    = 9.80665  # m/s^2
