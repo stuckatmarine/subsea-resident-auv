@@ -17,13 +17,17 @@ public class Pilot : Agent
     public Transform tank;
     public Bounds tankBounds;
 
+    private Vector3 lastKnownPos = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 lastVel = new Vector3(0.0f, 0.0f, 0.0f);
+    private float lastKnownHeading = 0.0f;
+
     public Transform srauv;
     public Transform startPos;
     public Transform goalBox;
-    public Rigidbody massUpper;
-    public Rigidbody massLower;
-    public Transform indGreen;
-    public Transform indRed;
+    private Rigidbody massUpper;
+    private Rigidbody massLower;
+    private Transform indGreen;
+    private Transform indRed;
 
     public int trigger = 0;
     
@@ -41,14 +45,16 @@ public class Pilot : Agent
     public float LongitudinalSpd = 5.0f;
     public float LaterialSpd = 5.0f;
     public float VerticalSpd = 5.0f;
-    public float YawSpd = 5.0f;
+    public float YawSpd = 2.5f;
 
-    private Vector3 TankMins = new Vector3(0.0f, 0.0f, 0.0f);
-    private Vector3 TankMaxs = new Vector3(3.6576f, 3.6576f, 3.6576f);
+    private Vector3 TankMins = new Vector3(0.0f, 2.0f, 0.0f);
+    private Vector3 TankMaxs = new Vector3(3.6576f, 3.4f, 3.6576f);
 
     private EnvironmentParameters resetParams;
     private StatsRecorder statsRecorder;
     private int successes = 1;
+
+    private Renderer tag;
 
     public override void Initialize()
     {
@@ -64,6 +70,7 @@ public class Pilot : Agent
             goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
             indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
             indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
+            tag = gameObject.transform.Find("aprilTag (0)").gameObject.transform.GetComponent<Renderer>();
             statsRecorder = Academy.Instance.StatsRecorder;
         }
 
@@ -75,25 +82,36 @@ public class Pilot : Agent
         thrustCtrl = srauv.GetComponent<ThrusterController>();
 
         //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
-        distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
-        
-        
+        //distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
+
         //resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // dist sensors
-        foreach (float dist in distancesFloat) {
-            sensor.AddObservation(dist);
-        }
+        // mimic IMU instantaneous accelerations
+        sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
+        lastVel = rb.velocity;
 
-        // srauv info
-        sensor.AddObservation(srauv.position - tank.position);
-        sensor.AddObservation(rb.velocity);
-        sensor.AddObservation(srauv.rotation.y);
-        sensor.AddObservation(rb.angularVelocity.y); //change this to just the one
+        // angular velocity from IMU gyro
+        sensor.AddObservation(rb.angularVelocity.y);
+
+        // position & heading from April Tags        
+        if (((srauv.position.x - tank.position.x) < 2.5f &&
+             (srauv.position.z - tank.position.z) < 2.5f &&
+              srauv.position.y > 1.5f) || // lax y for inner tag bounds
+            ((srauv.position.x - tank.position.x) < 2.7f &&
+             (srauv.position.z - tank.position.z) < 2.7f &&
+              srauv.position.y > 2.0f)) // strict y for outer tag bounds
+
+        {
+            // we do see an April Tag, so last known is right now
+            lastKnownPos = srauv.position - tank.position;
+            lastKnownHeading = srauv.rotation.y % 360;
+        }
+        sensor.AddObservation(lastKnownPos);
+        sensor.AddObservation(lastKnownHeading);
 
         // goal position
         sensor.AddObservation(goal - tank.position);
@@ -103,9 +121,9 @@ public class Pilot : Agent
     {
         AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 1.5f &&
-            Math.Abs(goal.y - srauv.position.y) <= 1.5f &&
-            Math.Abs(goal.z - srauv.position.z) <= 1.5f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 0.3f &&
+            Math.Abs(goal.y - srauv.position.y) <= 0.3f &&
+            Math.Abs(goal.z - srauv.position.z) <= 0.3f)
         {
             statsRecorder.Add("Targets Reached", successes++);
             AddReward(2.0f);
@@ -123,23 +141,26 @@ public class Pilot : Agent
         var vertical = act[2];
         var yaw = act[3];
 
-        switch (longitudinal)
+        if (yaw == 0)
         {
-            case 1:
-                thrustCtrl.moveForward(LongitudinalSpd);                
-                break;
-            case 2:
-                thrustCtrl.moveReverse(LongitudinalSpd);
-                break;
-        }
-        switch (laterial)
-        {
-            case 1:
-                thrustCtrl.strafeRight(LaterialSpd);
-                break;
-            case 2:
-                thrustCtrl.strafeLeft(LaterialSpd);
-                break;
+            switch (longitudinal)
+            {
+                case 1:
+                    thrustCtrl.moveForward(LongitudinalSpd);                
+                    break;
+                case 2:
+                    thrustCtrl.moveReverse(LongitudinalSpd);
+                    break;
+            }
+            switch (laterial)
+            {
+                case 1:
+                    thrustCtrl.strafeRight(LaterialSpd);
+                    break;
+                case 2:
+                    thrustCtrl.strafeLeft(LaterialSpd);
+                    break;
+            }
         }
 
         switch (vertical)
@@ -211,11 +232,13 @@ public class Pilot : Agent
         goal = GetRandomLocation(); // maybe check its not to close already
         goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
+        lastKnownPos = goal;
         
         // reset current rotation
         srauv.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
         
         // reset all current velocties
+        lastVel = Vector3.zero;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         massUpper.velocity = Vector3.zero;
@@ -226,7 +249,6 @@ public class Pilot : Agent
 
     IEnumerator TargetReachedSwapGroundMaterial(Transform ind, float time)
     {
-
         ind.position = new Vector3(tank.position.x + 1.8288f, 0.0f, tank.position.z + 1.8288f);
         yield return new WaitForSeconds(time); // Wait for 2 sec
         ind.position = new Vector3(tank.position.x + 1.8288f, -0.3048f, tank.position.z + 1.8288f);
