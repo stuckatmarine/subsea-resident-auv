@@ -28,7 +28,9 @@ public class ThrusterController : MonoBehaviour
 
     public bool raw_thrust_used = false;
     public bool dir_thrust_used = false;
+
     public bool lean_training = false;
+    public bool isMlTank = false;
 
     void Start()
     {
@@ -38,7 +40,8 @@ public class ThrusterController : MonoBehaviour
         raw_thrust = new float[6]{0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
         dir_thrust = new string[4]{"", "", "", ""};
 
-        lean_training = gameObject.GetComponent<Pilot>().lean_training;
+        if (isMlTank)
+            lean_training = gameObject.GetComponent<Pilot>().lean_training;
     }
 
     // Update is called once per frame
@@ -252,16 +255,19 @@ public class ThrusterController : MonoBehaviour
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
-    public void applyLatThrust(int tNum, float spd = 1.0f)
+    public void applyLatThrust(int tNum, float spd = 1.0f, bool dontApply = false)
     {
-        if (tNum >= latThrusters.Length)
-        {
-            Debug.Log("invali thruster num, lat");
-            return;
-        }
         Transform t = latThrusters[tNum];
-        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-
+        if (!dontApply)
+        {
+            if (tNum >= latThrusters.Length)
+            {
+                Debug.Log("invalid thruster num, lat");
+                return;
+            }
+            
+            rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        }
         // UI thrust
         Transform uiT = UiLatThrusters[tNum];
         uiT.GetChild(0).gameObject.SetActive(spd > 0);
@@ -270,16 +276,19 @@ public class ThrusterController : MonoBehaviour
         // Debug.DrawRay(t.transform.position, -spd * Time.deltaTime * t.transform.up, Color.green);
     }
 
-    public void applyVertThrust(int tNum, float spd = 1.0f)
+    public void applyVertThrust(int tNum, float spd = 1.0f, bool dontApply = false)
     {
-        if (tNum >= vertThrusters.Length)
-        {
-            Debug.Log("invalid thruster num, vert");
-            return;
-        }
         Transform t = vertThrusters[tNum];
-        rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
-
+        if (!dontApply)
+        {
+            if (tNum >= vertThrusters.Length)
+            {
+                Debug.Log("invalid thruster num, vert");
+                return;
+            }
+            
+            rb.AddForceAtPosition(spd * Time.deltaTime * t.transform.up, t.transform.position);
+        }
         // UI thrust
         Transform uiT = UiVertThrusters[tNum];
         uiT.GetChild(0).gameObject.SetActive(spd > 0);
