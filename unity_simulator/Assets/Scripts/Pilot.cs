@@ -42,10 +42,10 @@ public class Pilot : Agent
     public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     public float[] distancesFloat;
 
-    public float LongitudinalSpd = 5.0f;
-    public float LaterialSpd = 5.0f;
-    public float VerticalSpd = 5.0f;
-    public float YawSpd = 2.5f;
+    private float LongitudinalSpd = 20.0f;
+    private float LaterialSpd = 20.0f;
+    private float VerticalSpd = 20.0f;
+    private float YawSpd = 20.0f;
 
     private Vector3 TankMins = new Vector3(0.8f, 1.5f, 0.8f);
     private Vector3 TankMaxs = new Vector3(2.3f, 3.4f, 2.3f);
@@ -67,6 +67,8 @@ public class Pilot : Agent
         startPos = gameObject.transform.parent.gameObject.transform.Find("startPos").gameObject.transform;
         if (enablePilot)
         {
+            Application.targetFrameRate = 30;
+
             goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
             indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
             indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
@@ -108,15 +110,11 @@ public class Pilot : Agent
                 0.15f < viewPos.y && viewPos.y < 0.85f &&
                 0.95f < viewPos.z && rand < 9)
             {
-                tagInView = 1;
+                // we see an AprilTag so last known pos is right now
+                lastKnownPos = srauv.position - tank.position;
+                lastKnownHeading = srauv.eulerAngles.y;
+                break;
             }
-        }
-
-        if (tagInView == 1)
-        {
-            // we see an AprilTag so last known pos is right now
-            lastKnownPos = srauv.position - tank.position;
-            lastKnownHeading = srauv.rotation.y % 360;
         }
 
         // position & heading from AprilTag
@@ -128,8 +126,9 @@ public class Pilot : Agent
         sensor.AddObservation(goal - tank.position);
 
         // mimic IMU instantaneous accelerations
-        sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
-        lastVel = rb.velocity;
+        sensor.AddObservation(rb.velocity);
+        //sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
+        //lastVel = rb.velocity; v = d/t
 
         // angular velocity from IMU gyro
         sensor.AddObservation(rb.angularVelocity.y);
@@ -139,9 +138,9 @@ public class Pilot : Agent
     {
         AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.3f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.3f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.3f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 0.45f &&
+            Math.Abs(goal.y - srauv.position.y) <= 0.45f &&
+            Math.Abs(goal.z - srauv.position.z) <= 0.45f)
         {
             statsRecorder.Add("Targets Reached", successes++);
             AddReward(2.0f);
@@ -159,26 +158,24 @@ public class Pilot : Agent
         var vertical = act[2];
         var yaw = act[3];
 
-        if (yaw == 0)
+        switch (longitudinal)
         {
-            switch (longitudinal)
-            {
-                case 1:
-                    thrustCtrl.moveForward(LongitudinalSpd);                
-                    break;
-                case 2:
-                    thrustCtrl.moveReverse(LongitudinalSpd);
-                    break;
-            }
-            switch (laterial)
-            {
-                case 1:
-                    thrustCtrl.strafeRight(LaterialSpd);
-                    break;
-                case 2:
-                    thrustCtrl.strafeLeft(LaterialSpd);
-                    break;
-            }
+            case 1:
+                thrustCtrl.moveForward(LongitudinalSpd);                
+                break;
+            case 2:
+                thrustCtrl.moveReverse(LongitudinalSpd);
+                break;
+        }
+
+        switch (laterial)
+        {
+            case 1:
+                thrustCtrl.strafeRight(LaterialSpd);
+                break;
+            case 2:
+                thrustCtrl.strafeLeft(LaterialSpd);
+                break;
         }
 
         switch (vertical)
@@ -276,9 +273,7 @@ public class Pilot : Agent
 
     private Vector3 GetRandomLocation()
     {
-        // x: 1 - 11, y: 1 - 6, z: (-1) - (-11)
         float x = 0.0f, y = 0.0f, z = 0.0f;
-
         do
         {
             x = Random.Range(TankMins.x, TankMaxs.x) + tank.position.x;
