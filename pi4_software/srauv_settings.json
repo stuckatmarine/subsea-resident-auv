@@ -5,7 +5,7 @@
         "headlights": false,
         "leds": false
     },
-    "gimp_thrusters": false,
+    "gimp_thruster": false,
     "fly_sim": true,
     "log_to_stdout": false,
     "external_ip": "",
@@ -15,8 +15,7 @@
     "main_cam_port": 7002,
     "main_tag_port": 7003,
     "update_interval_ms": 200,
-    "default_comms_response_str": "delf_resp",
-    "waypoint_tolerence_m": 0.1,
+    "default_comms_response_str": "dflt_resp",
     "manual_deadman_timeout_ms": 5000,
     "dist_sensor_config":{
         "total_sensors": 5,
@@ -33,11 +32,12 @@
         "max_thrust": 30,
         "deadman_timeout_ms": 1000,
         "thrust_interval_ms": 200,
-        "thrust_dist_thershold_m": 0.3,
+        "thrust_dist_thershold_m": 0.05,
         "thrust_counter_thershold_m": 0.2,
         "thrust_counter_thershold_spd": 0.02,
         "board_id_base": 8,
         "board_id_shift": 6,
+        "gimp_thruster_id": -1,
         "rpm_max": 2000,
         "direction_arr":[
             false,
@@ -135,8 +135,9 @@
         ]
     },
     "gimp_thruster_config":{
+        "gimp_thruster_id": 3,
         "num_thrusters": 6,
-        "max_thrust": 60,
+        "max_thrust": 30,
         "deadman_timeout_ms": 1000,
         "thrust_interval_ms": 200,
         "thrust_dist_thershold_m": 0.2,

@@ -45,8 +45,11 @@ from external_ws_server import SrauvExternalWSS_start
 G_MAIN_INTERNAL_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_msg_port"])
 G_MAIN_TAG_ADDR = (SETTINGS["internal_ip"], SETTINGS["main_tag_port"])
 G_LOG_FILENAME = str(f'Logs/{datetime.now().strftime("SR--%m-%d-%Y_%H-%M-%S")}.log')
-G_THRUSTER_CONFIG = SETTINGS["thruster_config"]
 G_USE_SIM_SENSORS = SETTINGS["fly_sim"] # False -> thrust self, True -> send cmds to sim to fly
+if SETTINGS["gimp_thruster"] == True:
+    G_THRUSTER_CONFIG = SETTINGS["gimp_thruster_config"]
+else:
+    G_THRUSTER_CONFIG = SETTINGS["thruster_config"]
 
 g_logger = logger.setup_logger("srauv", G_LOG_FILENAME, SETTINGS["log_to_stdout"])
 g_tel_msg = telemetry_msg.make("srauv_main", "sim") # primary srauv data (shared mem)
@@ -89,26 +92,30 @@ def update_telemetry():
 
     else:
         # TODO: choose best values to store in root tel msg
-        g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
-        g_tel_msg["pos_x"] = g_tel_msg["tag_dict"]["pos_x"]
-
         ## change from apritag coord system to unity
+        g_tel_msg["vel_x"] = g_tel_msg["tag_dict"]["vel_x"]
+        g_tel_msg["vel_y"] = g_tel_msg["tag_dict"]["vel_z"] # swap z - y
+        g_tel_msg["vel_z"] = g_tel_msg["tag_dict"]["vel_y"] # swap z - y
+        g_tel_msg["pos_x"] = g_tel_msg["tag_dict"]["pos_x"]
         g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_z"] # swap z - y
         g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_y"] # swap z - y
-        g_tel_msg["heading"] = g_tel_msg["heading"] - 90 # unity x+ is north
+        g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
+        g_tel_msg["tag_dict"]["heading"]  = g_tel_msg["tag_dict"]["heading"] - 90 # unity x+ is north
         if g_tel_msg["tag_dict"]["heading"] < 0:
             g_tel_msg["heading"] = g_tel_msg["heading"] + 360
 
         # g_tel_msg["depth"] = g_tel_msg["depth_sensor_dict"]["depth"]
         # g_tel_msg["pos_z"] = 3.8 * g_tel_msg["depth"] # 3.8m == tank depth
-        g_tel_msg["alt"] = g_tel_msg["pos_z"]
-    
+        # g_tel_msg["alt"] = g_tel_msg["pos_z"]
+
+
     # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
 
 def go_to_idle():
     g_tel_msg["state"] = "idle"
     g_tel_msg["thrust_enabled"][0] = False
     g_logger.info("--- State -> IDLE ---")
+    g_tel_msg["mission_msg"] = "-- State -> IDLE\n" + g_tel_msg["mission_msg"]
 
 def evaluate_state():
     global g_last_topside_cmd_time_ms
@@ -119,6 +126,7 @@ def evaluate_state():
         g_tel_msg["thrust_enabled"][0] = True
         if not srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS):
             g_logger.warning(f"No more waypoints to find")
+            g_tel_msg["mission_msg"] = "All waypoints found\n" + g_tel_msg["mission_msg"]
             go_to_idle()
 
     elif g_tel_msg["state"] == "manual":
@@ -129,8 +137,8 @@ def evaluate_state():
             g_tel_msg["thrust_enabled"][0] = True
 
         # waypoint debug
-        if srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS) == False:
-            g_logger.warning(f"No more waypoints to find")
+        # if srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS) == False:
+        #     g_logger.warning(f"No more waypoints to find")
 
 def parse_received_command():
     # check kill condition first for safety
@@ -148,6 +156,7 @@ def parse_received_command():
 
     if g_incoming_cmd["force_state"] != g_tel_msg["state"] and g_incoming_cmd["force_state"] != "":  
         g_logger.warning(f"--- Forcing state ---> {g_incoming_cmd['force_state']}")
+        g_tel_msg["mission_msg"] = f"-- Forcing State -> {g_incoming_cmd['force_state']}\n" + g_tel_msg["mission_msg"]
 
         #  TODO: functionize state transitions
         g_tel_msg["state"] = g_incoming_cmd["force_state"]

@@ -18,17 +18,17 @@ g_t_dist_z = 0.0
 g_t_heading = 0.0
 
 def setup_waypoints(logger):
-    global g_waypoint_idx
+    global g_waypoint_idx, g_waypoints
     if len(WAYPOINT_INFO["route"]) > 0:
         g_waypoint_idx = 0
-        route = WAYPOINT_INFO["route"]
-        for w in route:
-            logger.info(f"Adding waypoint:'{route[w]}'")
-            print(f"Adding waypoint {w}:'{route[w]}'")
-            g_waypoints.append(route[w])
+        g_waypoints = WAYPOINT_INFO["route"]
+        # for w in route:
+        #     logger.info(f"Adding waypoint:'{w}'")
+        #     print(f"Adding waypoint {w}:'{w}'")
+        #     g_waypoints.append(w)
 
 def update_waypoint(tel_msg, logger, srauv_fly_sim):
-    global g_waypoint_idx, g_t_dist_x, g_t_dist_y, g_t_dist_z, g_t_heading
+    global g_waypoint_idx, g_waypoints, g_t_dist_x, g_t_dist_y, g_t_dist_z, g_t_heading
     if g_waypoint_idx == -1:
         print("if g_waypoint_idx == -1:")
         return False

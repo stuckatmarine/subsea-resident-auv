@@ -1,18 +1,18 @@
 {
-    "route":{
-        "0": "1_3_1",
-        "1": "1_2_1",
-        "2": "1_2_2",
-        "3": "2.5_2_2.5",
-        "4": "2.5_2_1",
-        "5": "2.5_3.5_1",
-        "6": "1_2_2",
-        "7": "1_2_1",
-        "8": "1_3_1"
-    },
+    "route":[
+        "launch_corner_hi",
+        "launch_corner_mid",
+        "x_wall_mid",
+        "x_wall_hi",
+        "x_wall_mid",
+        "center_tank_mid",
+        "x_wall_mid",
+        "launch_corner_mid",
+        "launch_corner_hi"
+    ],
     "targets":{
-        "1_3_1":{
-            "label": "1_3_1",
+        "launch_corner_hi":{
+            "label": "launch_corner_hi",
             "pos_x": 1.0,
             "pos_y": 3.0,
             "pos_z": 1.0,
@@ -21,8 +21,8 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "1_2_1":{
-            "label": "1_2_1",
+        "launch_corner_mid":{
+            "label": "launch_corner_mid",
             "pos_x": 1.0,
             "pos_y": 2.0,
             "pos_z": 1.0,
@@ -31,8 +31,8 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "1_2_2":{
-            "label": "1_2_2",
+        "z_wall_mid":{
+            "label": "launch_corner_mid",
             "pos_x": 1.0,
             "pos_y": 2.0,
             "pos_z": 2.0,
@@ -41,8 +41,8 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "2.5_2_2.5":{
-            "label": "2.5_2_2.5",
+        "center_tank_mid":{
+            "label": "center_tank_mid",
             "pos_x": 2.5,
             "pos_y": 2.0,
             "pos_z": 2.5,
@@ -51,8 +51,8 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "2.5_2_1":{
-            "label": "2.5_2_1",
+        "x_wall_mid":{
+            "label": "x_wall_mid",
             "pos_x": 2.5,
             "pos_y": 2.0,
             "pos_z": 1.0,
@@ -61,8 +61,8 @@
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "2.5_3.5_1":{
-            "label": "2.5_3.5_1",
+        "x_wall_hi":{
+            "label": "x_wall_hi",
             "pos_x": 2.5,
             "pos_y": 3.5,
             "pos_z": 1.0,
