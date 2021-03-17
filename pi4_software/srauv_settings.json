@@ -6,7 +6,7 @@
         "leds": false
     },
     "gimp_thrusters": false,
-    "fly_sim": true,
+    "fly_sim": false,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,

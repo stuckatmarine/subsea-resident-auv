@@ -154,10 +154,6 @@ while True:
     t2 = time.time()
     ret,frame = cap_receive.read()
 
-    # Delay video file reading to match real-stream FPS
-    if (not STREAM):
-        time.sleep(1/fps - t2)
-
     if not ret:
         print('empty frame')
         break
@@ -174,7 +170,7 @@ while True:
 
 
     time_detect = time.time()-t1 
-    print(time_detect)
+    #print(time_detect)
 
     for tag in tag_results:
         # Eliminate false positives by checking the hamming attribute
@@ -242,7 +238,7 @@ while True:
                 
                 print("TAG! at " + f'{(time.time()-t0):.4f}' + " s")
 
-                if (gAUVx < 0.0 or gAUVx > 3.7 or gAUVy < 0.0 or gAUVy > 3.7 or gAUVz < 0.0):
+                if (Tank_T_AUV[0, 3] < 0.0 or Tank_T_AUV[0, 3] > 3.7 or Tank_T_AUV[1, 3] < 0.0 or Tank_T_AUV[1, 3] > 3.7 or Tank_T_AUV[2, 3] < 0.0):
                     print("Coordinates out of bounds!") #Do nothing, coordinates are out of bounds and in error
                 else:
                     # Calculte AUV parameters
@@ -272,6 +268,12 @@ while True:
     
     # Write frame to recorded video
     video_out.write(frame)
+    
+    # Delay video file reading to match real-stream FPS
+    if (not STREAM):
+        time_delay = 1/fps - (time.time() - t2)
+        if time_delay > 0:
+            time.sleep(time_delay)
 
 # Once finished, release / destroy windows
 print("Cleaning up...")
