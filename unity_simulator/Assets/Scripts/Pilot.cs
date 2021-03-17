@@ -126,9 +126,9 @@ public class Pilot : Agent
         sensor.AddObservation(goal - tank.position);
 
         // mimic IMU instantaneous accelerations
-        sensor.AddObservation(rb.velocity);
-        //sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
-        //lastVel = rb.velocity; v = d/t
+        //sensor.AddObservation(rb.velocity);
+        sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
+        lastVel = rb.velocity; // or maybe v = d/t ?
 
         // angular velocity from IMU gyro
         sensor.AddObservation(rb.angularVelocity.y);

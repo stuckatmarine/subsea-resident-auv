@@ -45,6 +45,7 @@ def make(source, dest = ''):
             "magnetic_z" : 11.1,     
         },
         "tag_dict":{
+            "recent": [1],
             "pos_x": 1.0,
             "pos_y": 1.1,
             "pos_z": 1.2,
