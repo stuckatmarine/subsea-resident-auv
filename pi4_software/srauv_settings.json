@@ -3,7 +3,8 @@
         "can": false,
         "i2c": false,
         "headlights": false,
-        "leds": false
+        "leds": false,
+        "coral": false
     },
     "gimp_thruster": false,
     "fly_sim": true,

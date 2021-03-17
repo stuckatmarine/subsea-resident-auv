@@ -27,6 +27,7 @@ from time import perf_counter
 from multiprocessing import Process
 
 # Custome imports
+import auto_pilot
 import srauv_waypoints
 import imu_sensor
 import depth_sensor
@@ -62,6 +63,7 @@ g_sub_processes = []
 ## G_USE_SIM_SENSORS, srauv will be fed telemtry data from the sim instead of using its sensor values
 g_cmd_msg = command_msg.make("srauv_main", "sim") # if g_srauv_fly_sim
 g_tel_recv = telemetry_msg.make("dflt_src", "dflt_dest") # if fly sim, use sim data, pi decisions
+g_autopilot = auto_pilot.AutoPilot(g_tel_msg)
 
 ########  State  ########
 def update_telemetry():
@@ -193,8 +195,13 @@ def calculate_thrust():
         return
 
     if g_tel_msg["state"] == "autonomous":
-        print("need ML autonomy")
-    
+        # print(f"autopilot thrust:{g_autopilot.get_action()}")
+        for dir in g_autopilot.get_action():
+            # print(f"dir:{dir}")
+            add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
+        for i in range(len(new_thrust_values)):
+            g_tel_msg["thrust_values"][i] = new_thrust_values[i]
+        g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
     elif g_tel_msg["state"] == "simple_ai":
         ## simple grute force thrust try
         t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
