@@ -1,6 +1,10 @@
-from pycoral.utils import edgetpu
 import numpy as np
+from srauv_settings import SETTINGS
 
+if SETTINGS["hardware"]["coral"] == True:
+    from pycoral.utils import edgetpu
+else:
+    import tensorflow as tf
 
 SENSOR_LEN = 12
 
@@ -8,7 +12,10 @@ class AutoPilot:
     def __init__(self, tel_msg: dict):
         self.tel_msg = tel_msg
 
-        self.interpreter = edgetpu.make_interpreter('pilot.tflite')
+        if SETTINGS["hardware"]["coral"] == True:
+            self.interpreter = edgetpu.make_interpreter('pilot.tflite')
+        else:
+            self.interpreter = tf.lite.Interpreter(model_path='pilot.tflite')
         self.interpreter.allocate_tensors()
         
         self.input_details = self.interpreter.get_input_details()
@@ -18,18 +25,18 @@ class AutoPilot:
 
     def get_action(self):
         sensor = [
-            tel_msg['tag_dict']['recent'][0],
-            tel_msg['pos_x'],
-            tel_msg['pos_y'],
-            tel_msg['pos_z'],
-            tel_msg['heading'],
-            tel_msg['target_pos_x'],
-            tel_msg['target_pos_y'],
-            tel_msg['target_pos_z'],
-            tel_msg['imu_dict']['linear_accel_x'],
-            tel_msg['imu_dict']['linear_accel_y'],
-            tel_msg['imu_dict']['linear_accel_z'],
-            tel_msg['imu_dict']['gyro_y']
+            self.tel_msg['tag_dict']['recent'][0],
+            self.tel_msg['pos_x'],
+            self.tel_msg['pos_y'],
+            self.tel_msg['pos_z'],
+            self.tel_msg['heading'],
+            self.tel_msg['target_pos_x'],
+            self.tel_msg['target_pos_y'],
+            self.tel_msg['target_pos_z'],
+            self.tel_msg['imu_dict']['linear_accel_x'],
+            self.tel_msg['imu_dict']['linear_accel_y'],
+            self.tel_msg['imu_dict']['linear_accel_z'],
+            self.tel_msg['imu_dict']['gyro_y']
         ]
         input_data = np.array(sensor, dtype=np.float32)
         input_data = np.reshape(input_data, self.input_details[1]['shape'])

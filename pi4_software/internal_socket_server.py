@@ -38,6 +38,7 @@ class LocalSocketThread(threading.Thread):
         self.default_response = str('dflt response').encode('utf-8') # for testing, '' also acceptable
         self.dist_values = tel["dist_values"]
         self.tag_values = tel["tag_dict"]
+        self.last_tag_s = time.time()
 
         log_filename = str(f'Logs/{datetime.now().strftime("IS--%m-%d-%Y_%H-%M-%S")}.log')
         self.logger = logger.setup_logger("internal_socket_server", log_filename)
@@ -91,6 +92,8 @@ class LocalSocketThread(threading.Thread):
                     self.socket.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
                     self.logger.info(f"tx -> addr:{address} data:{self.tel_bytes}")
+                    if self.tel["mission_msg"] != "":
+                        self.tel["mission_msg"] = ""
 
                 elif data_dict["msg_type"] == "distance":
                     # update cmd_bytes if not most current
@@ -101,11 +104,25 @@ class LocalSocketThread(threading.Thread):
                     # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
                 
                 elif data_dict["msg_type"] == "position":
+                    # t_now = time.time()
+                    # t = t_now - self.last_tag_s
+                    # if t != 0:
+                    #     self.tag_values["vel_x"] = (data_dict["pos_x"] - self.tag_values["pos_x"]) / t
+                    #     self.tag_values["vel_y"] = (data_dict["pos_y"] - self.tag_values["pos_y"]) / t
+                    #     self.tag_values["vel_z"] = (data_dict["pos_z"] - self.tag_values["pos_z"]) / t
+                    # else:
+                    #     self.tag_values["vel_x"] = 0.0
+                    #     self.tag_values["vel_y"] = 0.0
+                    #     self.tag_values["vel_z"] = 0.0
+
+                    # self.last_tag_s = t_now
                     self.tag_values["pos_x"] = data_dict["pos_x"]
                     self.tag_values["pos_y"] = data_dict["pos_y"]
                     self.tag_values["pos_z"] = data_dict["pos_z"]
+                    
                     self.tag_values["heading"] = data_dict["heading"]
                     self.tag_values["tag_id"] = data_dict["tag_id"]
+                    self.tag_values["recv_time"] = time.time()
                     self.socket.sendto(self.default_response, address)
                     # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
 

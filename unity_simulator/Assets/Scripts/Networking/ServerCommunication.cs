@@ -64,6 +64,12 @@ public class ServerCommunication : MonoBehaviour
 
     // Address used in code
     private string host => useLocalhost ? "localhost" : hostIP;
+
+
+    public GameObject missionLog;
+    static private string baseLogMsg = "Not connected";
+    public string logText = baseLogMsg;
+
     // Final server address
     private string server;
     
@@ -91,6 +97,10 @@ public class ServerCommunication : MonoBehaviour
     public Transform telX;
     public Transform telY;
     public Transform telZ;
+    public Transform vel_x;
+    public Transform vel_y;
+    public Transform vel_z;
+    public Transform vel_rot;
     public float forcesDownscaler = 10.0f;
     public float latMax;
     public float latMin;
@@ -114,6 +124,8 @@ public class ServerCommunication : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        missionLog.GetComponent<TMPro.TextMeshProUGUI>().text = logText;
+
         sock = GetComponent<TcpSocket>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         distancesFloat = srauv.GetComponent<DistanceSensors>().distancesFloat;
@@ -210,6 +222,10 @@ public class ServerCommunication : MonoBehaviour
     private void HandleMessage(string msg)
     {
         Debug.Log("Rx: " + rxNum++ + ", msg: " + msg);
+        if (logText == baseLogMsg)
+        {
+            updateLog("Websocket Connected\n");
+        }
 
         // Deserializing message from the server
         var message = JsonUtility.FromJson<CommandModel>(msg);
@@ -239,8 +255,11 @@ public class ServerCommunication : MonoBehaviour
                     telX.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_x.ToString("#.00");
                     telY.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_y.ToString("#.00");
                     telZ.GetComponent<TMPro.TextMeshProUGUI>().text = tel.pos_z.ToString("#.00");
-                    // telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.heading.ToString("#.0");
                     telHeading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.heading.ToString("#.0");
+                    vel_x.GetComponent<TMPro.TextMeshProUGUI>().text = tel.vel_x.ToString("#.00");
+                    vel_y.GetComponent<TMPro.TextMeshProUGUI>().text = tel.vel_y.ToString("#.00");
+                    vel_z.GetComponent<TMPro.TextMeshProUGUI>().text = tel.vel_z.ToString("#.00");
+                    vel_rot.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.gyro_y.ToString("#.0");
                     telState.GetComponent<TMPro.TextMeshProUGUI>().text = tel.state;
                     
                     telX.parent.GetComponent<Image>().color = grn;
@@ -248,6 +267,11 @@ public class ServerCommunication : MonoBehaviour
                     telZ.parent.GetComponent<Image>().color = grn;
                     telHeading.parent.GetComponent<Image>().color = grn;
                     telState.parent.GetComponent<Image>().color = grn;
+
+                    if (tel.mission_msg != "")
+                    {
+                        updateLog(tel.mission_msg);
+                    }
 
                     targetWaypoint.transform.position = new Vector3(tel.target_pos_x,
                                                           tel.target_pos_y,
@@ -466,7 +490,7 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.imu_dict.vel_y = rb.velocity.y;
         cmd_msg.imu_dict.vel_z = rb.velocity.z;
         cmd_msg.vel_x = rb.velocity.x;
-        Debug.Log("velx " + rb.velocity.x);
+        // Debug.Log("velx " + rb.velocity.x);
         cmd_msg.vel_y = rb.velocity.y;
         cmd_msg.vel_z = rb.velocity.z;
         
@@ -614,6 +638,12 @@ public class ServerCommunication : MonoBehaviour
     public void sendTcp()
     {
         sock.SendAndReceive( System.Text.Encoding.UTF8.GetBytes("testtt"));
+    }
+
+    public void updateLog(string s)
+    {
+        logText = s + logText;
+        missionLog.GetComponent<TMPro.TextMeshProUGUI>().text = logText;
     }
 
     public void setSpotlights()

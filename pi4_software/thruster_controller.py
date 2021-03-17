@@ -35,6 +35,7 @@ class ThrusterThread(threading.Thread):
         self.deadman_timeout_ms = config["deadman_timeout_ms"]
         self.tx_cmds            = config["CAN_tx_ids"]
         self.rx_cmds            = config["CAN_rx_ids"]
+        self.gimp               = config["gimp_thruster_id"]
         self.thrust_arr         = tel["thrust_values"]
         self.thrust_enabled     = tel["thrust_enabled"]
         self.id                 = id
@@ -123,7 +124,7 @@ class ThrusterThread(threading.Thread):
         pass
 
     def run(self):
-        if SETTINGS["hardware"]["can"] == True and self.id != 3:
+        if SETTINGS["hardware"]["can"] == True and self.id != self.gimp:
             self.send_msg("arm", [0x01])
             time.sleep(1)
             print ("thruster armed")
