@@ -52,7 +52,8 @@ public class Pilot : Agent
 
     private EnvironmentParameters resetParams;
     private StatsRecorder statsRecorder;
-    private int successes = 1;
+    private int score = 0;
+    private int goals = 0;
 
     public List<Transform> tags;
 
@@ -110,9 +111,13 @@ public class Pilot : Agent
                 0.15f < viewPos.y && viewPos.y < 0.85f &&
                 0.95f < viewPos.z && rand < 9)
             {
+                // simulating noise of AprilTag localization
+                Vector3 noise = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+
                 // we see an AprilTag so last known pos is right now
-                lastKnownPos = srauv.position - tank.position;
+                lastKnownPos = srauv.position - tank.position + noise;
                 lastKnownHeading = srauv.eulerAngles.y;
+                tagInView = 1;
                 break;
             }
         }
@@ -138,14 +143,16 @@ public class Pilot : Agent
     {
         AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.45f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.45f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.45f)
+        if (Math.Abs(goal.x - srauv.position.x) <= 0.3f &&
+            Math.Abs(goal.y - srauv.position.y) <= 0.3f &&
+            Math.Abs(goal.z - srauv.position.z) <= 0.3f)
         {
-            statsRecorder.Add("Targets Reached", successes++);
-            AddReward(2.0f);
+            statsRecorder.Add("Goals Reached Before Fail", ++goals);
+            statsRecorder.Add("Score", ++score);
+            AddReward(1.0f);
+            goal = GetRandomLocation();
+            goalBox.position = goal;
             StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
-            EndEpisode();
         }
 
         MoveAgent(actionBuffers.DiscreteActions);
@@ -244,7 +251,7 @@ public class Pilot : Agent
             
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
-        goal = GetRandomLocation(); // maybe check its not to close already
+        goal = GetRandomLocation();
         goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
         lastKnownPos = goal;
@@ -283,6 +290,7 @@ public class Pilot : Agent
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
 
+        startPos.position = new Vector3(0f, 6f, 0f);
         return new Vector3(x, y, z);
     }
 
@@ -303,9 +311,11 @@ public class Pilot : Agent
     {
         if (enablePilot)
         {
-          SetReward(-1.0f);
-          StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
-          EndEpisode();
+            SetReward(-1.0f);
+            goals = 0;
+            statsRecorder.Add("Score", --score);
+            StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
+            EndEpisode();
         }
     }
 
