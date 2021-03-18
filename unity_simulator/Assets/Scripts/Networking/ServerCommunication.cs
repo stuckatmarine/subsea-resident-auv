@@ -101,6 +101,10 @@ public class ServerCommunication : MonoBehaviour
     public Transform vel_y;
     public Transform vel_z;
     public Transform vel_rot;
+    public Transform accel_x;
+    public Transform accel_y;
+    public Transform accel_z;
+    public Transform gyro_y;
     public float forcesDownscaler = 10.0f;
     public float latMax;
     public float latMin;
@@ -280,7 +284,7 @@ public class ServerCommunication : MonoBehaviour
                     if (useSrauvPos)
                     {
                         srauv.position = new Vector3(tel.pos_x, tel.pos_y, tel.pos_z);
-                        // srauv.rotation.y = tel_msg.heading;
+                        srauv.rotation = Quaternion.Euler(new Vector3((tel.imu_dict.roll + 180.0f) % 360, tel.heading, tel.imu_dict.pitch));
                     }
 
                     forces = tel.thrust_values;

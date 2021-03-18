@@ -21,14 +21,14 @@ import math
 DEBUG = True
 
 # If STREAM, video is captured from gstreamer pipeline, else its read from a file
-STREAM = False
+STREAM = True
 
 # If WATER, use underwater camera calibration results
 WATER = True
 
 # Z offset/scale
-z_offset = 0.15
-z_scale = 0.715
+z_offset = 0.12274
+z_scale = 0.77153
 
 # Define tag detector
 at_detector = Detector(families='tag16h5',
@@ -125,7 +125,7 @@ gAUVheading = 0.0
 
 # Output video parameters
 fourcc = cv2.VideoWriter_fourcc(*"XVID")
-video_out = cv2.VideoWriter('output_vid.avi',fourcc, 10, (640,480))
+video_out = cv2.VideoWriter('output_vid.avi',fourcc, 15, (640,480))
 
 print("Camera sink open, Waiting for camera feed...")
 
