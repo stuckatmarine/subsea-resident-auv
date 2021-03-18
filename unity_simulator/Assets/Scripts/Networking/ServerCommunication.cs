@@ -178,7 +178,7 @@ public class ServerCommunication : MonoBehaviour
             return;
 
         //  Update UI
-        simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = (srauv.rotation.y * 360.0f).ToString("#.0");
+        simHeading.GetComponent<TMPro.TextMeshProUGUI>().text = (srauv.eulerAngles.y).ToString("#.0");
         simX.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.x.ToString("#.00");
         simY.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.y.ToString("#.00");
         simZ.GetComponent<TMPro.TextMeshProUGUI>().text = srauv.position.z.ToString("#.00");
