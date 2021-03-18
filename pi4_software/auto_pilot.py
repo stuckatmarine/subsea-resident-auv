@@ -1,30 +1,32 @@
+import math
 import numpy as np
 from srauv_settings import SETTINGS
 
-if SETTINGS["hardware"]["coral"] == True:
+
+if SETTINGS["hardware"]["coral"] is True:
     from pycoral.utils import edgetpu
 else:
     import tensorflow as tf
 
-SENSOR_LEN = 12
 
 class AutoPilot:
     def __init__(self, tel_msg: dict):
-        self.tel_msg = tel_msg
-
-        if SETTINGS["hardware"]["coral"] == True:
+        if SETTINGS["hardware"]["coral"] is True:
             self.interpreter = edgetpu.make_interpreter('pilot.tflite')
         else:
             self.interpreter = tf.lite.Interpreter(model_path='pilot.tflite')
+
+        self.tel_msg = tel_msg
+        self.exp = np.vectorize(math.exp)
         self.interpreter.allocate_tensors()
-        
+
         self.input_details = self.interpreter.get_input_details()
         self.output_details = self.interpreter.get_output_details()
 
-        self.input0 = np.array(np.zeros(self.input_details[0]['shape']), dtype=np.float32)
+        self.action_masks = np.array(np.ones(self.input_details[0]['shape']), dtype=np.float32)
 
-    def get_action(self):
-        sensor = [
+    def _collect_observations(self):
+        return np.reshape(np.array([
             self.tel_msg['tag_dict']['recent'][0],
             self.tel_msg['pos_x'],
             self.tel_msg['pos_y'],
@@ -37,48 +39,45 @@ class AutoPilot:
             self.tel_msg['imu_dict']['linear_accel_y'],
             self.tel_msg['imu_dict']['linear_accel_z'],
             self.tel_msg['imu_dict']['gyro_y']
-        ]
-        input_data = np.array(sensor, dtype=np.float32)
-        input_data = np.reshape(input_data, self.input_details[1]['shape'])
+        ], dtype=np.float32), self.input_details[1]['shape'])
 
-        self.interpreter.set_tensor(self.input_details[0]['index'], self.input0)
-        self.interpreter.set_tensor(self.input_details[1]['index'], input_data)
+    def get_action(self):
+        self.interpreter.set_tensor(self.input_details[0]['index'], self.action_masks)
+        self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations())
         self.interpreter.invoke()
 
-        for i in [19, 20, 30, 31, 32]:
-            output_data = self.interpreter.get_tensor(i)
-            print(f'{i}: {output_data}')
+        actions = self.exp(self.interpreter.get_tensor(111)[0])
+        longitudinal = actions[0:3].argmax(axis=0)
+        laterial = actions[3:6].argmax(axis=0)
+        vertical = actions[6:9].argmax(axis=0)
+        yaw = actions[9:12].argmax(axis=0)
 
         dir_thrust = []
 
-        output_dir = self.interpreter.get_tensor(19)[0]
-        if output_dir == 1:
+        if longitudinal == 1:
             dir_thrust.append('fwd')
-        elif output_dir == 2:
+        elif longitudinal == 2:
             dir_thrust.append('rev')
         else:
             dir_thrust.append('_')
 
-        output_dir = self.interpreter.get_tensor(20)[0]
-        if output_dir == 1:
+        if laterial == 1:
             dir_thrust.append('lat_right')
-        elif output_dir == 2:
+        elif laterial == 2:
             dir_thrust.append('lat_left')
         else:
             dir_thrust.append('_')
 
-        output_dir = self.interpreter.get_tensor(30)[0]
-        if output_dir == 1:
+        if yaw == 1:
             dir_thrust.append('rot_right')
-        elif output_dir == 2:
+        elif yaw == 2:
             dir_thrust.append('rot_left')
         else:
             dir_thrust.append('_')
 
-        output_dir = self.interpreter.get_tensor(31)[0]
-        if output_dir == 1:
+        if vertical == 1:
             dir_thrust.append('up')
-        elif output_dir == 2:
+        elif vertical == 2:
             dir_thrust.append('down')
         else:
             dir_thrust.append('_')
