@@ -15,4 +15,5 @@ public class TagModel
     public float heading;
     public int tag_id;
     public int recv_time;
+    public int[] recent;
 }

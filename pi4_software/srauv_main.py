@@ -78,8 +78,6 @@ def update_telemetry():
         g_tel_msg["vel_y"] = g_incoming_cmd["vel_y"]
         g_tel_msg["vel_z"] = g_incoming_cmd["vel_z"]
         g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
-        if g_incoming_cmd["imu_dict"]["heading"] < 0:
-            g_tel_msg["heading"] = -g_tel_msg["heading"]
         g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
         g_tel_msg["imu_dict"]["gyro_y"] = g_incoming_cmd["imu_dict"]["gyro_y"]
