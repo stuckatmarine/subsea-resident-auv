@@ -15,7 +15,7 @@
         "launch_corner_hi":{
             "label": "launch_corner_hi",
             "pos_x": 1.5,
-            "pos_y": 3.5,
+            "pos_y": 3.0,
             "pos_z": 1.0,
             "tolerance": 0.3,
             "heading": 0.0,
@@ -25,7 +25,7 @@
         "launch_corner_surface":{
             "label": "launch_corner_surface",
             "pos_x": 0.5,
-            "pos_y": 4.5,
+            "pos_y": 3.5,
             "pos_z": 0.5,
             "tolerance": 0.3,
             "heading": 0.0,
@@ -75,7 +75,7 @@
         "grid_center_hi":{
             "label": "grid_center_hi",
             "pos_x": 1.625,
-            "pos_y": 3.5,
+            "pos_y": 3.0,
             "pos_z": 1.625,
             "tolerance": 0.4,
             "heading": 0.0,
@@ -95,7 +95,7 @@
         "x_wall_hi":{
             "label": "x_wall_hi",
             "pos_x": 2.25,
-            "pos_y": 3.5,
+            "pos_y": 3.0,
             "pos_z": 1.0,
             "tolerance": 0.3,
             "heading": 0.0,

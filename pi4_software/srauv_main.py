@@ -91,8 +91,7 @@ def update_telemetry():
         g_tel_msg["imu_dict"]["heading"] = g_incoming_cmd["imu_dict"]["heading"]
 
     else:
-        # TODO: choose best values to store in root tel msg
-        ## change from apritag coord system to unity
+        # change from apritag coord system to unity
         g_tel_msg["vel_x"] = g_tel_msg["tag_dict"]["vel_x"]
         g_tel_msg["vel_y"] = g_tel_msg["tag_dict"]["vel_z"] # swap z - y
         g_tel_msg["vel_z"] = g_tel_msg["tag_dict"]["vel_y"] # swap z - y
@@ -104,12 +103,13 @@ def update_telemetry():
         if g_tel_msg["heading"] < 0:
             g_tel_msg["heading"] = g_tel_msg["heading"] + 360
 
-        # g_tel_msg["depth"] = g_tel_msg["depth_sensor_dict"]["depth"]
-        # g_tel_msg["pos_z"] = 3.8 * g_tel_msg["depth"] # 3.8m == tank depth
-        # g_tel_msg["alt"] = g_tel_msg["pos_z"]
+        if time.time() - g_tel_msg["tag_dict"]["recv_time"] >= SETTINGS["tag_stale_timeout_s"]:
+            g_tel_msg["tag_dict"]["recent"][0] = 0
+        else:
+            g_tel_msg["tag_dict"]["recent"][0] = 1
 
-
-    # g_logger.info(f"update_telemetry(), tel:{g_tel_msg}")
+        # imu roll off by 180 deg
+        g_tel_msg["imu_dict"]["roll"] = (g_tel_msg["imu_dict"]["roll"] + 180.0) % 360
 
 def go_to_idle():
     g_tel_msg["state"] = "idle"
@@ -136,10 +136,6 @@ def evaluate_state():
         else:
             g_tel_msg["thrust_enabled"][0] = True
 
-        # waypoint debug
-        # if srauv_waypoints.update_waypoint(g_tel_msg, g_logger, G_USE_SIM_SENSORS) == False:
-        #     g_logger.warning(f"No more waypoints to find")
-
 def parse_received_command():
     # check kill condition first for safety
     if g_incoming_cmd["force_state"] == "kill":
@@ -147,7 +143,7 @@ def parse_received_command():
 
     global g_incoming_cmd_num, G_USE_SIM_SENSORS, g_last_topside_cmd_time_ms
 
-    #  only use new msgs/ not same msg twice
+    #  only use new msgs
     if g_incoming_cmd["msg_num"] <= g_incoming_cmd_num:
         return
 
@@ -156,9 +152,8 @@ def parse_received_command():
 
     if g_incoming_cmd["force_state"] != g_tel_msg["state"] and g_incoming_cmd["force_state"] != "":  
         g_logger.warning(f"--- Forcing state ---> {g_incoming_cmd['force_state']}")
-        g_tel_msg["mission_msg"] = f"-- Forcing State -> {g_incoming_cmd['force_state']}\n" + g_tel_msg["mission_msg"]
+        g_tel_msg["mission_msg"] = f"SRAUV State -> {g_incoming_cmd['force_state']}\n" + g_tel_msg["mission_msg"]
 
-        #  TODO: functionize state transitions
         g_tel_msg["state"] = g_incoming_cmd["force_state"]
         if g_incoming_cmd["force_state"] == "idle":
             go_to_idle()
@@ -173,10 +168,10 @@ def parse_received_command():
         g_tel_msg["headlights_setting"] = g_incoming_cmd["headlight_setting"]
         headlight_controls.set_headlights(g_tel_msg["headlights_setting"])
 
-    # if g_incoming_cmd["action"] == "fly_sim_true":
-    #     G_USE_SIM_SENSORS = True
-    # elif g_incoming_cmd["action"] == "fly_sim_false":
-    #     G_USE_SIM_SENSORS = False
+    if g_incoming_cmd["reset_to_first_waypoint"] == True and srauv_waypoints.get_target_waypoint_idx() != 0:
+        srauv_waypoints.reset_to_first_waypoint()
+        g_logger.warning(f"Resetting to first waypoint")
+        g_tel_msg["mission_msg"] = f"Resetting to first waypoint\n" + g_tel_msg["mission_msg"]
 
 ########  thrust  ########
 def add_thrust(val_arr, amt):
@@ -193,62 +188,37 @@ def calculate_thrust():
         return
 
     if g_tel_msg["state"] == "autonomous":
-        # print(f"autopilot thrust:{g_autopilot.get_action()}")
         for dir in g_autopilot.get_action():
-            # print(f"dir:{dir}")
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
         g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
-    elif g_tel_msg["state"] == "simple_ai":
-        ## simple grute force thrust try
+
+    elif g_tel_msg["state"] == "simple_ai": # simple brute force thrust ai
         t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
         t_dist_y = g_tel_msg["pos_y"] - g_tel_msg["target_pos_y"]
         t_dist_z = g_tel_msg["pos_z"] - g_tel_msg["target_pos_z"]
 
-        if t_dist_y > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_y"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+        if t_dist_y > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
-        elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+        elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-        # else:
-        #     if (t_dist_y > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #         g_tel_msg["vel_y"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-        #     elif (t_dist_y < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #         g_tel_msg["vel_y"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
 
-        # isolate rot from lateral movement
+        # prioritize rotation from lateral movement
         if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
-        # if g_tel_msg["heading"] > 195:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
         elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
-        # elif g_tel_msg["heading"] < 165:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
         else:
-            if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
-            elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            elif t_dist_x > -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
-            # else:
-        #         if (t_dist_x > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #             g_tel_msg["vel_x"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rev"])
-        #         elif (t_dist_x < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #             g_tel_msg["vel_x"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["fwd"])
 
-            if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_z"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            if t_dist_z > G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
-            elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_z"] > -G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:
+            elif t_dist_z < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
-            # else:
-            #     if (t_dist_z > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-            #         g_tel_msg["vel_z"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-            #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_left"])
-            #     elif (t_dist_z < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-            #         g_tel_msg["vel_z"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-            #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["lat_right"])
 
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
@@ -261,14 +231,11 @@ def calculate_thrust():
             g_logger.info(f"Setting thrust_values:{g_incoming_cmd['raw_thrust']}")
 
         elif g_incoming_cmd["thrust_type"] == "dir_thrust":
-            # print(f"Updating manual thrust values in calculate_thrust")
             for dir in g_incoming_cmd["dir_thrust"]:
-                # print(f"dir:{dir}")
                 add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
             for i in range(len(new_thrust_values)):
                 g_tel_msg["thrust_values"][i] = new_thrust_values[i]
             g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
-            # print(f"g_tel_msg['thrust_values']:{g_tel_msg['thrust_values']}")
         
         else:
             for i in range(len(new_thrust_values)):
@@ -345,12 +312,12 @@ def close_gracefully():
 ########                           Main                                ########
 ###############################################################################
 def main():
+    # instantiate subclasses
     g_logger.info(f'state:{g_tel_msg["state"]} MSG:SRAUV starting')
     last_update_ms = 0
     g_tel_msg["state"] = "idle"
     headlight_controls.set_headlights(g_tel_msg["headlight_setting"])
-    srauv_waypoints.setup_waypoints(g_logger)
-
+    srauv_waypoints.setup_waypoints(g_tel_msg, g_logger)
     start_threads()
 
     g_logger.info(f'state:{g_tel_msg["state"]} MSG:Starting update loop')
@@ -362,11 +329,7 @@ def main():
 
                 parse_received_command()
 
-                # # if G_USE_SIM_SENSORS: # Use sim values and send sim cmds
-                # #     srauv_fly_sim.parse_received_telemetry(g_tel_msg, g_tel_recv)
-                # #     srauv_fly_sim.update_sim_cmd(g_tel_msg, g_cmd_msg)
-                # # else:
-                update_telemetry() # use sensor values and thrusters
+                update_telemetry()
 
                 srauv_waypoints.estimate_position(g_tel_msg)
 
@@ -374,19 +337,14 @@ def main():
                 
                 calculate_thrust()
 
-                # # update loop performance timer
+                # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
                 g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
-                last_update_ms = time_now   
+                last_update_ms = time_now
 
-                # debug msgs to comfirm thread operation
-                # g_logger.info(f"state         : {g_tel_msg['state']}")
-                # g_logger.info(f"imu data     : {g_tel_msg['imu_dict']}")
-                # #print(f"thrust enabled: {g_tel_msg['thrust_enabled'][0]}")
+                # log in blocks for clarity
                 g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
                 g_logger.info(f"tel msg       : {g_tel_msg}")
-                # print(f"tel msg heading   : {g_tel_msg['heading']}")
-                # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
                 g_logger.info(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 
             time.sleep(0.001)    

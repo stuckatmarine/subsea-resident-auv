@@ -104,17 +104,6 @@ class LocalSocketThread(threading.Thread):
                     # print(f"Recvd sensor_idx:{sensor_idx} distance:{self.dist_values[sensor_idx]}")
                 
                 elif data_dict["msg_type"] == "position":
-                    # t_now = time.time()
-                    # t = t_now - self.last_tag_s
-                    # if t != 0:
-                    #     self.tag_values["vel_x"] = (data_dict["pos_x"] - self.tag_values["pos_x"]) / t
-                    #     self.tag_values["vel_y"] = (data_dict["pos_y"] - self.tag_values["pos_y"]) / t
-                    #     self.tag_values["vel_z"] = (data_dict["pos_z"] - self.tag_values["pos_z"]) / t
-                    # else:
-                    #     self.tag_values["vel_x"] = 0.0
-                    #     self.tag_values["vel_y"] = 0.0
-                    #     self.tag_values["vel_z"] = 0.0
-
                     # self.last_tag_s = t_now
                     self.tag_values["pos_x"] = data_dict["pos_x"]
                     self.tag_values["pos_y"] = data_dict["pos_y"]

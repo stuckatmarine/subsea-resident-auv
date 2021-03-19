@@ -24,17 +24,20 @@ public class ServerCommunication : MonoBehaviour
     public bool send_cmds = false;
     public bool send_tel = false;
     public bool disableWebsocketServer = false; // disables all socket stuff for training
-    public bool useWebsocket = false; // uses tcp raw socket instead of websocket
-    public bool useTcpSocket = false; // uses tcp raw socket instead of websocket
+    public bool useWebsocket = false;           // uses tcp raw socket instead of websocket
+    public bool useTcpSocket = false;           // uses tcp raw socket instead of websocket
     public bool enableLogging = false;
-    public bool enableVehicleCmds = false; // pi_fly_sim, vehicle sends commands up (do not use)
-    public bool sendScreenshots = false; // sends fron cam img as string
-    public bool isMlTank = false; // sends fron cam img as string
+    public bool enableVehicleCmds = false;      // pi_fly_sim, vehicle sends commands up (do not use)
+    public bool sendScreenshots = false;        // sends fron cam img as string
+    public bool isMlTank = false;               // sends fron cam img as string
     
     public string headlightSetting = "low";
     public State controlState = State.Idle;
 
     public Color32 grn = new Color32(0, 138, 20, 255);
+    public Color32 blu = new Color32(0, 138, 20, 255);
+    public Color32 red = new Color32(0, 138, 20, 255);
+    public Color32 gry = new Color32(0, 138, 20, 255);
 
     public TcpSocket sock; // tcpSocket ip and port set in other script
     public byte[] tcpTxBytes = new byte[65000];
@@ -55,6 +58,7 @@ public class ServerCommunication : MonoBehaviour
     private int txNum = 0;
     [SerializeField]
     private int rxNum = 0;
+    private bool clientConnected = false;
 
     public int txIntervalMs = 1000;
     private int lastTxTime = 0;
@@ -85,6 +89,7 @@ public class ServerCommunication : MonoBehaviour
     private Texture2D frontCamTexture;
     private GameObject[] spotlights;
     public GameObject targetWaypoint;
+    private bool reset_to_first_waypoint = false;
 
     //  UI
     public Transform simHeading;
@@ -92,6 +97,15 @@ public class ServerCommunication : MonoBehaviour
     public Transform simY;
     public Transform simZ;
 
+    public Button server_btn;
+    public Button pos;
+    public Button headlight;
+    public Button waypoint;
+    public Button idle;
+    public Button manual;
+    public Button simple;
+    public Button auto;
+    public Button reset_gui;
     public Transform telState;
     public Transform telHeading;
     public Transform telX;
@@ -101,10 +115,10 @@ public class ServerCommunication : MonoBehaviour
     public Transform vel_y;
     public Transform vel_z;
     public Transform vel_rot;
-    public Transform accel_x;
-    public Transform accel_y;
-    public Transform accel_z;
-    public Transform gyro_y;
+    public Transform target_pos_x;
+    public Transform target_pos_y;
+    public Transform target_pos_z;
+    public Transform target_heading;
     public float forcesDownscaler = 10.0f;
     public float latMax;
     public float latMin;
@@ -129,32 +143,21 @@ public class ServerCommunication : MonoBehaviour
     private void Awake()
     {
         missionLog.GetComponent<TMPro.TextMeshProUGUI>().text = logText;
-
         sock = GetComponent<TcpSocket>();
         srauv = GameObject.Find("SRAUV").GetComponent<Transform>();
         distancesFloat = srauv.GetComponent<DistanceSensors>().distancesFloat;
+        raw_thrust_arr = srauv.GetComponent<ThrusterController>().raw_thrust;
+        cmd_msg.raw_thrust = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
+        cmd_msg.dir_thrust = new string[]{"", "", "", ""};
+        cmd_msg.headlight_setting = headlightSetting;
+        rb = srauv.GetComponent<Rigidbody>();
+        spotlights =  GameObject.FindGameObjectsWithTag("spotlight");
 
         if (isMlTank)
             goalPos = srauv.GetComponent<Pilot>().goal;
 
-        raw_thrust_arr = srauv.GetComponent<ThrusterController>().raw_thrust;
-        cmd_msg.raw_thrust = new float[]{0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
-        
-        cmd_msg.dir_thrust = new string[]{"", "", "", ""};
-        cmd_msg.headlight_setting = headlightSetting;
-        rb = srauv.GetComponent<Rigidbody>();
-
-        spotlights =  GameObject.FindGameObjectsWithTag("spotlight");
-
-        //dock = GameObject.Find("Dock").GetComponent<Transform>();
-
-        
         if (disableWebsocketServer)
             return;
-
-        //tree1 = GameObject.Find("Tree1").GetComponent<Transform>();
-        //tree2 = GameObject.Find("Tree2").GetComponent<Transform>();
-        //tree3 = GameObject.Find("Tree3").GetComponent<Transform>();
 
         if (sendScreenshots)
             frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
@@ -171,7 +174,6 @@ public class ServerCommunication : MonoBehaviour
         }
         setSpotlights();
     }
-
 
     /// <summary>
     /// Unity method called every frame
@@ -234,7 +236,7 @@ public class ServerCommunication : MonoBehaviour
         // Deserializing message from the server
         var message = JsonUtility.FromJson<CommandModel>(msg);
 
-        // // Picking correct method for message handling
+        // Picking correct method for message handling
         switch (message.msg_type)
         {
             case "command":
@@ -264,27 +266,51 @@ public class ServerCommunication : MonoBehaviour
                     vel_y.GetComponent<TMPro.TextMeshProUGUI>().text = tel.vel_y.ToString("#.00");
                     vel_z.GetComponent<TMPro.TextMeshProUGUI>().text = tel.vel_z.ToString("#.00");
                     vel_rot.GetComponent<TMPro.TextMeshProUGUI>().text = tel.imu_dict.gyro_y.ToString("#.0");
+                    target_pos_x.GetComponent<TMPro.TextMeshProUGUI>().text = tel.target_pos_x.ToString("#.00");
+                    target_pos_y.GetComponent<TMPro.TextMeshProUGUI>().text = tel.target_pos_y.ToString("#.00");
+                    target_pos_z.GetComponent<TMPro.TextMeshProUGUI>().text = tel.target_pos_z.ToString("#.00");
+                    target_heading.GetComponent<TMPro.TextMeshProUGUI>().text = tel.target_heading_to.ToString("#.0");
                     telState.GetComponent<TMPro.TextMeshProUGUI>().text = tel.state;
                     
-                    telX.parent.GetComponent<Image>().color = grn;
-                    telY.parent.GetComponent<Image>().color = grn;
-                    telZ.parent.GetComponent<Image>().color = grn;
-                    telHeading.parent.GetComponent<Image>().color = grn;
-                    telState.parent.GetComponent<Image>().color = grn;
+                    telState.parent.GetComponent<Image>().color = blu;
+                    telX.parent.GetComponent<Image>().color = blu;
+                    telY.parent.GetComponent<Image>().color = blu;
+                    telZ.parent.GetComponent<Image>().color = blu;
+                    telHeading.parent.GetComponent<Image>().color = blu;
+                    vel_x.parent.GetComponent<Image>().color = blu;
+                    vel_y.parent.GetComponent<Image>().color = blu;
+                    vel_z.parent.GetComponent<Image>().color = blu;
+                    vel_rot.parent.GetComponent<Image>().color = blu;
+                    target_pos_x.parent.GetComponent<Image>().color = grn;
+                    target_pos_y.parent.GetComponent<Image>().color = grn;
+                    target_pos_z.parent.GetComponent<Image>().color = grn;
+                    target_heading.parent.GetComponent<Image>().color = grn;
 
+                    // gui buttons
+                    server_btn.GetComponent<Image>().color = clientConnected && send_cmds ? blu : red;
+                    pos.GetComponent<Image>().color = useSrauvPos ? blu : red;
+                    headlight.GetComponent<Image>().color = headlightSetting == "low" ? blu : red;
+                    waypoint.GetComponent<Image>().color = reset_to_first_waypoint ? blu : red;
+
+
+                    idle.GetComponent<Image>().color = tel.state == "idle" ? blu : red;
+                    manual.GetComponent<Image>().color = tel.state == "manual" ? blu : red;
+                    simple.GetComponent<Image>().color = tel.state == "simple_ai" ? blu : red;
+                    auto.GetComponent<Image>().color = tel.state == "autonomous" ? blu : red;
+                    
                     if (tel.mission_msg != "")
                     {
                         updateLog(tel.mission_msg);
                     }
 
                     targetWaypoint.transform.position = new Vector3(tel.target_pos_x,
-                                                          tel.target_pos_y,
-                                                          tel.target_pos_z);
+                                                                    tel.target_pos_y,
+                                                                    tel.target_pos_z);
 
                     if (useSrauvPos)
                     {
                         srauv.position = new Vector3(tel.pos_x, tel.pos_y, tel.pos_z);
-                        srauv.rotation = Quaternion.Euler(new Vector3((tel.imu_dict.roll + 180.0f) % 360, tel.heading, tel.imu_dict.pitch));
+                        srauv.rotation = Quaternion.Euler(new Vector3((tel.imu_dict.roll), tel.heading, tel.imu_dict.pitch));
                     }
 
                     forces = tel.thrust_values;
@@ -294,23 +320,6 @@ public class ServerCommunication : MonoBehaviour
                             forces[i] = forces[i] / forcesDownscaler;
                     }
                     telDistanceFloats = tel.dist_values;
-                    // for (int i = 0; i < 6; i++)
-                    // {
-                    //     telDistanceFloats[i] = tel.dist_values[i];
-                    // }
-                    
-                    // colorize/"max" limits
-                    // for (int i = 0; i < 4; i++)
-                    // {
-                    //     updateValues(i, latMin, latMax);
-                    // }
-                    // for (int i = 4; i < 6; i++)
-                    // {
-                    //     updateValues(i, vertMin, vertMax);
-                    // }
-
-                    // for (int i = 0; i < 6; i++)
-                    //     forces[i] = message.raw_thrust[i];
                 }
                 break;
             case "reset":
@@ -328,6 +337,7 @@ public class ServerCommunication : MonoBehaviour
     public async void ConnectToServer()
     {
         await client.Connect();
+        clientConnected = true;
     }
 
     /// <summary>
@@ -355,39 +365,6 @@ public class ServerCommunication : MonoBehaviour
         tel_msg.imu_dict.vel_z = rb.velocity.z;
         tel_msg.dist_values = distancesFloat;
 
-        // tel_msg.roll = srauv.rotation.x * 360.0f;
-        // tel_msg.pitch = srauv.rotation.z * 360.0f;
-        // if (dock)
-        // {
-        //     tel_msg.dockDist = Vector3.Distance(srauv.position, dock.position);
-        //     tel_msg.dockDistX = srauv.position.x - dock.position.x;
-        //     tel_msg.dockDistY = srauv.position.y - dock.position.y;
-        //     tel_msg.dockDistZ = srauv.position.z - dock.position.z;
-        // }
-        // if (tree1)
-        // {
-        //     tel_msg.tree1Dist = Vector3.Distance(srauv.position, tree1.position);
-        //     tel_msg.tree1DistX = srauv.position.x - tree1.position.x;
-        //     tel_msg.tree1DistY = srauv.position.y - tree1.position.y;
-        //     tel_msg.tree1DistZ = srauv.position.z - tree1.position.z;
-        // }
-        // if (tree2)
-        // {
-        //     tel_msg.tree2Dist = Vector3.Distance(srauv.position, tree2.position);
-        //     tel_msg.tree2DistX = srauv.position.x - tree2.position.x;
-        //     tel_msg.tree2DistY = srauv.position.y - tree2.position.y;
-        //     tel_msg.tree2DistZ = srauv.position.z - tree2.position.z;
-        // }
-        // if (tree3)
-        // {
-        //     tel_msg.tree3Dist = Vector3.Distance(srauv.position, tree3.position);
-        //     tel_msg.tree3DistX = srauv.position.x - tree3.position.x;
-        //     tel_msg.tree3DistY = srauv.position.y - tree3.position.y;
-        //     tel_msg.tree3DistZ = srauv.position.z - tree3.position.z;
-        // }
-        
-        //string msg = JsonUtility.ToJson(tel_msg);
-
         if (useTcpSocket)
         {
             if (sock.connectTcpSocket())
@@ -412,9 +389,6 @@ public class ServerCommunication : MonoBehaviour
                 useTcpSocket = false;
             }
         }
-        
-        // if (useWebsocket)
-        //     client.Send(msg);
 
         // send screenshot too after every x msgs
         if (sendScreenshots && txNum % 2 == 0)
@@ -428,19 +402,7 @@ public class ServerCommunication : MonoBehaviour
             // frontCamTexSture = frontCam;
             if (enableLogging)
                 Debug.Log("Sending: " + cam_msg);
-            
-            // if (useWebsocket)
-            // {
-            //     byte[] bytes;
-            //     bytes = frontCamTexture.EncodeToJPG();
-            //     cam_msg.img_str = Convert.ToBase64String(bytes);
 
-            //     msg = System.Text.Encoding.UTF8.GetBytes(cam_msg);
-            //     if (enableLogging)
-            //         Debug.Log("Sending Img of size: " + bytes.Length);
-
-            //     client.Send(JsonUtility.ToJson(cam_msg));
-            // }
             if (useTcpSocket)
             {
                 if (sock.connectTcpSocket())
@@ -475,7 +437,6 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.headlight_setting = headlightSetting;
         DateTime timestamp = DateTime.Now;
         cmd_msg.timestamp = timestamp.ToString("MM/dd/yyy HH:mm:ss.") + DateTime.Now.Millisecond.ToString();
-        
         cmd_msg.pos_x = srauv.position.x;
         cmd_msg.pos_y = srauv.position.y;
         cmd_msg.pos_z = srauv.position.z;
@@ -494,9 +455,12 @@ public class ServerCommunication : MonoBehaviour
         cmd_msg.imu_dict.vel_y = rb.velocity.y;
         cmd_msg.imu_dict.vel_z = rb.velocity.z;
         cmd_msg.vel_x = rb.velocity.x;
-        // Debug.Log("velx " + rb.velocity.x);
         cmd_msg.vel_y = rb.velocity.y;
         cmd_msg.vel_z = rb.velocity.z;
+
+        cmd_msg.reset_to_first_waypoint = reset_to_first_waypoint;
+        if (reset_to_first_waypoint)
+            setWaypointReset(false);
         
         for (int i = 0; i < 4; i++)
         {
@@ -508,8 +472,8 @@ public class ServerCommunication : MonoBehaviour
             cmd_msg.raw_thrust[i] = srauv.GetComponent<ThrusterController>().raw_thrust[i];
         }
 
-        Debug.Log("dir_thrust_used: " + srauv.GetComponent<ThrusterController>().dir_thrust_used);
-        Debug.Log("raw_thrust_used: " + srauv.GetComponent<ThrusterController>().raw_thrust_used);
+        // Debug.Log("dir_thrust_used: " + srauv.GetComponent<ThrusterController>().dir_thrust_used);
+        // Debug.Log("raw_thrust_used: " + srauv.GetComponent<ThrusterController>().raw_thrust_used);
 
         if (controlState == State.Manual)
         {
@@ -539,7 +503,6 @@ public class ServerCommunication : MonoBehaviour
             cmd_msg.force_state = "idle";
         }
         
-
         string msg = JsonUtility.ToJson(cmd_msg);
 
         if (enableLogging)
@@ -563,7 +526,6 @@ public class ServerCommunication : MonoBehaviour
         if (useWebsocket)
             client.Send(msg);
     }
-
 
     // Take a "screenshot" of a camera's Render Texture.
     private Texture2D getScreenshot(Camera camera)
@@ -625,7 +587,7 @@ public class ServerCommunication : MonoBehaviour
             telDistanceTransforms[i].GetComponent<Image>().color = Color.red;
         }
         else
-            telDistanceTransforms[i].GetComponent<Image>().color = Color.grey;
+            telDistanceTransforms[i].GetComponent<Image>().color = gry;
     }
 
     public void toggleSendCmds()
@@ -641,13 +603,21 @@ public class ServerCommunication : MonoBehaviour
 
     public void sendTcp()
     {
-        sock.SendAndReceive( System.Text.Encoding.UTF8.GetBytes("testtt"));
+        sock.SendAndReceive( System.Text.Encoding.UTF8.GetBytes("test"));
     }
 
     public void updateLog(string s)
     {
-        logText = s + logText;
-        missionLog.GetComponent<TMPro.TextMeshProUGUI>().text = logText;
+        if (logText.IndexOf(s) != 0)
+        {
+            logText = s + logText;
+            missionLog.GetComponent<TMPro.TextMeshProUGUI>().text = logText;
+        }
+    }
+
+    public void setWaypointReset(bool b)
+    {
+        reset_to_first_waypoint = b;
     }
 
     public void setSpotlights()
