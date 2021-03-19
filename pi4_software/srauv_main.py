@@ -102,8 +102,8 @@ def update_telemetry():
         g_tel_msg["pos_y"] = g_tel_msg["tag_dict"]["pos_z"] # swap z - y
         g_tel_msg["pos_z"] = g_tel_msg["tag_dict"]["pos_y"] # swap z - y
         g_tel_msg["alt"] = g_tel_msg["tag_dict"]["pos_z"]
-        g_tel_msg["tag_dict"]["heading"]  = g_tel_msg["tag_dict"]["heading"] - 90 # unity x+ is north
-        if g_tel_msg["tag_dict"]["heading"] < 0:
+        g_tel_msg["heading"]  = -g_tel_msg["tag_dict"]["heading"] - 90 # unity x+ is north
+        if g_tel_msg["heading"] < 0:
             g_tel_msg["heading"] = g_tel_msg["heading"] + 360
 
         # g_tel_msg["depth"] = g_tel_msg["depth_sensor_dict"]["depth"]
@@ -222,8 +222,10 @@ def calculate_thrust():
 
         # isolate rot from lateral movement
         if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
+        # if g_tel_msg["heading"] > 195:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
         elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
+        # elif g_tel_msg["heading"] < 165:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
         else:
             if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:# and g_tel_msg["vel_x"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]:

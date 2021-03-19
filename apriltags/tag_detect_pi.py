@@ -19,17 +19,17 @@ import math
 from socket_sender import send_over_socket
 
 # If DEBUG mode is True, displays tag and camera pose information to video
-DEBUG = False
+DEBUG = True
 
 # If STREAM, video is captured from gstreamer pipeline, else its read from a file
-STREAM = False
+STREAM = True
 
 # If WATER, use underwater camera calibration results
 WATER = True
 
-# Z offset/scale
-z_offset = 0.15
-z_scale = 0.715
+# Z offset/scale calculated from z measurements 
+z_offset = 0.12274
+z_scale = 0.77153
 
 # Define tag detector #
 at_detector = Detector(families='tag16h5',
