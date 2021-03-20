@@ -22,6 +22,7 @@ import socket
 import time
 import threading
 import math  
+from random import randrange, uniform
 from datetime import datetime
 from time import perf_counter
 from multiprocessing import Process
@@ -71,14 +72,39 @@ def update_telemetry():
     g_tel_msg["timestamp"] = timestamp.now_string()
 
     if G_USE_SIM_SENSORS == True:
-        g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
-        g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
-        g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
-        g_tel_msg["vel_x"] = g_incoming_cmd["vel_x"]
-        g_tel_msg["vel_y"] = g_incoming_cmd["vel_y"]
-        g_tel_msg["vel_z"] = g_incoming_cmd["vel_z"]
-        g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
-        g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
+        g_tel_msg["tag_dict"]["recent"][0] = 1
+        if SETTINGS["sim_sensor_noise"]:
+            rand = randrange(10)
+            if (rand < 9 #and
+                # g_incoming_cmd["pos_x"] > 0.2 and
+                # g_incoming_cmd["pos_x"] < 2.7 and
+                # g_incoming_cmd["pos_z"] < 2.6 and
+                # g_incoming_cmd["pos_y"] > 1.4 and
+                # g_incoming_cmd["pos_y"] < 4.0 and
+                ):
+            
+                g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"] + uniform(-0.1, 0.1)
+                g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"] + uniform(-0.1, 0.1)
+                g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"] + uniform(-0.1, 0.1)
+                g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"] + uniform(-5, 5)
+                g_tel_msg["vel_x"] = g_incoming_cmd["vel_x"] + uniform(-0.1, 0.1)
+                g_tel_msg["vel_y"] = g_incoming_cmd["vel_y"] + uniform(-0.1, 0.1)
+                g_tel_msg["vel_z"] = g_incoming_cmd["vel_z"] + uniform(-0.1, 0.1)
+                g_tel_msg["alt"] = g_incoming_cmd["pos_z"] + uniform(-0.1, 0.1)
+                g_tel_msg["tag_dict"]["recent"][0] = 1
+            else:
+                g_tel_msg["tag_dict"]["recent"][0] = 0
+        else:
+            g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"]
+            g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"]
+            g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"]
+            g_tel_msg["heading"] = g_incoming_cmd["imu_dict"]["heading"]
+            g_tel_msg["vel_x"] = g_incoming_cmd["vel_x"]
+            g_tel_msg["vel_y"] = g_incoming_cmd["vel_y"]
+            g_tel_msg["vel_z"] = g_incoming_cmd["vel_z"]
+            g_tel_msg["alt"] = g_incoming_cmd["pos_z"]
+            g_tel_msg["tag_dict"]["recent"][0] = 1
+
         g_tel_msg["imu_dict"]["gyro_x"] = g_incoming_cmd["imu_dict"]["gyro_x"]
         g_tel_msg["imu_dict"]["gyro_y"] = g_incoming_cmd["imu_dict"]["gyro_y"]
         g_tel_msg["imu_dict"]["gyro_z"] = g_incoming_cmd["imu_dict"]["gyro_z"]

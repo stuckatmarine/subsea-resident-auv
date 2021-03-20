@@ -17,7 +17,7 @@
             "pos_x": 1.5,
             "pos_y": 3.0,
             "pos_z": 1.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -27,7 +27,7 @@
             "pos_x": 0.5,
             "pos_y": 3.5,
             "pos_z": 0.5,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -37,7 +37,7 @@
             "pos_x": 1.5,
             "pos_y": 2.5,
             "pos_z": 2.25,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -47,7 +47,7 @@
             "pos_x": 1.5,
             "pos_y": 2.5,
             "pos_z": 2.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -87,7 +87,7 @@
             "pos_x": 2.25,
             "pos_y": 2.5,
             "pos_z": 1.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -97,7 +97,7 @@
             "pos_x": 2.25,
             "pos_y": 3.0,
             "pos_z": 1.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0

@@ -8,6 +8,7 @@
     },
     "gimp_thruster": false,
     "fly_sim": true,
+    "sim_sensor_noise": true,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,
