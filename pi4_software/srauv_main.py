@@ -129,6 +129,9 @@ def update_telemetry():
         if g_tel_msg["heading"] < 0:
             g_tel_msg["heading"] = g_tel_msg["heading"] + 360
 
+        if time.time() - g_tel_msg["tag_dict"]["recv_time"] >= SETTINGS["tag_kill_timeout_s"]:
+            go_to_idle()
+
         if time.time() - g_tel_msg["tag_dict"]["recv_time"] >= SETTINGS["tag_stale_timeout_s"]:
             g_tel_msg["tag_dict"]["recent"][0] = 0
         else:

@@ -29,53 +29,36 @@
         },
         "launch_corner_hi":{
             "label": "launch_corner_hi",
-<<<<<<< HEAD
             "pos_x": 1.2,
             "pos_y": 3.390,
             "pos_z": 0.5,
             "tolerance": 0.15,
-=======
-            "pos_x": 1.5,
-            "pos_y": 3.0,
-            "pos_z": 1.0,
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-<<<<<<< HEAD
         "x_wall_surface":{
             "label": "x_wall_surface",
             "pos_x": 1.25,
             "pos_y": 3.5,
             "pos_z": 0.5,
             "tolerance": 0.15,
-=======
-        "launch_corner_surface":{
-            "label": "launch_corner_surface",
-            "pos_x": 0.5,
+        "x_wall_surface":{
+            "label": "x_wall_surface",
+            "pos_x": 1.25,
             "pos_y": 3.5,
             "pos_z": 0.5,
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
+            "tolerance": 0.15,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
         "launch_corner_mid":{
             "label": "launch_corner_mid",
-<<<<<<< HEAD
             "pos_x": 1.20,
             "pos_y": 3.00,
             "pos_z": 0.7,
             "tolerance": 0.15,
-=======
-            "pos_x": 1.5,
-            "pos_y": 2.5,
-            "pos_z": 2.25,
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -85,11 +68,7 @@
             "pos_x": 1.5,
             "pos_y": 2.5,
             "pos_z": 2.0,
-<<<<<<< HEAD
             "tolerance": 0.15,
-=======
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -126,34 +105,20 @@
         },
         "x_wall_mid":{
             "label": "x_wall_mid",
-<<<<<<< HEAD
             "pos_x": 1.75,
             "pos_y": 3.0,
             "pos_z": 0.735,
             "tolerance": 0.15,
-=======
-            "pos_x": 2.25,
-            "pos_y": 2.5,
-            "pos_z": 1.0,
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
         "x_wall_hi":{
             "label": "x_wall_hi",
-<<<<<<< HEAD
             "pos_x": 2.0,
             "pos_y": 3.395,
             "pos_z": 0.5,
             "tolerance": 0.15,
-=======
-            "pos_x": 2.25,
-            "pos_y": 3.0,
-            "pos_z": 1.0,
-            "tolerance": 0.45,
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0

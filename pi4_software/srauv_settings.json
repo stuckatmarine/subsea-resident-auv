@@ -20,6 +20,7 @@
     "default_comms_response_str": "dflt_resp",
     "manual_deadman_timeout_ms": 5000,
     "tag_stale_timeout_s": 0.500,
+    "tag_kill_timeout_s": 10.0,
     "dist_sensor_config":{
         "total_sensors": 5,
         "min_cm": 10,
