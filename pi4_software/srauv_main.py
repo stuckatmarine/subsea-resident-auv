@@ -232,7 +232,6 @@ def calculate_thrust():
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
         elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-<<<<<<< HEAD
         # else:
         #     if (t_dist_y > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
         #         g_tel_msg["vel_y"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
@@ -247,13 +246,6 @@ def calculate_thrust():
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
         elif g_tel_msg["heading"] < 357 and g_tel_msg["heading"] > 180:
         # elif g_tel_msg["heading"] < 165:
-=======
-
-        # prioritize rotation from lateral movement
-        if g_tel_msg["heading"] > 15 and g_tel_msg["heading"]  < 180:
-            add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_left"])
-        elif g_tel_msg["heading"] < 350 and g_tel_msg["heading"] > 180:
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["rot_right"])
         else:
             if t_dist_x < G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
@@ -385,7 +377,6 @@ def main():
 
                 # update loop performance timer
                 ul_perf_timer_end = perf_counter() 
-<<<<<<< HEAD
                 # g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
                 last_update_ms = time_now   
 
@@ -397,14 +388,6 @@ def main():
                 # g_logger.info(f"tel msg       : {g_tel_msg}")
                 # print(f"tel msg heading   : {g_tel_msg['heading']}")
                 # print(f"dist 0        : {g_tel_msg['dist_values'][0]}")
-=======
-                g_logger.info(f'state:{g_tel_msg["state"]} update loop ms:{(ul_perf_timer_end-ul_perf_timer_start) * 1000}')
-                last_update_ms = time_now
-
-                # log in blocks for clarity
-                g_logger.info(f"thrust_vals   : {g_tel_msg['thrust_values']}")
-                g_logger.info(f"tel msg       : {g_tel_msg}")
->>>>>>> ed9a15fd3907cbb77b3adbc585634735cc8a56bd
                 g_logger.info(f"update loop ms: {(ul_perf_timer_end-ul_perf_timer_start) * 1000}\n")
 
             time.sleep(0.001)    

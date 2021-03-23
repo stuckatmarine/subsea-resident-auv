@@ -43,12 +43,6 @@
             "pos_y": 3.5,
             "pos_z": 0.5,
             "tolerance": 0.15,
-        "x_wall_surface":{
-            "label": "x_wall_surface",
-            "pos_x": 1.25,
-            "pos_y": 3.5,
-            "pos_z": 0.5,
-            "tolerance": 0.15,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
