@@ -102,4 +102,4 @@ class AutoPilot:
         else:
             dir_thrust.append('_')
 
-        return _thruster_safety(dir_thrust)
+        return self._thruster_safety(dir_thrust)
