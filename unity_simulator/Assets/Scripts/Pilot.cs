@@ -52,7 +52,10 @@ public class Pilot : Agent
 
     private EnvironmentParameters resetParams;
     private StatsRecorder statsRecorder;
-    private int successes = 1;
+    private int score = 0;
+    [SerializeField] private int goalsReached = 0;
+    [SerializeField] private int numWaypoints = 1;
+    [SerializeField] private float goalSize = 0.45f;
 
     public List<Transform> tags;
 
@@ -91,7 +94,7 @@ public class Pilot : Agent
         //frontCam = GameObject.Find("FrontCamera").GetComponent<Camera>();
         //distancesFloat = gameObject.GetComponent<DistanceSensors>().distancesFloat;
 
-        //resetParams = Academy.Instance.EnvironmentParameters;
+        resetParams = Academy.Instance.EnvironmentParameters;
         SetResetParameters();
     }
 
@@ -106,8 +109,8 @@ public class Pilot : Agent
             // simulating noise of random inaccuracies in AprilTag detector
             float rand = Random.Range(0, 10);
 
-            if (0.15f < viewPos.x && viewPos.x < 0.85f &&
-                0.15f < viewPos.y && viewPos.y < 0.85f &&
+            if (0.1f < viewPos.x && viewPos.x < 0.9f &&
+                0.1f < viewPos.y && viewPos.y < 0.9f &&
                 0.95f < viewPos.z && rand < 9)
             {
                 // we see an AprilTag so last known pos is right now
@@ -138,14 +141,25 @@ public class Pilot : Agent
     {
         AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= 0.45f &&
-            Math.Abs(goal.y - srauv.position.y) <= 0.45f &&
-            Math.Abs(goal.z - srauv.position.z) <= 0.45f)
+        if (Math.Abs(goal.x - srauv.position.x) <= goalSize &&
+            Math.Abs(goal.y - srauv.position.y) <= goalSize &&
+            Math.Abs(goal.z - srauv.position.z) <= goalSize)
         {
-            statsRecorder.Add("Targets Reached", successes++);
+            goalsReached++;
+            statsRecorder.Add("Score", ++score);
+
             AddReward(2.0f);
             StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
-            EndEpisode();
+
+            if (goalsReached < numWaypoints)
+            {
+                goal = GetRandomLocation();
+                goalBox.position = goal;
+            }
+            else
+            {
+                EndEpisode();
+            }
         }
 
         MoveAgent(actionBuffers.DiscreteActions);
@@ -249,6 +263,14 @@ public class Pilot : Agent
         startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
         lastKnownPos = goal;
         
+        // params from curriculum lesson
+        numWaypoints = (int) resetParams.GetWithDefault("num_waypoints", 1);
+        goalSize = resetParams.GetWithDefault("goal_size", 0.45f);
+        
+        // reset scoring metrics
+        goalsReached = 0;
+        score = 0;
+
         // reset current rotation
         srauv.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
         
@@ -303,9 +325,13 @@ public class Pilot : Agent
     {
         if (enablePilot)
         {
-          SetReward(-1.0f);
-          StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
-          EndEpisode();
+            SetReward(-1.0f);
+
+            statsRecorder.Add("Goals Reached Before Fail", goalsReached);
+            statsRecorder.Add("Score", --score);
+
+            StartCoroutine(TargetReachedSwapGroundMaterial(indRed, 0.5f));
+            EndEpisode();
         }
     }
 

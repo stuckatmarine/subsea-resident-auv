@@ -3,7 +3,7 @@ behaviors:
     trainer_type: ppo
     hyperparameters:
       batch_size: 2048
-      buffer_size: 20480
+      buffer_size: 131072
       learning_rate: 0.0003
       beta: 0.005
       epsilon: 0.2
@@ -24,3 +24,60 @@ behaviors:
     time_horizon: 1000
     summary_freq: 10000
     threaded: true
+environment_parameters:
+  num_waypoints:
+    curriculum:
+      - name: Lesson0
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.2
+        value: 1.0
+      - name: Lesson1
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.4
+        value: 2.0
+      - name: Lesson2
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.6
+        value: 3.0
+      - name: Lesson3
+        value: 4.0
+  goal_size:
+    curriculum:
+      - name: Lesson0
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.2
+        value: 0.45
+      - name: Lesson1
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.4
+        value: 0.40
+      - name: Lesson2
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.6
+        value: 0.35
+      - name: Lesson3
+        value: 0.30
