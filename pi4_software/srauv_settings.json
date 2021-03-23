@@ -6,7 +6,7 @@
         "leds": false,
         "coral": true
     },
-    "gimp_thruster": false,
+    "gimp_thruster": true,
     "fly_sim": false,
     "log_to_stdout": false,
     "external_ip": "",
@@ -136,9 +136,9 @@
         ]
     },
     "gimp_thruster_config":{
-        "gimp_thruster_id": 3,
+        "gimp_thruster_id": 0,
         "num_thrusters": 6,
-        "max_thrust": 30,
+        "max_thrust": 40,
         "deadman_timeout_ms": 1000,
         "thrust_interval_ms": 200,
         "thrust_dist_thershold_m": 0.2,
@@ -176,50 +176,50 @@
             0
         ],
         "fwd":[
-            10,
-            10,
             0,
             0,
+            10,
+            10,
             0,
             0
         ],
         "rev":[
+            -0,
+            -0,
             -10,
             -10,
-            0,
-            0,
             0,
             0
         ],
         "lat_right":[
-            10,
             0,
             -10,
-            0,
+            -0,
+            10,
             0,
             0
         ],
         "lat_left":[
-            -10,
-            0,
+            -0,
             10,
             0,
+            -10,
             0,
             0
         ],
         "rot_right":[
-            0,
-            5,
-            -5,
+            -0,
+            4,
+            -4,
             0,
             0,
             0
         ],
         "rot_left":[
             0,
-            -5,
-            5,
-            0,
+            -4,
+            4,
+            -0,
             0,
             0
         ],
@@ -228,16 +228,16 @@
             0,
             0,
             0,
-            20,
-            20
+            10,
+            10
         ],
         "down":[
             0,
             0,
             0,
             0,
-            -20,
-            -20
+            -10,
+            -10
         ]
     }
 }
