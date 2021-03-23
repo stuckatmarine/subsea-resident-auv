@@ -8,6 +8,7 @@ def make(source, dest = ''):
         "dest" : dest,
         "msg_num" : -1,
         "state" : "none",
+        "mission_msg" : "",
         "thrust_enabled" : [False],
         "headlight_setting" : "low",
         "pos_x" : 0.1,              # navigation est
@@ -44,11 +45,16 @@ def make(source, dest = ''):
             "magnetic_z" : 11.1,     
         },
         "tag_dict":{
+            "recent": [1],
             "pos_x": 1.0,
             "pos_y": 1.1,
             "pos_z": 1.2,
+            "vel_x": 1.0,
+            "vel_y": 1.1,
+            "vel_z": 1.2,
             "heading": 1.3,
-            "tag_id": -1
+            "tag_id": -1,
+            "recv_time": 0.0
         },
         "depth_sensor_dict":{
             "mbar": 1.0,

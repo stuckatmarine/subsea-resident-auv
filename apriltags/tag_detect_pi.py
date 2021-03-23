@@ -19,7 +19,17 @@ import math
 from socket_sender import send_over_socket
 
 # If DEBUG mode is True, displays tag and camera pose information to video
-DEBUG = False
+DEBUG = True
+
+# If STREAM, video is captured from gstreamer pipeline, else its read from a file
+STREAM = True
+
+# If WATER, use underwater camera calibration results
+WATER = True
+
+# Z offset/scale calculated from z measurements 
+z_offset = 0.12274
+z_scale = 0.77153
 
 # Define tag detector #
 at_detector = Detector(families='tag16h5',
@@ -36,6 +46,7 @@ gCam_pose_t = np.array([0,0,0])
 gCam_pose_R = np.array([[0,0,0],[0,0,0],[0,0,0]])
 gRx = 0.0
 gRy = 0.0
+gRz = 0.0
 gTID = None
 
 # Global AUV Localization Parameters #
@@ -124,7 +135,10 @@ video_out = cv2.VideoWriter('output_vid.avi', vid_encoder, fps, frame_size)
 
 print("Camera sink open, Waiting for camera feed...")
 
-cap_receive = cv2.VideoCapture('udpsrc port=5004 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! v4l2h264dec capture-io-mode=4 ! v4l2convert capture-io-mode=4  ! appsink sync=false', cv2.CAP_GSTREAMER)
+if STREAM:
+    cap_receive = cv2.VideoCapture('udpsrc port=5004 ! application/x-rtp,encoding_name=H264,payload=96 ! rtph264depay ! v4l2h264dec capture-io-mode=4 ! v4l2convert capture-io-mode=4  ! appsink sync=false', cv2.CAP_GSTREAMER)
+else:
+    cap_receive = cv2.VideoCapture('test_vid.mp4') 
 
 print("Camera feed detected, press 'ctrl+c' to quit")
 
@@ -137,6 +151,7 @@ t0 = time.time()
 
 # Main Detection Loop
 while True:
+    t2 = time.time()
     ret,frame = cap_receive.read()
 
     if not ret:
@@ -148,10 +163,14 @@ while True:
 
     # Convert frame to gray and detect april tags using underwater camera calibration
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[1127.7,1139.3,314.7352,226.3186], tag_size=0.1555)
+    if WATER:
+        tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[1127.7,1139.3,314.7352,226.3186], tag_size=0.1555)
+    else:
+        tag_results = at_detector.detect(gray, estimate_tag_pose=True, camera_params=[800.5335,801.2600,313.2403,231.1194], tag_size=0.1555)
+
 
     time_detect = time.time()-t1 
-    print(time_detect)
+    #print(time_detect)
 
     for tag in tag_results:
         # Eliminate false positives by checking the hamming attribute
@@ -180,11 +199,19 @@ while True:
                 cv2.circle(frame, (cX, cY), 5, (0, 0, 255), -1)
                 
                 # Calculate camera pose parameters
-                gCam_pose_T = np.vstack((np.hstack((tag.pose_R, tag.pose_t)), np.array([0.0,0.0,0.0,1.0])))
                 gCam_pose_t = tag.pose_t
                 gCam_pose_R = tag.pose_R
                 Rx = math.atan2(tag.pose_R[2,1], tag.pose_R[1,1]) * 180.0 / math.pi
                 Ry = math.atan2(tag.pose_R[0,2], tag.pose_R[0,0]) * 180.0 / math.pi
+                gRz = math.atan2(-gCam_pose_R[0,1], gCam_pose_R[0,0]) * 180.0 / math.pi
+                Rz_rad = math.atan2(-gCam_pose_R[0,1], gCam_pose_R[0,0]) 
+
+                # Appox camera pose rotation using only theta Z
+                gR_approx = np.array([[ math.cos(Rz_rad), -math.sin(Rz_rad), 0.0],
+                                      [ math.sin(Rz_rad), math.cos(Rz_rad), 0.0],
+                                      [ 0.0, 0.0, 1.0]])
+            
+                gCam_pose_T = np.vstack((np.hstack((gR_approx, gCam_pose_t)), np.array([0.0,0.0,0.0,1.0])))
 
                 # Calculate AUV frame relative to tank frame
                 if (gCam_pose_T.any()):
@@ -209,21 +236,22 @@ while True:
                     else:
                         print("Not a valid tag ID")
                 
-                # Calculte AUV parameters
-                gAUVx = Tank_T_AUV[0, 3]
-                gAUVy = Tank_T_AUV[1, 3]
-                gAUVz = Tank_T_AUV[2, 3]
-                gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
-
                 print("TAG! at " + f'{(time.time()-t0):.4f}' + " s")
 
-                if (gAUVx < 0.0 or gAUVx > 3.7 or gAUVy < 0.0 or gAUVy > 3.7 or gAUVz < 0.0 or gAUVz > 3.70):
+                if (Tank_T_AUV[0, 3] < 0.0 or Tank_T_AUV[0, 3] > 3.7 or Tank_T_AUV[1, 3] < 0.0 or Tank_T_AUV[1, 3] > 3.7 or Tank_T_AUV[2, 3] < 0.0):
                     print("Coordinates out of bounds!") #Do nothing, coordinates are out of bounds and in error
                 else:
+                    # Calculte AUV parameters
+                    gAUVx = Tank_T_AUV[0, 3]
+                    gAUVy = Tank_T_AUV[1, 3]
+                    gAUVz = Tank_T_AUV[2, 3]*z_scale + z_offset
+                    gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
+
+                    # Send to srauv_main
                     send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading, gTID)
 
     # Add Pose details to frame view if Tag detected and DEBUG mode enabled
-    if((gTID is not None) and (DEBUG == True)):
+    if((gTID is not None) and DEBUG):
         cv2.putText(frame, "CAM_X: " + f'{gCam_pose_t[0,0]:.3f}' + "m", (50,400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
         cv2.putText(frame, "CAM_Y: " + f'{gCam_pose_t[1,0]:.3f}' + "m", (50,420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
         cv2.putText(frame, "CAM_Z: " + f'{gCam_pose_t[2,0]:.3f}' + "m", (50,440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
@@ -240,6 +268,12 @@ while True:
     
     # Write frame to recorded video
     video_out.write(frame)
+    
+    # Delay video file reading to match real-stream FPS
+    if (not STREAM):
+        time_delay = 1/fps - (time.time() - t2)
+        if time_delay > 0:
+            time.sleep(time_delay)
 
 # Once finished, release / destroy windows
 print("Cleaning up...")

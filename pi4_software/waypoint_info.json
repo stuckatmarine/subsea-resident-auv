@@ -1,72 +1,103 @@
 {
-    "route":{
-        "0": "1_3_1",
-        "1": "1_2_1",
-        "2": "1_2_2",
-        "3": "2.5_2_2.5",
-        "4": "2.5_2_1",
-        "5": "2.5_3.5_1",
-        "6": "1_2_2",
-        "7": "1_2_1",
-        "8": "1_3_1"
-    },
+    "route":[
+        "launch_corner_hi",
+        "launch_corner_mid",
+        "x_wall_mid",
+        "center_tank_mid",
+        "z_wall_mid",
+        "launch_corner_mid",
+        "grid_center_mid",
+        "grid_center_hi",
+        "launch_corner_hi",
+        "launch_corner_surface"
+    ],
     "targets":{
-        "1_3_1":{
-            "label": "1_3_1",
-            "pos_x": 1.0,
+        "launch_corner_hi":{
+            "label": "launch_corner_hi",
+            "pos_x": 1.5,
             "pos_y": 3.0,
             "pos_z": 1.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "1_2_1":{
-            "label": "1_2_1",
-            "pos_x": 1.0,
-            "pos_y": 2.0,
-            "pos_z": 1.0,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "1_2_2":{
-            "label": "1_2_2",
-            "pos_x": 1.0,
-            "pos_y": 2.0,
-            "pos_z": 2.0,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "2.5_2_2.5":{
-            "label": "2.5_2_2.5",
-            "pos_x": 2.5,
-            "pos_y": 2.0,
-            "pos_z": 2.5,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "2.5_2_1":{
-            "label": "2.5_2_1",
-            "pos_x": 2.5,
-            "pos_y": 2.0,
-            "pos_z": 1.0,
-            "tolerance": 0.3,
-            "heading": 0.0,
-            "heading_tol": 15.0,
-            "hold_duration_s": 0.0
-        },
-        "2.5_3.5_1":{
-            "label": "2.5_3.5_1",
-            "pos_x": 2.5,
+        "launch_corner_surface":{
+            "label": "launch_corner_surface",
+            "pos_x": 0.5,
             "pos_y": 3.5,
+            "pos_z": 0.5,
+            "tolerance": 0.45,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "launch_corner_mid":{
+            "label": "launch_corner_mid",
+            "pos_x": 1.5,
+            "pos_y": 2.5,
+            "pos_z": 2.25,
+            "tolerance": 0.45,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "z_wall_mid":{
+            "label": "launch_corner_mid",
+            "pos_x": 1.5,
+            "pos_y": 2.5,
+            "pos_z": 2.0,
+            "tolerance": 0.45,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "center_tank_mid":{
+            "label": "center_tank_mid",
+            "pos_x": 2.25,
+            "pos_y": 2.5,
+            "pos_z": 2.25,
+            "tolerance": 0.4,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "grid_center_mid":{
+            "label": "grid_center_mid",
+            "pos_x": 1.625,
+            "pos_y": 2.5,
+            "pos_z": 1.625,
+            "tolerance": 0.4,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "grid_center_hi":{
+            "label": "grid_center_hi",
+            "pos_x": 1.625,
+            "pos_y": 3.0,
+            "pos_z": 1.625,
+            "tolerance": 0.4,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "x_wall_mid":{
+            "label": "x_wall_mid",
+            "pos_x": 2.25,
+            "pos_y": 2.5,
             "pos_z": 1.0,
-            "tolerance": 0.3,
+            "tolerance": 0.45,
+            "heading": 0.0,
+            "heading_tol": 15.0,
+            "hold_duration_s": 0.0
+        },
+        "x_wall_hi":{
+            "label": "x_wall_hi",
+            "pos_x": 2.25,
+            "pos_y": 3.0,
+            "pos_z": 1.0,
+            "tolerance": 0.45,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0

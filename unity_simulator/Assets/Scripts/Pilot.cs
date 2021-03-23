@@ -57,6 +57,7 @@ public class Pilot : Agent
     [SerializeField] private int numWaypoints = 1;
     [SerializeField] private float goalSize = 0.45f;
 
+
     public List<Transform> tags;
 
     public override void Initialize()
@@ -113,9 +114,13 @@ public class Pilot : Agent
                 0.1f < viewPos.y && viewPos.y < 0.9f &&
                 0.95f < viewPos.z && rand < 9)
             {
+                // simulating noise of AprilTag localization
+                Vector3 noise = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+
                 // we see an AprilTag so last known pos is right now
-                lastKnownPos = srauv.position - tank.position;
+                lastKnownPos = srauv.position - tank.position + noise;
                 lastKnownHeading = srauv.eulerAngles.y;
+                tagInView = 1;
                 break;
             }
         }
@@ -258,7 +263,7 @@ public class Pilot : Agent
             
         // if academy resetParams.GetWithDefault()
         srauv.position = GetRandomLocation();
-        goal = GetRandomLocation(); // maybe check its not to close already
+        goal = GetRandomLocation();
         goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
         lastKnownPos = goal;
@@ -305,6 +310,7 @@ public class Pilot : Agent
             startPos.position = new Vector3(x, y, z);
         } while (trigger > 0);
 
+        startPos.position = new Vector3(0f, 6f, 0f);
         return new Vector3(x, y, z);
     }
 

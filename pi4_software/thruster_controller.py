@@ -35,6 +35,7 @@ class ThrusterThread(threading.Thread):
         self.deadman_timeout_ms = config["deadman_timeout_ms"]
         self.tx_cmds            = config["CAN_tx_ids"]
         self.rx_cmds            = config["CAN_rx_ids"]
+        self.gimp               = config["gimp_thruster_id"]
         self.thrust_arr         = tel["thrust_values"]
         self.thrust_enabled     = tel["thrust_enabled"]
         self.id                 = id
@@ -117,13 +118,13 @@ class ThrusterThread(threading.Thread):
             th_lo = int(thrust_RPM) & 0xff
             self.send_msg("set_rpm", [thrust_dir, th_hi, th_lo])
             # self.send_msg("set_rpm", [0x00,0x05,0xDC]) # low test value
-            print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM} th_hi:{th_hi} th_lo:{th_lo}")
+            # print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM} th_hi:{th_hi} th_lo:{th_lo}")
 
     def read_msg(self):
         pass
 
     def run(self):
-        if SETTINGS["hardware"]["can"] == True and self.id != 3:
+        if SETTINGS["hardware"]["can"] == True and self.id != self.gimp:
             self.send_msg("arm", [0x01])
             time.sleep(1)
             print ("thruster armed")

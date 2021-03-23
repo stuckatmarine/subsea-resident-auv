@@ -22,6 +22,7 @@ public class CommandModel
     public float alt = 0.0f;
     public ImuModel imu_dict;
     public bool can_thrust = false;
+    public bool reset_to_first_waypoint = false;
     public string headlight_setting = "low";
     public string thrust_type = "";
     public float[] raw_thrust; // 6

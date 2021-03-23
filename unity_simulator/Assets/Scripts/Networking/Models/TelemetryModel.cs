@@ -23,6 +23,7 @@ public class TelemetryModel
     public float vel_z = 0.0f;
     public float depth;
     public float alt;
+    public string mission_msg;
     public float target_pos_x;
     public float target_pos_y;
     public float target_pos_z;
