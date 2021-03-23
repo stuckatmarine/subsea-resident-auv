@@ -55,7 +55,7 @@ class LocalSocketThread(threading.Thread):
                 data_dict = json.loads(data.decode("utf-8"))
                 
                 # print(f"internal socket recvd:{data}")
-                self.logger.info(f"rx <- {data}")
+                # self.logger.info(f"rx <- {data}")
 
                 if data_dict["msg_type"] == "telemetry":
                     self.tel_recv = data_dict
@@ -65,7 +65,7 @@ class LocalSocketThread(threading.Thread):
                     
                     # update tel_bytes if not most current
                     if self.tel["msg_num"] > self.last_tel_sent:
-                        self.logger.info(f"tx tel -> {self.tel}")
+                        # self.logger.info(f"tx tel -> {self.tel}")
                         self.tel_bytes = json.dumps(self.tel).encode("utf-8")
 
                     self.socket.sendto(self.tel_bytes, address)
@@ -81,7 +81,7 @@ class LocalSocketThread(threading.Thread):
 
                     # update tel_bytes if not most current
                     if self.tel["msg_num"] > self.last_tel_sent:
-                        self.logger.info(f"tx tel -> {self.tel}")
+                        # self.logger.info(f"tx tel -> {self.tel}")
                         self.tel_bytes = json.dumps(self.tel).encode("utf-8")
 
                     # immediatly log kill recvd in case msg is missed
@@ -91,7 +91,7 @@ class LocalSocketThread(threading.Thread):
                     
                     self.socket.sendto(self.tel_bytes, address)
                     self.last_tel_sent = self.tel["msg_num"]
-                    self.logger.info(f"tx -> addr:{address} data:{self.tel_bytes}")
+                    # self.logger.info(f"tx -> addr:{address} data:{self.tel_bytes}")
                     if self.tel["mission_msg"] != "":
                         self.tel["mission_msg"] = ""
 

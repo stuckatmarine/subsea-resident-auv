@@ -1,14 +1,14 @@
 {
     "hardware":{
-        "can": false,
-        "i2c": false,
-        "headlights": false,
+        "can": true,
+        "i2c": true,
+        "headlights": true,
         "leds": false,
-        "coral": false
+        "coral": true
     },
     "gimp_thruster": false,
-    "fly_sim": true,
-    "sim_sensor_noise": true,
+    "fly_sim": false,
+    "sim_sensor_noise": false,
     "log_to_stdout": false,
     "external_ip": "",
     "external_port": 8001,
