@@ -118,7 +118,7 @@ class ThrusterThread(threading.Thread):
             th_lo = int(thrust_RPM) & 0xff
             self.send_msg("set_rpm", [thrust_dir, th_hi, th_lo])
             # self.send_msg("set_rpm", [0x00,0x05,0xDC]) # low test value
-            print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM} th_hi:{th_hi} th_lo:{th_lo}")
+            # print(f"thruster id:{self.id} thrust_RPM:{thrust_RPM} th_hi:{th_hi} th_lo:{th_lo}")
 
     def read_msg(self):
         pass

@@ -10,6 +10,7 @@ def make(source, dest = ''):
         "force_state": "",
         "action": "",
         "headlight_setting": "",
+        "reset_to_first_waypoint": False,
         "pos_x": 1.0,   # for fly by sim pos
         "pos_y": 1.1,   # for fly by sim pos
         "pos_z": 1.2,   # for fly by sim pos

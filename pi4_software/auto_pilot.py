@@ -1,7 +1,10 @@
 import math
 import numpy as np
+from time import time
+
 from srauv_settings import SETTINGS
 
+thruster_min_change_time = 0.5  # 500ms
 
 if SETTINGS["hardware"]["coral"] is True:
     from pycoral.utils import edgetpu
@@ -15,6 +18,9 @@ class AutoPilot:
             self.interpreter = edgetpu.make_interpreter('pilot.tflite')
         else:
             self.interpreter = tf.lite.Interpreter(model_path='pilot.tflite')
+
+        self.thruster_timers = [(time(), '_'), (time(), '_'),
+                                (time(), '_'), (time(), '_')]
 
         self.tel_msg = tel_msg
         self.exp = np.vectorize(math.exp)
@@ -40,6 +46,20 @@ class AutoPilot:
             self.tel_msg['imu_dict']['linear_accel_z'],
             self.tel_msg['imu_dict']['gyro_y']
         ], dtype=np.float32), self.input_details[1]['shape'])
+
+    def _thruster_safety(self, dir_thrust):
+        curr_time = time()
+
+        for i in range(0, len(dir_thrust)):
+            if dir_thrust[i] != self.thruster_timers[i][1]:
+                if (self.thruster_timers[i][0] + thruster_min_change_time) < curr_time:
+                    # been long enough, its okay to swap dir
+                    self.thruster_timers[i] = (curr_time, dir_thrust[i])
+                else:
+                    # keep old thrust dir, hasnt been long enough to swap
+                    dir_thrust[i] = self.thruster_timers[i][1]
+
+        return dir_thrust
 
     def get_action(self):
         self.interpreter.set_tensor(self.input_details[0]['index'], self.action_masks)
@@ -82,4 +102,4 @@ class AutoPilot:
         else:
             dir_thrust.append('_')
 
-        return dir_thrust
+        return self._thruster_safety(dir_thrust)
