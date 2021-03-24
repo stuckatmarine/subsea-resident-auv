@@ -5,7 +5,7 @@ import math
 # tensorflow 2.3.1
 # numpy 1.18.5
 
-interpreter = tf.lite.Interpreter(model_path="pilot.tflite")
+interpreter = tf.lite.Interpreter(model_path="pilot2.tflite")
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
