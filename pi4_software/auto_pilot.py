@@ -109,7 +109,7 @@ class AutoPilot:
         self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations_accel())
         self.interpreter.invoke()
 
-        actions = self.exp(self.interpreter.get_tensor(105)[0])
+        actions = self.exp(self.interpreter.get_tensor(105)[0]) # 111 0r 105
         longitudinal = actions[0:3].argmax(axis=0)
         laterial = actions[3:6].argmax(axis=0)
         vertical = actions[6:9].argmax(axis=0)
