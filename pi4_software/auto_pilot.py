@@ -17,11 +17,18 @@ class AutoPilot:
         if SETTINGS["hardware"]["coral"] is True:
             self.interpreter = edgetpu.make_interpreter('pilot.tflite')
         else:
-            self.interpreter = tf.lite.Interpreter(model_path='pilot.tflite')
+            self.interpreter = tf.lite.Interpreter(model_path='pilot2.tflite')
 
+        # for smoothing logic
         self.thruster_timers = [(time(), '_'), (time(), '_'),
                                 (time(), '_'), (time(), '_')]
-
+        
+        # for velocity calc logic
+        self.velocity_timer = 0
+        self.last_pos_x = tel_msg['pos_x']
+        self.last_pos_y = tel_msg['pos_y']
+        self.last_pos_z = tel_msg['pos_z']
+    
         self.tel_msg = tel_msg
         self.exp = np.vectorize(math.exp)
         self.interpreter.allocate_tensors()
@@ -31,7 +38,7 @@ class AutoPilot:
 
         self.action_masks = np.array(np.ones(self.input_details[0]['shape']), dtype=np.float32)
 
-    def _collect_observations(self):
+    def _collect_observations_accel(self):
         return np.reshape(np.array([
             self.tel_msg['tag_dict']['recent'][0],
             self.tel_msg['pos_x'],
@@ -44,6 +51,42 @@ class AutoPilot:
             self.tel_msg['imu_dict']['linear_accel_x'],
             self.tel_msg['imu_dict']['linear_accel_y'],
             self.tel_msg['imu_dict']['linear_accel_z'],
+            self.tel_msg['imu_dict']['gyro_y']
+        ], dtype=np.float32), self.input_details[1]['shape'])
+    
+    def _collect_observations_vel(self):
+        curr_time = time()
+        vel_x = 0
+        vel_y = 0
+        vel_z = 0
+        
+        if self.velocity_timer != 0:
+            vel_x = (self.tel_msg['pos_x'] - self.last_pos_x)/(curr_time - self.velocity_timer)
+            vel_y = (self.tel_msg['pos_y'] - self.last_pos_y)/(curr_time - self.velocity_timer)
+            vel_z = (self.tel_msg['pos_z'] - self.last_pos_z)/(curr_time - self.velocity_timer)
+            
+            if abs(vel_x) > 0.15: vel_x = 0.15 if vel_x > 0 else -0.15
+            if abs(vel_y) > 0.15: vel_y = 0.15 if vel_y > 0 else -0.15
+            if abs(vel_z) > 0.15: vel_z = 0.15 if vel_z > 0 else -0.15
+        
+        # update params for next run
+        self.velocity_timer = curr_time
+        self.last_pos_x = self.tel_msg['pos_x']
+        self.last_pos_y = self.tel_msg['pos_y']
+        self.last_pos_z = self.tel_msg['pos_z']
+        
+        return np.reshape(np.array([
+            self.tel_msg['tag_dict']['recent'][0],
+            self.tel_msg['pos_x'],
+            self.tel_msg['pos_y'],
+            self.tel_msg['pos_z'],
+            self.tel_msg['heading'],
+            self.tel_msg['target_pos_x'],
+            self.tel_msg['target_pos_y'],
+            self.tel_msg['target_pos_z'],
+            vel_x,
+            vel_y,
+            vel_z,
             self.tel_msg['imu_dict']['gyro_y']
         ], dtype=np.float32), self.input_details[1]['shape'])
 
@@ -63,10 +106,10 @@ class AutoPilot:
 
     def get_action(self):
         self.interpreter.set_tensor(self.input_details[0]['index'], self.action_masks)
-        self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations())
+        self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations_accel())
         self.interpreter.invoke()
 
-        actions = self.exp(self.interpreter.get_tensor(111)[0])
+        actions = self.exp(self.interpreter.get_tensor(105)[0])
         longitudinal = actions[0:3].argmax(axis=0)
         laterial = actions[3:6].argmax(axis=0)
         vertical = actions[6:9].argmax(axis=0)
