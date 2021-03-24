@@ -16,12 +16,13 @@ import cv2
 import time
 from pupil_apriltags import Detector
 import math
+import csv
 
 # If DEBUG mode is True, displays tag and camera pose information to video
 DEBUG = True
 
 # If STREAM, video is captured from gstreamer pipeline, else its read from a file
-STREAM = True
+STREAM = False
 
 # If WATER, use underwater camera calibration results
 WATER = True
@@ -123,9 +124,24 @@ gAUVy = 0.0
 gAUVz = 0.0
 gAUVheading = 0.0
 
+# Running average 
+gAUVx_ravg = []
+gAUVy_ravg = []
+gAUVz_ravg = []
+gAUVHeading_ravg = []
+ravg_len = 10
+
+
+# For csv file writing 
+x_data, y_data, z_data, heading_data, time_stamp = [], [], [], [], []
+data_writer = csv.writer(open('position_data.csv', mode='w', newline=''), delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+data_writer.writerow(['AUV X [m]','AUV Y [m]','AUV Z [m]','AUV Heading [Degrees]','Time Stamp [s]'])
+
 # Output video parameters
 fourcc = cv2.VideoWriter_fourcc(*"XVID")
-video_out = cv2.VideoWriter('output_vid.avi',fourcc, 15, (640,480))
+fps = 10
+resolution = (640,480)
+video_out = cv2.VideoWriter('output_vid.avi', fourcc, fps, resolution)
 
 print("Camera sink open, Waiting for camera feed...")
 
@@ -143,9 +159,10 @@ if not cap_receive.isOpened():
     exit()
 
 cap_count = 0
+frame_count = 0
 while True:
     ret,frame = cap_receive.read()
-
+    frame_count = frame_count + 1
     if not ret:
         print('Empty Frame or Video Finished')
         break
@@ -161,7 +178,11 @@ while True:
 
 
     time_detect = time.time()-t1
-
+    tag_count = 0
+    gAUVx = 0.0
+    gAUVy = 0.0
+    gAUVz = 0.0
+    gAUVheading = 0.0
     for tag in tag_results:
         # Eliminate false positives by checking the hamming attribute
         if (tag.hamming == 0):
@@ -230,10 +251,37 @@ while True:
                 print("Coordinates out of bounds!") #Do nothing, coordinates are out of bounds and in error
             else:
                 # Calculte AUV parameters
-                gAUVx = Tank_T_AUV[0, 3]
-                gAUVy = Tank_T_AUV[1, 3]
-                gAUVz = Tank_T_AUV[2, 3]*z_scale + z_offset
-                gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
+                gAUVx += Tank_T_AUV[0, 3]
+                gAUVy += Tank_T_AUV[1, 3]
+                gAUVz += Tank_T_AUV[2, 3]*z_scale + z_offset
+                gAUVheading += math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
+                tag_count += 1
+    
+    # If tag detected earlier, do running avg, etc
+    if tag_count > 0:
+        gAUVx = gAUVx/tag_count
+        gAUVy = gAUVy/tag_count
+        gAUVz = gAUVz/tag_count
+        gAUVheading = gAUVheading/tag_count
+
+        gAUVx_ravg.append(gAUVx)
+        gAUVy_ravg.append(gAUVy)
+        gAUVz_ravg.append(gAUVz)
+        gAUVHeading_ravg.append(gAUVheading)
+
+        if len(gAUVx_ravg) > ravg_len:
+            gAUVx_ravg.pop(0)
+            gAUVy_ravg.pop(0)
+            gAUVz_ravg.pop(0)
+            gAUVHeading_ravg.pop(0)
+
+        gAUVx = sum(gAUVx_ravg)/len(gAUVx_ravg)
+        gAUVy = sum(gAUVy_ravg)/len(gAUVy_ravg)
+        gAUVz = sum(gAUVz_ravg)/len(gAUVz_ravg)
+        gAUVheading = sum(gAUVHeading_ravg)/len(gAUVHeading_ravg)
+
+        data_writer.writerow([gAUVx, gAUVy, gAUVz, gAUVheading, frame_count*1/fps]) 
+    
 
     # Add Pose details to frame view if Tag detected
     if(gTID is not None and DEBUG):
@@ -247,10 +295,11 @@ while True:
         cv2.putText(frame, "CAM_ThetaZ: " + f'{(gRz):.3f}' + " Deg", (200,440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
         cv2.putText(frame, "Detect Time: " + f'{(time_detect*1000):.2f}' + " ms", (200,460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
 
-        cv2.putText(frame, "AUV_X: " + f'{gAUVx:.3f}' + "m", (440,400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
-        cv2.putText(frame, "AUV_Y: " + f'{gAUVy:.3f}' + "m", (440,420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
-        cv2.putText(frame, "AUV_Z: " + f'{gAUVz:.3f}' + "m", (440,440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
-        cv2.putText(frame, "AUV_Yaw: " + f'{gAUVheading:.3f}' + " Deg", (440,460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+        if (tag_count > 0):
+            cv2.putText(frame, "AUV_X: " + f'{gAUVx:.3f}' + "m", (440,400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(frame, "AUV_Y: " + f'{gAUVy:.3f}' + "m", (440,420), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(frame, "AUV_Z: " + f'{gAUVz:.3f}' + "m", (440,440), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
+            cv2.putText(frame, "AUV_Yaw: " + f'{gAUVheading:.3f}' + " Deg", (440,460), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1, cv2.LINE_AA)
     
     # Write frame to video
     video_out.write(frame)

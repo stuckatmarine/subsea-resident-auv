@@ -55,6 +55,13 @@ gAUVy = 0.0
 gAUVz = 0.0
 gAUVheading = 0.0
 
+# Running average 
+gAUVx_ravg = []
+gAUVy_ravg = []
+gAUVz_ravg = []
+gAUVHeading_ravg = []
+ravg_len = 10
+
 # Transformation Matrices #
 
 # Tank to Marker Transforms
@@ -172,6 +179,11 @@ while True:
     time_detect = time.time()-t1 
     #print(time_detect)
 
+    tag_count = 0
+    gAUVx = 0.0
+    gAUVy = 0.0
+    gAUVz = 0.0
+    gAUVheading = 0.0
     for tag in tag_results:
         # Eliminate false positives by checking the hamming attribute
         if (tag.hamming == 0):
@@ -242,13 +254,38 @@ while True:
                     print("Coordinates out of bounds!") #Do nothing, coordinates are out of bounds and in error
                 else:
                     # Calculte AUV parameters
-                    gAUVx = Tank_T_AUV[0, 3]
-                    gAUVy = Tank_T_AUV[1, 3]
-                    gAUVz = Tank_T_AUV[2, 3]*z_scale + z_offset
-                    gAUVheading = math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
+                    gAUVx += Tank_T_AUV[0, 3]
+                    gAUVy += Tank_T_AUV[1, 3]
+                    gAUVz += Tank_T_AUV[2, 3]*z_scale + z_offset
+                    gAUVheading += math.atan2(Tank_T_AUV[1,0], Tank_T_AUV[0,0]) * 180.0 / math.pi
+                    tag_count += 1
 
-                    # Send to srauv_main
-                    send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading, gTID)
+    # If tag detected earlier, do running avg, etc
+    if tag_count > 0:
+        gAUVx = gAUVx/tag_count
+        gAUVy = gAUVy/tag_count
+        gAUVz = gAUVz/tag_count
+        gAUVheading = gAUVheading/tag_count
+
+        gAUVx_ravg.append(gAUVx)
+        gAUVy_ravg.append(gAUVy)
+        gAUVz_ravg.append(gAUVz)
+        gAUVHeading_ravg.append(gAUVheading)
+
+        if len(gAUVx_ravg) > ravg_len:
+            gAUVx_ravg.pop(0)
+            gAUVy_ravg.pop(0)
+            gAUVz_ravg.pop(0)
+            gAUVHeading_ravg.pop(0)
+
+    if len(gAUVx_ravg) > 0:
+        gAUVx = sum(gAUVx_ravg)/len(gAUVx_ravg)
+        gAUVy = sum(gAUVy_ravg)/len(gAUVy_ravg)
+        gAUVz = sum(gAUVz_ravg)/len(gAUVz_ravg)
+        gAUVheading = sum(gAUVHeading_ravg)/len(gAUVHeading_ravg)
+
+        # Send to srauv_main
+        send_over_socket(gAUVx, gAUVy, gAUVz, gAUVheading, gTID)
 
     # Add Pose details to frame view if Tag detected and DEBUG mode enabled
     if((gTID is not None) and DEBUG):
