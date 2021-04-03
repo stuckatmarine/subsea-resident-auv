@@ -45,7 +45,8 @@ public class Pilot : Agent
     private float LongitudinalSpd = 20.0f;
     private float LaterialSpd = 20.0f;
     private float VerticalSpd = 20.0f;
-    private float YawSpd = 20.0f;
+    private float YawSpd = 150.0f;
+    private float maxVel = 0.15f;
 
     private Vector3 TankMins = new Vector3(0.8f, 1.5f, 0.8f);
     private Vector3 TankMaxs = new Vector3(2.3f, 3.4f, 2.3f);
@@ -72,10 +73,10 @@ public class Pilot : Agent
         if (enablePilot)
         {
             Application.targetFrameRate = 30;
-
             goalBox = gameObject.transform.parent.gameObject.transform.Find("goalBox").gameObject.transform;
             indGreen = gameObject.transform.parent.gameObject.transform.Find("indicatorGreen").gameObject.transform;
             indRed = gameObject.transform.parent.gameObject.transform.Find("indicatorRed").gameObject.transform;
+
             downCam = gameObject.transform.Find("DownCam").gameObject.transform.Find("CameraDown").GetComponent<Camera>();
             statsRecorder = Academy.Instance.StatsRecorder;
             
@@ -118,8 +119,9 @@ public class Pilot : Agent
                 Vector3 noise = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
 
                 // we see an AprilTag so last known pos is right now
-                lastKnownPos = srauv.position - tank.position + noise;
+                lastKnownPos = srauv.position - tank.position; // + noise;
                 lastKnownHeading = srauv.eulerAngles.y;
+                lastVel = rb.velocity;
                 tagInView = 1;
                 break;
             }
@@ -127,16 +129,18 @@ public class Pilot : Agent
 
         // position & heading from AprilTag
         sensor.AddObservation(tagInView);
-        sensor.AddObservation(lastKnownPos);
-        sensor.AddObservation(lastKnownHeading);
+        sensor.AddObservation(srauv.position - tank.position);
+        sensor.AddObservation(srauv.eulerAngles.y);
 
         // goal position
         sensor.AddObservation(goal - tank.position);
 
+        // yolo velocity calcs, what could go wrong?
+        sensor.AddObservation(lastVel);
+
         // mimic IMU instantaneous accelerations
-        //sensor.AddObservation(rb.velocity);
-        sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
-        lastVel = rb.velocity; // or maybe v = d/t ?
+        //sensor.AddObservation((rb.velocity - lastVel)/Time.deltaTime);
+        //lastVel = rb.velocity; // or maybe v = d/t ?
 
         // angular velocity from IMU gyro
         sensor.AddObservation(rb.angularVelocity.y);
@@ -145,6 +149,13 @@ public class Pilot : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         AddReward(-1f / MaxStep);
+
+        if (Math.Abs(rb.velocity.x) > maxVel ||
+            Math.Abs(rb.velocity.y) > maxVel ||
+            Math.Abs(rb.velocity.z) > maxVel)
+        {
+            AddReward(-1f / MaxStep);
+        }
 
         if (Math.Abs(goal.x - srauv.position.x) <= goalSize &&
             Math.Abs(goal.y - srauv.position.y) <= goalSize &&
