@@ -11,6 +11,7 @@
 - `pip3 install requirements.txt` // or requirements_win.txt
 
 - `python3 srauv_main.py` // main update loop for the srauv
+
   The SRAUV has an update loop that operates at a
     deterministic rate 20 hz (50ms), to make decisions
     based on current vehicle state and sensor values and apply the
