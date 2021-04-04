@@ -1,6 +1,5 @@
 
 ![Alt text](Media/ProjectDescription.PNG?raw=true "Project description")
-![Alt text](Media/Team.PNG?raw=true "Team-members")
 
 # Subsea Resident Autonomous Underwater Vehicle
 ### Memorial University ECE Capstone Project
@@ -20,7 +19,7 @@
 - Upper buttons used for SRAUV communications
 - Lower buttons for sim control
 - wasd for lats | qr for rotation | up/down arrows for verts
-- ![Alt text](Media/gui.PNG?raw=true "GUI")
+- ![Alt text](Media/gui.png?raw=true "GUI")
 
 ## Scene == MlTank
 - Multi-tank training enviornment for ML based autopilot
