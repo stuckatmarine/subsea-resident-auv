@@ -23,7 +23,7 @@
 
 ## Scene == MlTank
 - Multi-tank training enviornment for ML based autopilot
-![Alt text](Media/ml_tank.PNG?raw=true "Machine learning tanks")
+![Alt text](Media/ml_tank.png?raw=true "Machine learning tanks")
 
 ## Scene == OceanRender
 - Open ocean scene for scenerio render
