@@ -41,7 +41,7 @@
 - Upper buttons used for SRAUV communications
 - Lower buttons for sim control
 - wasd for lats | qr for rotation | up/down arrows for verts
-- ![Alt text](Media/gui.png?raw=true "GUI")
+![Alt text](Media/gui.png?raw=true "GUI")
 
 ## Scene == MlTank
 - Multi-tank training enviornment for ML based autopilot
