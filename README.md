@@ -4,7 +4,14 @@
 # Subsea Resident Autonomous Underwater Vehicle
 ### Memorial University ECE Capstone Project
 
-  the SRAUV has an update loop that operates at a
+  
+# pi4_software - SRAUV main and modules
+- srauv_settings.json // config file
+- install_commands.txt // useful pi4 setup cmds
+- `pip3 install requirements.txt` // or requirements_win.txt
+
+- `python3 srauv_main.py` // main update loop for the srauv
+  The SRAUV has an update loop that operates at a
     deterministic rate 20 hz (50ms), to make decisions
     based on current vehicle state and sensor values and apply the
     appropriate thrust until the next update cycle.
@@ -23,12 +30,6 @@
   Local sockets are used to communicate with tag_detect for position, and
   the external_websocket_server (non-localhost, udp socket, talks to Unity GUI)
   
-# pi4_software - SRAUV main and modules
-- srauv_settings.json // config file
-- install_commands.txt // useful pi4 setup cmds
-- `pip3 install requirements.txt` // or requirements_win.txt
-
-- `python3 srauv_main.py` // main update loop for the srauv
 ## apriltags - get position data from video stream to send over socket
 - `python3 tag_detect.py`
 
