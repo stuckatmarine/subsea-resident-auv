@@ -1,23 +1,30 @@
 
-![Alt text](Media/ProjectDescription.PNG?raw=true "Optional Title")
-![Alt text](Media/Team.PNG?raw=true "Optional Title")
+![Alt text](Media/ProjectDescription.PNG?raw=true "Project description")
+![Alt text](Media/Team.PNG?raw=true "Team-members")
 
 # Subsea Resident Autonomous Underwater Vehicle
 ### Memorial University ECE Capstone Project
-## PI4 - On AUV programs
-- srauv_main.py // main update loop for the auv
-- external_ws_server.py // websocket server
+# pi4_software - SRAUV main and modules
+- srauv_settings.json // config file
+- install_commands.txt // useful pi4 setup cmds
+- `pip3 install requirements.txt` // or requirements_win.txt
 
-# Unity SIM
-## Check Builds folder for UI
+- `python3 srauv_main.py` // main update loop for the srauv
+## apriltags - get position data from video stream to send over socket
+- `python3 tag_detect.py`
+
+# Unity SIM - version 2019.3.10 was used 
 ## Scene == TankSim
-- UI for the vehicle
-- Shows live telemetry
-- TX cmds to vehicle
-
-## Scene == OceanRender
-- Open ocean scene for 'realistic' render
+- GUI for the vehicle
+- In editor "WSClient" object used to change target ip
+- Upper buttons used for SRAUV communications
+- Lower buttons for sim control
+- wasd for lats | qr for rotation | up/down arrows for verts
+- ![Alt text](Media/gui.PNG?raw=true "GUI")
 
 ## Scene == MlTank
-- Stripped down TankSim
-- Used for ML training
+- Multi-tank training enviornment for ML based autopilot
+![Alt text](Media/ml_tanks.PNG?raw=true "Machine learning tanks")
+
+## Scene == OceanRender
+- Open ocean scene for scenerio render
