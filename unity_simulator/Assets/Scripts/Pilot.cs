@@ -42,11 +42,11 @@ public class Pilot : Agent
     public float[] forces = new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     public float[] distancesFloat;
 
-    private float LongitudinalSpd = 20.0f;
-    private float LaterialSpd = 20.0f;
-    private float VerticalSpd = 20.0f;
-    private float YawSpd = 150.0f;
-    private float maxVel = 0.15f;
+    private float LongitudinalSpd = 200.0f;
+    private float LaterialSpd = 200.0f;
+    private float VerticalSpd = 400.0f;
+    private float YawSpd = 1000.0f;
+    private float maxVel = 0.3f;
 
     private Vector3 TankMins = new Vector3(0.8f, 1.5f, 0.8f);
     private Vector3 TankMaxs = new Vector3(2.3f, 3.4f, 2.3f);
@@ -150,12 +150,14 @@ public class Pilot : Agent
     {
         AddReward(-1f / MaxStep);
 
-        if (Math.Abs(rb.velocity.x) > maxVel ||
-            Math.Abs(rb.velocity.y) > maxVel ||
-            Math.Abs(rb.velocity.z) > maxVel)
-        {
+        if (Math.Abs(rb.velocity.z) > maxVel)
             AddReward(-1f / MaxStep);
-        }
+        if (Math.Abs(rb.velocity.z) > maxVel)
+            AddReward(-1f / MaxStep);
+        if (Math.Abs(rb.velocity.z) > maxVel)
+            AddReward(-1f / MaxStep);
+        if (Math.Abs(rb.angularVelocity.y) > maxVel)
+            AddReward(-1f / MaxStep);
 
         if (Math.Abs(goal.x - srauv.position.x) <= goalSize &&
             Math.Abs(goal.y - srauv.position.y) <= goalSize &&
@@ -164,7 +166,7 @@ public class Pilot : Agent
             goalsReached++;
             statsRecorder.Add("Score", ++score);
 
-            AddReward(2.0f);
+            AddReward(1.0f);
             StartCoroutine(TargetReachedSwapGroundMaterial(indGreen, 0.5f));
 
             if (goalsReached < numWaypoints)

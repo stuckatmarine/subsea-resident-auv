@@ -20,9 +20,9 @@ behaviors:
         gamma: 0.99
         strength: 1.0
     keep_checkpoints: 5
-    max_steps: 50000000
+    max_steps: 100000000
     time_horizon: 1000
-    summary_freq: 10000
+    summary_freq: 100000
     threaded: true
 environment_parameters:
   num_waypoints:
@@ -50,9 +50,9 @@ environment_parameters:
           signal_smoothing: true
           min_lesson_length: 100
           threshold: 0.6
-        value: 3.0
-      - name: Lesson3
         value: 4.0
+      - name: Lesson3
+        value: 8.0
   goal_size:
     curriculum:
       - name: Lesson0
@@ -61,7 +61,7 @@ environment_parameters:
           behavior: Pilot
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 0.2
+          threshold: 0.1
         value: 0.45
       - name: Lesson1
         completion_criteria:
@@ -69,15 +69,23 @@ environment_parameters:
           behavior: Pilot
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 0.4
-        value: 0.40
+          threshold: 0.2
+        value: 0.35
       - name: Lesson2
         completion_criteria:
           measure: progress
           behavior: Pilot
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 0.6
-        value: 0.35
+          threshold: 0.4
+        value: 0.25
       - name: Lesson3
-        value: 0.30
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.6
+        value: 0.15
+      - name: Lesson4
+        value: 0.05
