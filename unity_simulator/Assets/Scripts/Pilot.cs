@@ -185,49 +185,28 @@ public class Pilot : Agent
 
     private void MoveAgent(ActionSegment<int> act)
     {
-        var longitudinal = act[0];
-        var laterial = act[1];
-        var vertical = act[2];
-        var yaw = act[3];
-
-        switch (longitudinal)
+        var multiper = 1;
+        for (int i=0; i < 6; i++)
         {
-            case 1:
-                thrustCtrl.moveForward(LongitudinalSpd);                
-                break;
-            case 2:
-                thrustCtrl.moveReverse(LongitudinalSpd);
-                break;
-        }
+            var thrustSpd = act[i];
+            var thrusters = thrustCtrl.latThrusters;
+            var sub = 0;
 
-        switch (laterial)
-        {
-            case 1:
-                thrustCtrl.strafeRight(LaterialSpd);
-                break;
-            case 2:
-                thrustCtrl.strafeLeft(LaterialSpd);
-                break;
-        }
+            if (i >= 4)
+            {
+                sub = -4;
+                multiper = 2;
+                thrusters = thrustCtrl.vertThrusters;
+            }
 
-        switch (vertical)
-        {
-            case 1:
-                thrustCtrl.vertUp(VerticalSpd);
-                break;
-            case 2:
-                thrustCtrl.vertDown(VerticalSpd);
-                break;
-        }
-
-        switch (yaw)
-        {
-            case 1:
-                thrustCtrl.turnRight(YawSpd);
-                break;
-            case 2:
-                thrustCtrl.turnLeft(YawSpd);
-                break;
+            if (thrustSpd == 0)
+                thrustCtrl.applyThrust(thrusters[i+sub], -LongitudinalSpd * multiper);
+            else if (thrustSpd == 1)
+                thrustCtrl.applyThrust(thrusters[i+sub], -LongitudinalSpd * multiper / 2);
+            else if (thrustSpd == 3)
+                thrustCtrl.applyThrust(thrusters[i+sub],  LongitudinalSpd * multiper / 2);
+            else if (thrustSpd == 4)
+                thrustCtrl.applyThrust(thrusters[i+sub],  LongitudinalSpd * multiper);
         }
     }
 
@@ -244,29 +223,25 @@ public class Pilot : Agent
         if (Input.GetKeyDown(KeyCode.Escape))
             EndEpisode();
 
-        discreteActionsOut[0] = 0;
         if (Input.GetKey(KeyCode.W))
-            discreteActionsOut[0] = 1;
+            thrustCtrl.moveForward(LongitudinalSpd);
         else if (Input.GetKey(KeyCode.S))
-            discreteActionsOut[0] = 2;
+            thrustCtrl.moveReverse(LongitudinalSpd);
 
-        discreteActionsOut[1] = 0;
         if (Input.GetKey(KeyCode.D))
-            discreteActionsOut[1] = 1;
+            thrustCtrl.strafeRight(LaterialSpd);
         else if (Input.GetKey(KeyCode.A))
-            discreteActionsOut[1] = 2;
+            thrustCtrl.strafeLeft(LaterialSpd);
 
-        discreteActionsOut[2] = 0;
         if (Input.GetKey(KeyCode.UpArrow))
-            discreteActionsOut[2] = 1;
+            thrustCtrl.vertUp(VerticalSpd);
         else if (Input.GetKey(KeyCode.DownArrow))
-            discreteActionsOut[2] = 2;
+            thrustCtrl.vertDown(VerticalSpd);
 
-        discreteActionsOut[3] = 0;
         if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.RightArrow))
-            discreteActionsOut[3] = 1;
+            thrustCtrl.turnRight(YawSpd);
         else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftArrow))
-            discreteActionsOut[3] = 2;
+            thrustCtrl.turnLeft(YawSpd);
     }
 
     public void SetResetParameters()
