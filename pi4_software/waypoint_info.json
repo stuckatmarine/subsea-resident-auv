@@ -102,11 +102,7 @@
             "pos_x": 1.75,
             "pos_y": 3.0,
             "pos_z": 0.735,
-<<<<<<< HEAD
             "tolerance": 0.1,
-=======
-            "tolerance": 0.3,
->>>>>>> f50bbbbe4a7397e6457fb71715e7ef6875dac5ac
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -116,11 +112,7 @@
             "pos_x": 2.0,
             "pos_y": 3.395,
             "pos_z": 0.5,
-<<<<<<< HEAD
             "tolerance": 0.1,
-=======
-            "tolerance": 0.3,
->>>>>>> f50bbbbe4a7397e6457fb71715e7ef6875dac5ac
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0

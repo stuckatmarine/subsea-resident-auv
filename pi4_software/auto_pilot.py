@@ -118,15 +118,12 @@ class AutoPilot:
         vertical = actions[6:9].argmax(axis=0)
         yaw = actions[9:12].argmax(axis=0)
 
-<<<<<<< HEAD
         print(f'longitudinal: {longitudinal} {actions[0:3]} {actions[0:3].sum()}')
         print(f'laterial: {laterial} {actions[3:6]} {actions[3:6].sum()}')
         print(f'vertical: {vertical} {actions[6:9]} {actions[6:9].sum()}')
         print(f'yaw: {yaw} {actions[9:12]} {actions[9:12].sum()}')
 
-=======
         print(actions)
->>>>>>> f50bbbbe4a7397e6457fb71715e7ef6875dac5ac
 
         dir_thrust = []
 
