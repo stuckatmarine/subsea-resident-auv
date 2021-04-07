@@ -115,6 +115,8 @@ class AutoPilot:
         vertical = actions[6:9].argmax(axis=0)
         yaw = actions[9:12].argmax(axis=0)
 
+        print(actions)
+
         dir_thrust = []
 
         if longitudinal == 1:

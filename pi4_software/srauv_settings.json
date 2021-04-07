@@ -1,13 +1,12 @@
 {
     "hardware":{
-        "can": true,
-        "i2c": true,
-        "headlights": true,
+        "can": false,
+        "i2c": false,
+        "headlights": false,
         "leds": false,
-        "coral": true
+        "coral": false
     },
-    "gimp_thruster": true,
-    "fly_sim": false,
+    "fly_sim": true,
     "sim_sensor_noise": false,
     "log_to_stdout": false,
     "external_ip": "",
@@ -31,6 +30,7 @@
     "imu_sensor_config":{
         "poll_interval_s": 0.1
     },
+    "gimp_thruster": true,
     "thruster_config":{
         "num_thrusters": 6,
         "max_thrust": 60,

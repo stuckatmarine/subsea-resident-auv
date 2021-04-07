@@ -75,14 +75,7 @@ def update_telemetry():
         g_tel_msg["tag_dict"]["recent"][0] = 1
         if SETTINGS["sim_sensor_noise"]:
             rand = randrange(10)
-            if (rand < 9 #and
-                # g_incoming_cmd["pos_x"] > 0.2 and
-                # g_incoming_cmd["pos_x"] < 2.7 and
-                # g_incoming_cmd["pos_z"] < 2.6 and
-                # g_incoming_cmd["pos_y"] > 1.4 and
-                # g_incoming_cmd["pos_y"] < 4.0 and
-                ):
-            
+            if rand < 9:
                 g_tel_msg["pos_x"] = g_incoming_cmd["pos_x"] + uniform(-0.1, 0.1)
                 g_tel_msg["pos_y"] = g_incoming_cmd["pos_y"] + uniform(-0.1, 0.1)
                 g_tel_msg["pos_z"] = g_incoming_cmd["pos_z"] + uniform(-0.1, 0.1)
@@ -232,13 +225,6 @@ def calculate_thrust():
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
         elif t_dist_y < -G_THRUSTER_CONFIG["thrust_dist_thershold_m"]:
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-        # else:
-        #     if (t_dist_y > G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #         g_tel_msg["vel_y"] > G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["up"])
-        #     elif (t_dist_y < -G_THRUSTER_CONFIG["thrust_counter_thershold_m"] and
-        #         g_tel_msg["vel_y"] < G_THRUSTER_CONFIG["thrust_counter_thershold_spd"]):
-        #         add_thrust(new_thrust_values, G_THRUSTER_CONFIG["down"])
 
         # isolate rot from lateral movement
         if g_tel_msg["heading"] > 8 and g_tel_msg["heading"]  < 180:

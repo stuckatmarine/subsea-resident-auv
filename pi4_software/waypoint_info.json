@@ -12,7 +12,7 @@
             "pos_x": 0.36,
             "pos_y": 3.395,
             "pos_z": 0.55,
-            "tolerance": 0.05,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -22,7 +22,7 @@
             "pos_x": 1.0,
             "pos_y": 3.385,
             "pos_z": 0.5,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -32,7 +32,7 @@
             "pos_x": 1.2,
             "pos_y": 3.390,
             "pos_z": 0.5,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -42,7 +42,7 @@
             "pos_x": 1.25,
             "pos_y": 3.5,
             "pos_z": 0.5,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -52,7 +52,7 @@
             "pos_x": 1.20,
             "pos_y": 3.00,
             "pos_z": 0.7,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -62,7 +62,7 @@
             "pos_x": 1.5,
             "pos_y": 2.5,
             "pos_z": 2.0,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -102,7 +102,7 @@
             "pos_x": 1.75,
             "pos_y": 3.0,
             "pos_z": 0.735,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -112,7 +112,7 @@
             "pos_x": 2.0,
             "pos_y": 3.395,
             "pos_z": 0.5,
-            "tolerance": 0.15,
+            "tolerance": 0.3,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
