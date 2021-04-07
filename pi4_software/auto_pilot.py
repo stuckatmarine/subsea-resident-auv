@@ -15,9 +15,9 @@ else:
 class AutoPilot:
     def __init__(self, tel_msg: dict):
         if SETTINGS["hardware"]["coral"] is True:
-            self.interpreter = edgetpu.make_interpreter('pilot.tflite')
+            self.interpreter = edgetpu.make_interpreter('pilot3.tflite')
         else:
-            self.interpreter = tf.lite.Interpreter(model_path='pilot2.tflite')
+            self.interpreter = tf.lite.Interpreter(model_path='pilot3.tflite')
 
         # for smoothing logic
         self.thruster_timers = [(time(), '_'), (time(), '_'),
@@ -106,14 +106,23 @@ class AutoPilot:
 
     def get_action(self):
         self.interpreter.set_tensor(self.input_details[0]['index'], self.action_masks)
-        self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations_accel())
+        self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations_vel())
         self.interpreter.invoke()
 
-        actions = self.exp(self.interpreter.get_tensor(105)[0]) # 111 0r 105
+        actions = self.exp(self.interpreter.get_tensor(111)[0]) # 111 0r 105
+        if not actions.any():
+            return ['_', '_', '_', '_']
+
         longitudinal = actions[0:3].argmax(axis=0)
         laterial = actions[3:6].argmax(axis=0)
         vertical = actions[6:9].argmax(axis=0)
         yaw = actions[9:12].argmax(axis=0)
+
+        print(f'longitudinal: {longitudinal} {actions[0:3]} {actions[0:3].sum()}')
+        print(f'laterial: {laterial} {actions[3:6]} {actions[3:6].sum()}')
+        print(f'vertical: {vertical} {actions[6:9]} {actions[6:9].sum()}')
+        print(f'yaw: {yaw} {actions[9:12]} {actions[9:12].sum()}')
+
 
         dir_thrust = []
 

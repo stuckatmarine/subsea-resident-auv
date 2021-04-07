@@ -1,9 +1,9 @@
 {
     "route":[
-        "launch_corner_hi",
+        "x_wall_mid",
         "x_wall_hi",
-        "center_tank_mid",
-        "x_wall_hi",
+        "grid_center_mid",
+        "grid_center_hi",
         "center_cage"
     ],
     "targets":{
@@ -80,9 +80,9 @@
         "grid_center_mid":{
             "label": "grid_center_mid",
             "pos_x": 1.625,
-            "pos_y": 2.5,
+            "pos_y": 1.25,
             "pos_z": 1.625,
-            "tolerance": 0.4,
+            "tolerance": 0.15,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -92,7 +92,7 @@
             "pos_x": 1.625,
             "pos_y": 3.0,
             "pos_z": 1.625,
-            "tolerance": 0.4,
+            "tolerance": 0.15,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -102,7 +102,7 @@
             "pos_x": 1.75,
             "pos_y": 3.0,
             "pos_z": 0.735,
-            "tolerance": 0.15,
+            "tolerance": 0.1,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
@@ -112,7 +112,7 @@
             "pos_x": 2.0,
             "pos_y": 3.395,
             "pos_z": 0.5,
-            "tolerance": 0.15,
+            "tolerance": 0.1,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
