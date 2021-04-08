@@ -1,28 +1,29 @@
 {
     "route":[
-        "x_wall_mid",
+        "front_cage",
         "x_wall_hi",
-        "grid_center_mid",
         "grid_center_hi",
+        "x_wall_hi",
+        "front_cage",
         "center_cage"
     ],
     "targets":{
         "center_cage":{
             "label": "center_cage",
-            "pos_x": 0.36,
-            "pos_y": 3.395,
-            "pos_z": 0.55,
-            "tolerance": 0.3,
+            "pos_x": 0.30,
+            "pos_y": 3.45,
+            "pos_z": 0.75,
+            "tolerance": 0.05,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
         },
-        "rev_cage":{
-            "label": "rev_cage",
-            "pos_x": 1.0,
-            "pos_y": 3.385,
-            "pos_z": 0.5,
-            "tolerance": 0.3,
+        "front_cage":{
+            "label": "front_cage",
+            "pos_x": 1.25,
+            "pos_y": 3.45,
+            "pos_z": 0.75,
+            "tolerance": 0.15,
             "heading": 0.0,
             "heading_tol": 15.0,
             "hold_duration_s": 0.0
