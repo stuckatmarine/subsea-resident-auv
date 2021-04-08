@@ -1,0 +1,62 @@
+Mono path[0] = 'C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Managed'
+Mono config path = 'C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/MonoBleedingEdge/etc'
+PlayerConnection initialized from C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55247
+Multi-casting "[IP] 192.168.2.57 [Port] 55247 [Flags] 2 [Guid] 239255323 [EditorId] 2934162689 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-Q58BH45) [Debug] 0 [PackageName] WindowsPlayer [ProjectName] WaypointEditor" to [225.0.0.222:54997]...
+Started listening to [0.0.0.0:55247]
+PlayerConnection already initialized - listening to [0.0.0.0:55247]
+Initialize engine version: 2019.3.10f1 (5968d7f82152)
+[Subsystems] Discovering subsystems at path C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/UnitySubsystems
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Begin MonoManager ReloadAssembly
+- Completed reload, in  0.095 seconds
+Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported.
+ERROR: Shader Hidden/PostProcessing/Debug/Vectorscope shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/ScreenSpaceReflections shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/Debug/Waveform shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/CopyStdFromTexArray shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/Debug/LightMeter shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/MultiScaleVO shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/Debug/Histogram shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Hidden/PostProcessing/DepthOfField shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+UnloadTime: 0.646700 ms
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libcoreclr.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libdl.so
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib.dll
+Fallback handler could not load library C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data/Mono/libSystem.dylib
+Unable to save timers to file C:/Users/17096/Documents/GitHub/srauv-sim/MLTraining/envs/MlTank/WaypointEditor_Data\ML-Agents\Timers\MlTank_timers.json
+UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:LogWarning(Object)
+Unity.MLAgents.TimerStack:SaveJsonTimers(String) (at C:\Users\17096\Documents\GitHub\srauv-sim\unity_simulator\Library\PackageCache\com.unity.ml-agents@1.7.0-preview\Runtime\Timer.cs:483)
+Unity.MLAgents.Academy:Dispose() (at C:\Users\17096\Documents\GitHub\srauv-sim\unity_simulator\Library\PackageCache\com.unity.ml-agents@1.7.0-preview\Runtime\Academy.cs:643)
+UnityEngine.Application:Internal_ApplicationQuit() (at C:\buildslave\unity\build\Runtime\Export\Application\Application.cs:299)
+ 
+(Filename: C:/Users/17096/Documents/GitHub/srauv-sim/unity_simulator/Library/PackageCache/com.unity.ml-agents@1.7.0-preview/Runtime/Timer.cs Line: 483)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 2c18 -> priority: 1 
+  Thread -> id: 5370 -> priority: 1 
+  Thread -> id: 23d0 -> priority: 1 
+  Thread -> id: 7f3c -> priority: 1 
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1617848503245,"processId":2664,"allocatedMemory":35876,"memoryLabels":[{"Permanent":40},{"NewDelete":472},{"Thread":72},{"Manager":2448},{"GfxDevice":30500},{"Physics":32},{"Serialization":40},{"String":560},{"PoolAlloc":56},{"GI":296},{"VR":2016},{"Subsystems":-656}]}

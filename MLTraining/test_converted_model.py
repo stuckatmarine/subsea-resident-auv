@@ -5,7 +5,7 @@ import math
 # tensorflow 2.3.1
 # numpy 1.18.5
 
-interpreter = tf.lite.Interpreter(model_path="pilot2.tflite")
+interpreter = tf.lite.Interpreter(model_path="pilot.tflite")
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
@@ -22,16 +22,18 @@ interpreter.set_tensor(input_details[1]['index'], input_data)
 
 interpreter.invoke()
 exp = np.vectorize(math.exp)
-actions = exp(interpreter.get_tensor(111)[0])
+actions = exp(interpreter.get_tensor(129)[0])
 
-longitudinal = actions[0:3].argmax(axis=0)
-laterial = actions[3:6].argmax(axis=0)
-vertical = actions[6:9].argmax(axis=0)
-yaw = actions[9:12].argmax(axis=0)
+thruster0 = actions[0:7].argmax(axis=0)
+thruster1 = actions[7:14].argmax(axis=0)
+thruster2 = actions[14:21].argmax(axis=0)
+thruster3 = actions[21:28].argmax(axis=0)
+verts = actions[28:35].argmax(axis=0)
 
-print(f'longitudinal: {longitudinal} {actions[0:3]} {actions[0:3].sum()}')
-print(f'laterial: {laterial} {actions[3:6]} {actions[3:6].sum()}')
-print(f'vertical: {vertical} {actions[6:9]} {actions[6:9].sum()}')
-print(f'yaw: {yaw} {actions[9:12]} {actions[9:12].sum()}')
+print(f'thruster0: {thruster0} {actions[0:7]} {actions[0:7].sum()}')
+print(f'thruster1: {thruster1} {actions[7:14]} {actions[7:14].sum()}')
+print(f'thruster2: {thruster2} {actions[14:21]} {actions[14:21].sum()}')
+print(f'thruster3: {thruster3} {actions[21:28]} {actions[21:28].sum()}')
+print(f'verts: {verts} {actions[28:35]} {actions[28:35].sum()}')
 
  
