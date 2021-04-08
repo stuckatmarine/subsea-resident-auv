@@ -109,7 +109,7 @@ class AutoPilot:
         self.interpreter.set_tensor(self.input_details[1]['index'], self._collect_observations_vel())
         self.interpreter.invoke()
 
-        actions = self.exp(self.interpreter.get_tensor(129)[0]) # 129
+        actions = self.exp(self.interpreter.get_tensor(129)[0]) # 129 or 111 for new model
         if not actions.any():
             return [0, 0, 0, 0, 0, 0]
 
