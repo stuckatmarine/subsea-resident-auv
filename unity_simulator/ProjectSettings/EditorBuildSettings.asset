@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/OceanRender.unity
     guid: 7724e4306cc842b4eb278c45c51ed627
   - enabled: 1

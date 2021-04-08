@@ -135,6 +135,7 @@ public class Pilot : Agent
 
         // goal position
         sensor.AddObservation(goal - tank.position);
+        sensor.AddObservation(goalHeading);
 
         // yolo velocity calcs
         sensor.AddObservation(lastVel);
