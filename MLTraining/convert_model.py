@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 # first run onnx-tf convert -i "pilot.onnx" -o  "pilot.pb"
-path = 'results/autopilot3/pilot.pb'
+path = 'results/autopilot2.1_indivThrusters3/pilot.pb'
 
 # TODO: look into tf.lite.Optimize
 converter = tf.lite.TFLiteConverter.from_saved_model(path) 
