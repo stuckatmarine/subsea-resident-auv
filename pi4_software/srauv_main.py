@@ -209,12 +209,19 @@ def calculate_thrust():
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
         return
 
-    if g_tel_msg["state"] == "autonomous":
-        for dir in g_autopilot.get_action():
+    if g_tel_msg["state"] == "autonomous_old":
+        for dir in g_autopilot.get_action_old():
             add_thrust(new_thrust_values, G_THRUSTER_CONFIG[dir])
         for i in range(len(new_thrust_values)):
             g_tel_msg["thrust_values"][i] = new_thrust_values[i]
         g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
+
+    elif g_tel_msg["state"] == "autonomous":
+        new_thrust_values = g_autopilot.get_action()
+        for i in range(0, len(new_thrust_values)):
+            g_tel_msg["thrust_values"][i] = new_thrust_values[i]
+        g_logger.info(f"Addied dir_thrust:{g_incoming_cmd['dir_thrust']}")
+
 
     elif g_tel_msg["state"] == "simple_ai": # simple brute force thrust ai
         t_dist_x = g_tel_msg["pos_x"] - g_tel_msg["target_pos_x"]
@@ -264,6 +271,7 @@ def calculate_thrust():
         else:
             for i in range(len(new_thrust_values)):
                 g_tel_msg["thrust_values"][i] = new_thrust_values[i]
+
 
 ########  Process Helper Functions  ########
 def start_threads():

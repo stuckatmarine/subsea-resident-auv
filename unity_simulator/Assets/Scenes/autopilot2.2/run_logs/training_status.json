@@ -1,0 +1,54 @@
+{
+    "num_waypoints": {
+        "lesson_num": 3
+    },
+    "goal_size": {
+        "lesson_num": 4
+    },
+    "Pilot": {
+        "checkpoints": [
+            {
+                "steps": 48499821,
+                "file_path": "results\\autopilot2.2\\Pilot\\Pilot-48499821.onnx",
+                "reward": 5.3919033379484915,
+                "creation_time": 1617848005.6611047
+            },
+            {
+                "steps": 48999978,
+                "file_path": "results\\autopilot2.2\\Pilot\\Pilot-48999978.onnx",
+                "reward": 5.557811322632958,
+                "creation_time": 1617848175.4207587
+            },
+            {
+                "steps": 49499985,
+                "file_path": "results\\autopilot2.2\\Pilot\\Pilot-49499985.onnx",
+                "reward": 5.274752035887555,
+                "creation_time": 1617848342.0813591
+            },
+            {
+                "steps": 49999954,
+                "file_path": "results\\autopilot2.2\\Pilot\\Pilot-49999954.onnx",
+                "reward": 5.364466337362925,
+                "creation_time": 1617848502.7433112
+            },
+            {
+                "steps": 50000267,
+                "file_path": "results\\autopilot2.2\\Pilot\\Pilot-50000267.onnx",
+                "reward": 5.385741591453552,
+                "creation_time": 1617848502.9233122
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 50000267,
+            "file_path": "results\\autopilot2.2\\Pilot.onnx",
+            "reward": 5.385741591453552,
+            "creation_time": 1617848502.9233122
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.23.0",
+        "torch_version": "1.8.0",
+        "tensorflow_version": "2.3.0"
+    }
+}

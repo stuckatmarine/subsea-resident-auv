@@ -16,7 +16,7 @@ input_data = np.array(np.ones(input_shape0), dtype=np.float32)
 interpreter.set_tensor(input_details[0]['index'], input_data)
 
 input_shape1 = input_details[1]['shape']
-input_data = np.array([1, 2.0, 2.0, 2.0, 180, 2.0, 1.0, 2.0, 0, 0, 0, 0], dtype=np.float32)
+input_data = np.array([1, 2.0, 2.0, 2.0, 180, 2.0, 1.0, 2.0, 0, 0, 0, 0, 0], dtype=np.float32)
 input_data = np.reshape(input_data, input_shape1)
 interpreter.set_tensor(input_details[1]['index'], input_data)
 
@@ -24,14 +24,16 @@ interpreter.invoke()
 exp = np.vectorize(math.exp)
 actions = exp(interpreter.get_tensor(111)[0])
 
-longitudinal = actions[0:3].argmax(axis=0)
-laterial = actions[3:6].argmax(axis=0)
-vertical = actions[6:9].argmax(axis=0)
-yaw = actions[9:12].argmax(axis=0)
+# thruster0 = actions[0:7].argmax(axis=0)
+thruster1 = actions[0:7].argmax(axis=0)
+thruster2 = actions[7:14].argmax(axis=0)
+thruster3 = actions[14:21].argmax(axis=0)
+verts = actions[21:28].argmax(axis=0)
 
-print(f'longitudinal: {longitudinal} {actions[0:3]} {actions[0:3].sum()}')
-print(f'laterial: {laterial} {actions[3:6]} {actions[3:6].sum()}')
-print(f'vertical: {vertical} {actions[6:9]} {actions[6:9].sum()}')
-print(f'yaw: {yaw} {actions[9:12]} {actions[9:12].sum()}')
+# print(f'thruster0: {thruster0} {actions[0:7]} {actions[0:7].sum()}')
+print(f'thruster1: {thruster1} {actions[0:7]} {actions[0:7].sum()}')
+print(f'thruster2: {thruster2} {actions[7:14]} {actions[7:14].sum()}')
+print(f'thruster3: {thruster3} {actions[14:21]} {actions[14:21].sum()}')
+print(f'verts: {verts} {actions[21:28]} {actions[21:28].sum()}')
 
  
