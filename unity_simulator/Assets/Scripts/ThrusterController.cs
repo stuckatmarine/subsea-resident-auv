@@ -44,6 +44,7 @@ public class ThrusterController : MonoBehaviour
             lean_training = gameObject.GetComponent<Pilot>().lean_training;
     }
 
+    // count 50 for dir change
     // Update is called once per frame
     void Update()
     {

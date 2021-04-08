@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/OceanRender.unity
     guid: 7724e4306cc842b4eb278c45c51ed627
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MlTank.unity
     guid: 9316b4a5234a8854eb8f4454d10908f6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TankSim.unity
     guid: 0455455f10faa9f40bfd8281f783c386
   m_configObjects: {}

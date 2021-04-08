@@ -89,3 +89,39 @@ environment_parameters:
         value: 0.15
       - name: Lesson4
         value: 0.05
+  heading_tolerance:
+    curriculum:
+      - name: Lesson0
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.2
+        value: 180
+      - name: Lesson1
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.4
+        value: 120
+      - name: Lesson2
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.5
+        value: 60
+      - name: Lesson3
+        completion_criteria:
+          measure: progress
+          behavior: Pilot
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.7
+        value: 30
+      - name: Lesson4
+        value: 15

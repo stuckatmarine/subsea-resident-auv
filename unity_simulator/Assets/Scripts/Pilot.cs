@@ -13,6 +13,7 @@ public class Pilot : Agent
     public bool enablePilot = true;
     public bool lean_training = true;
 
+    public float goalHeading = 0f;
     public Vector3 goal = new Vector3(0.0f, 0.0f, 0.0f);
     public Transform tank;
     public Bounds tankBounds;
@@ -57,7 +58,7 @@ public class Pilot : Agent
     [SerializeField] private int goalsReached = 0;
     [SerializeField] private int numWaypoints = 1;
     [SerializeField] private float goalSize = 0.45f;
-
+    [SerializeField] private float headingTolerance = 180f;
 
     public List<Transform> tags;
 
@@ -135,7 +136,7 @@ public class Pilot : Agent
         // goal position
         sensor.AddObservation(goal - tank.position);
 
-        // yolo velocity calcs, what could go wrong?
+        // yolo velocity calcs
         sensor.AddObservation(lastVel);
 
         // mimic IMU instantaneous accelerations
@@ -158,10 +159,10 @@ public class Pilot : Agent
             AddReward(-1f / MaxStep);
         if (Math.Abs(rb.angularVelocity.y) > maxVel)
             AddReward(-1f / MaxStep);
+        if (!isInGoal())
+            AddReward(-1f / MaxStep);
 
-        if (Math.Abs(goal.x - srauv.position.x) <= goalSize &&
-            Math.Abs(goal.y - srauv.position.y) <= goalSize &&
-            Math.Abs(goal.z - srauv.position.z) <= goalSize)
+        if (isInGoal() && isInHeading())
         {
             goalsReached++;
             statsRecorder.Add("Score", ++score);
@@ -183,30 +184,95 @@ public class Pilot : Agent
         MoveAgent(actionBuffers.DiscreteActions);
     }
 
+    private bool isInGoal()
+    {
+        if (Math.Abs(goal.x - srauv.position.x) <= goalSize &&
+            Math.Abs(goal.y - srauv.position.y) <= goalSize &&
+            Math.Abs(goal.z - srauv.position.z) <= goalSize)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool isInHeading()
+    {
+        // this is a bit hacky, there is probably a better vector math solution for this
+        float min = srauv.eulerAngles.y - (headingTolerance / 2);
+        float max = srauv.eulerAngles.y + (headingTolerance / 2);
+
+        if (max > 360)
+        {
+            max = max % 360;
+            if ((goalHeading < max && goalHeading > 0) ||
+                (goalHeading > min && goalHeading < 360))
+            {
+                return true;
+            }
+        }
+        else if (min < 0)
+        {
+            min = 360 + min;
+            if ((goalHeading > min && goalHeading < 360) ||
+                (goalHeading < max && goalHeading > 0))
+            {
+                return true;
+            }
+        }
+        else if (goalHeading < max && goalHeading > min)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private void MoveAgent(ActionSegment<int> act)
     {
-        var multiper = 1;
-        for (int i=0; i < 6; i++)
+        for (int i=1; i < 5; i++)
         {
-            var thrustSpd = act[i];
-            var thrusters = thrustCtrl.latThrusters;
-            var sub = 0;
+            var thrustSpd = act[i-1];
 
-            if (i >= 4)
+            if (i < 4)
             {
-                sub = -4;
-                multiper = 2;
-                thrusters = thrustCtrl.vertThrusters;
-            }
+                var thrusters = thrustCtrl.latThrusters;
 
-            if (thrustSpd == 0)
-                thrustCtrl.applyThrust(thrusters[i+sub], -LongitudinalSpd * multiper);
-            else if (thrustSpd == 1)
-                thrustCtrl.applyThrust(thrusters[i+sub], -LongitudinalSpd * multiper / 2);
-            else if (thrustSpd == 3)
-                thrustCtrl.applyThrust(thrusters[i+sub],  LongitudinalSpd * multiper / 2);
-            else if (thrustSpd == 4)
-                thrustCtrl.applyThrust(thrusters[i+sub],  LongitudinalSpd * multiper);
+                if (thrustSpd == 0)
+                    thrustCtrl.applyThrust(thrusters[i], -LongitudinalSpd);
+                else if (thrustSpd == 1)
+                    thrustCtrl.applyThrust(thrusters[i], -LongitudinalSpd / 2);
+                else if (thrustSpd == 2)
+                    thrustCtrl.applyThrust(thrusters[i], -LongitudinalSpd / 4);
+                else if (thrustSpd == 4)
+                    thrustCtrl.applyThrust(thrusters[i],  LongitudinalSpd / 4);
+                else if (thrustSpd == 5)
+                    thrustCtrl.applyThrust(thrusters[i],  LongitudinalSpd / 2);
+                else if (thrustSpd == 6)
+                    thrustCtrl.applyThrust(thrusters[i],  LongitudinalSpd);
+            }
+            else
+            {
+                float spd = 0;
+
+                if (thrustSpd == 0)
+                    spd = -VerticalSpd;
+                else if (thrustSpd == 1)
+                    spd = -VerticalSpd / 2;
+                else if (thrustSpd == 2)
+                    spd = -VerticalSpd / 4;
+                else if (thrustSpd == 4)
+                    spd =  VerticalSpd / 4;
+                else if (thrustSpd == 5)
+                    spd =  VerticalSpd / 2;
+                else if (thrustSpd == 6)
+                    spd =  VerticalSpd;
+
+                foreach(Transform t in thrustCtrl.vertThrusters)
+                {
+                    thrustCtrl.applyThrust(t, spd);
+                }
+            }
         }
     }
 
@@ -254,11 +320,13 @@ public class Pilot : Agent
         goal = GetRandomLocation();
         goalBox.position = goal;
         startPos.position = new Vector3(tank.position.x, 3.6576f, tank.position.z);
+        goalHeading = Random.Range(0, 360);
         lastKnownPos = goal;
         
         // params from curriculum lesson
-        numWaypoints = (int) resetParams.GetWithDefault("num_waypoints", 1);
-        goalSize = resetParams.GetWithDefault("goal_size", 0.45f);
+        numWaypoints = (int) resetParams.GetWithDefault("num_waypoints", 8);
+        goalSize = resetParams.GetWithDefault("goal_size", 0.05f);
+        headingTolerance = resetParams.GetWithDefault("heading_tolerance", 15f);
         
         // reset scoring metrics
         goalsReached = 0;
