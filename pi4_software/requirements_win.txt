@@ -43,7 +43,7 @@ SimpleWebSocketServer==0.1.1
 six==1.15.0
 timeloop==1.0.2
 toml==0.10.1
-Twisted==20.3.0
+Twisted==22.1.0
 typed-ast==1.4.2
 urllib3==1.24.1
 websocket-client==0.57.0
